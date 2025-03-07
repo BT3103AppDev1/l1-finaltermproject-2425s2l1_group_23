@@ -1,29 +1,50 @@
 # PawfectHome
 
-This template should help get you started developing with Vue 3 in Vite.
+PawfectHome is a full-stack application with a Vue 3 frontend and a backend. This README will guide you through setting up and working with both parts of the application.
 
-## Recommended IDE Setup
+## Frontend Setup 
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### Prerequisites
+- Node.js (version 16 or later recommended)
+- npm (Node Package Manager)
 
-## Customize configuration
+### Installation
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+To get started with the frontend, follow these steps
 
-## Project Setup
+Navigate to the frontend directory:
+
+```sh
+cd frontend
+```
+Install the necessary dependencies:
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Development
+
+To start the frontend application in development mode with hot reloading:
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+## Backend Setup
+
+### Installation
+
+To get started with the backend, follow these steps
+
+Navigate to the backend directory:
 
 ```sh
-npm run build
+cd backend
 ```
+Install the necessary dependencies:
+
+```sh
+npm install
+```
+
