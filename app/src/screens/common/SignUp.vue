@@ -16,7 +16,7 @@
         </div>
         <div class="signup-form">
           <div class="signup-form-input">
-            <p>First Name</p>
+            <p>First name</p>
             <input
               type="text"
               placeholder="Samuel"
@@ -25,11 +25,20 @@
             />
           </div>
           <div class="signup-form-input">
-            <p>Last Name</p>
+            <p>Last name</p>
             <input type="text" placeholder="Tan" v-model="lastname" required />
           </div>
           <div class="signup-form-input">
             <p>Email</p>
+            <input
+              type="text"
+              placeholder="crapcake@gmail.com"
+              v-model="email"
+              required
+            />
+          </div>
+          <div class="signup-form-input">
+            <p>Contact number</p>
             <input
               type="text"
               placeholder="crapcake@gmail.com"
