@@ -1,0 +1,54 @@
+/* Fonts */
+
+/* Headings */
+@font-face {
+  font-family: "FredokaOne-Regular";
+  src: url("../fonts/Fredoka_One1/FredokaOne-Regular.ttf") format("truetype");
+}
+
+/* Body */
+@font-face {
+  font-family: "Raleway-Medium";
+  src: url("../fonts/Raleway/static/Raleway-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Raleway-SemiBold";
+  src: url("../fonts/Raleway/static/Raleway-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Raleway-Bold";
+  src: url("../fonts/Raleway/static/Raleway-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Raleway-Light";
+  src: url("../fonts/Raleway/static/Raleway-Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Raleway-Regular";
+  src: url("../fonts/Raleway/static/Raleway-Regular.ttf") format("truetype");
+}
+
+/* Listings */
+@font-face {
+  font-family: "Poppins-Regular";
+  src: url("../fonts/Poppins/Poppins-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins-Bold";
+  src: url("../fonts/Poppins/Poppins-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins-SemiBold";
+  src: url("../fonts/Poppins/Poppins-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins-Medium";
+  src: url("../fonts/Poppins/Poppins-Medium.ttf") format("truetype");
+}
