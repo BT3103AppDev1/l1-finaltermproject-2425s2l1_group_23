@@ -62,6 +62,8 @@ h1 {
   font-size: 53px;
   color: #222F61;
   text-align: center;
+  margin-top:130px;
+
 }
 
 .buttons {
@@ -70,12 +72,10 @@ h1 {
   margin-top: 20px;
 }
 
-
 .btn {
   width: 210px;
   height: 58px;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 20px;
   color: #222F61;
   background-color: #F7F3EB;
   border: 2px solid #222F61;
@@ -84,6 +84,8 @@ h1 {
   box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
   font-family: "Poppins-Bold";
+  pointer-events: auto;
+  z-index: 10;
 }
 
 .btn:hover {
@@ -92,30 +94,30 @@ h1 {
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-
 .image-container {
   position: relative;
-  width: 400px; 
-  height: 400px;
+  width: 740px; 
+  height: 740px;
   margin-top: 20px;
 }
 
 .background-image {
-  width: 180%;
+  width: 150%;
   position: absolute;
   top: -30px; 
   left: 50%;
-  transform: translateX(-50%) rotate(-360deg); 
+  transform: translateX(-50%) rotate(-360deg) translateY(-40px); 
   z-index: 1; 
 }
 
 .foreground-image {
-  width: 100%;
+  width: 80%;
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
+
 }
 
 </style>
