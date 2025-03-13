@@ -1,8 +1,7 @@
 <template>
+    <img src="../../assets/images/PawfectHome.png" alt="Pawfect Home Logo" class="logo" />
     <div class="welcome-container">
       <!-- Logo -->
-      <img src="../../assets/images/PawfectHome.png" alt="Pawfect Home Logo" class="logo" />
-  
       <div class="content">
         <div class="text-section">
           <h1>
@@ -12,6 +11,8 @@
           <button class="cta-button">Get started</button>
         </div>
       </div>
+
+      <img src = "../../assets/images/welcome/welcome.png" alt = "Dog Welcome" class = "welcome-image"/>
     </div>
   </template>
   
@@ -51,7 +52,7 @@
   .welcome-container {
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     justify-content: center;
     background-color: #F7F3EB;
@@ -67,6 +68,10 @@
     width: 140px;
     height: auto;
     z-index: 1000; /* Ensures it's above everything */
+  }
+
+  .welcome-image { 
+
   }
   
   /* Content layout */
