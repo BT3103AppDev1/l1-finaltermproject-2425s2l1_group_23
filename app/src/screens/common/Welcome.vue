@@ -54,8 +54,6 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    height: 100vh;
-    width: 100vw;
     background-color: #F7F3EB;
     overflow: hidden;
     padding: 60px;
@@ -64,7 +62,7 @@
   /* Logo Fix */
   .logo {
     position: absolute;
-    top: 100px;
+    top: 0px;
     left: 30px;
     width: 140px;
     height: auto;
@@ -123,19 +121,6 @@
   
   .cta-button:hover {
     background-color: #1A1E30;
-  }
-  
-  /* Background Image Fix (Prevents White Border) */
-  .welcome-container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50%;
-    height: 100%;
-    background: url("../../assets/images/welcome/welcome.png") no-repeat right center;
-    background-size: cover;
-    z-index: 1;
   }
   </style>
   
