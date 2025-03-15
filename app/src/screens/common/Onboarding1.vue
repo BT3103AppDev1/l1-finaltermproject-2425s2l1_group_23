@@ -106,7 +106,7 @@ h1 {
   position: absolute;
   top: -30px; 
   left: 50%;
-  transform: translateX(-50%) rotate(-360deg) translateY(-40px); 
+  transform: translateX(-50%) rotate(-360deg) translateY(-50px); 
   z-index: 1; 
 }
 
@@ -115,7 +115,7 @@ h1 {
   position: absolute;
   top: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-10px); ;
   z-index: 2;
 
 }
