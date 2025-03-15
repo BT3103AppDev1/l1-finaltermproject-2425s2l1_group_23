@@ -124,8 +124,8 @@ p {
   box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
   position:absolute;
-  bottom: 50px;
-  right:120px;
+  bottom: 100px;
+  right:130px;
 }
 
 .btn:hover {
