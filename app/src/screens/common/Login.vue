@@ -41,6 +41,7 @@ const login = async () => {
         console.log('Successfully logged in', userCredential);
     } catch (error) {
         console.error('Error logging in', error);
+        alert('Error logging in: Incorrect email or password')
     }
 };
 </script>
@@ -83,10 +84,6 @@ const login = async () => {
     color: #7F7E83;
     margin-top: -20px;
     margin-bottom: 40px;
-}
-
-.form {
-    gap: 
 }
 
 .login-button, .signup-button {
