@@ -28,8 +28,8 @@
         name: "Onboarding2",
         methods: {
             goToNextPage() {
-                // change "OnboardingQn" to the path of next onboarding page in index.js
-                this.$router.push("/OnboardingQn"); 
+                // change "onboarding" to the path of next onboarding page in index.js
+                this.$router.push("/onboarding"); 
             },
         },
     };
