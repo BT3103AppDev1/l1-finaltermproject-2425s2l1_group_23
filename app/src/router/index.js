@@ -1,8 +1,9 @@
-import { createRouter, createWebHistory } from "vue-router";
-import Login from "../screens/common/Login.vue";
-import SignUp from "../screens/common/SignUp.vue";
-import Welcome from "../screens/common/Welcome.vue";
-import OnboardingView from "./views/OnboardingView.vue";
+import { createRouter, createWebHistory } from 'vue-router';
+import Login from '../screens/common/Login.vue';
+import SignUp from '../screens/common/SignUp.vue';
+import Welcome from '../screens/common/Welcome.vue';
+import Onboarding1 from "../screens/common/Onboarding1.vue";
+import Onboarding2 from "../screens/adopter/Onboarding2.vue";
 
 const routes = [
   {
@@ -16,15 +17,20 @@ const routes = [
     component: SignUp,
   },
   {
-    path: "/welcome",
-    name: "Welcome",
-    component: Welcome,
+    path: '/welcome',
+    name: 'Welcome',
+    component: Welcome
   },
   {
-    path: "/onboarding",
-    name: "Onboarding",
-    component: OnboardingView,
+    path: '/onboarding1',
+    name: 'Onboarding1',
+    component: Onboarding1
   },
+  {
+    path: '/onboarding2',
+    name: 'Onboarding2',
+    component: Onboarding2
+  }
 ];
 
 const router = createRouter({
