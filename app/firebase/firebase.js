@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -13,11 +14,12 @@ const firebaseConfig = {
   storageBucket: "pawfecthome-a7b3d.firebasestorage.app",
   messagingSenderId: "511093891781",
   appId: "1:511093891781:web:04a1ace065f05d7840c6ac",
-  measurementId: "G-SJ9ML0MZZG"
+  measurementId: "G-SJ9ML0MZZG",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app); // Initialize firestore
 
-export { auth, app };
+export { auth, app, db };
