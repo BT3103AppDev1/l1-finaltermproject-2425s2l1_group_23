@@ -76,6 +76,17 @@
 import { db } from "../../../firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { onboardingQuestions } from "./onboardingQuestions";
+import { getAuth } from "firebase/auth";
+
+const auth = getAuth();
+
+const user = auth.currentUser;
+
+if (user) {
+  console.log("User ID:", user.uid);
+} else {
+  console.log("No user is signed in.");
+}
 
 /* FYI
 ... is a spread operator. When used with arrays, 
@@ -93,7 +104,7 @@ export default {
       currentStep: 0,
       selectedOptions: [],
       questions: onboardingQuestions,
-      userId: null,
+      userId: 1,
       responses: {}, // Initialize the responses object
       showOtherInput: false, // Track whether "Other" is selected
       otherInputValue: "", // Store the value entered in the "Other" textbox
@@ -178,7 +189,7 @@ export default {
         const docData = {
           ...this.responses,
           timestamp: new Date(),
-          user_id: this.userId, // You need to implement user auth
+          user_id: this.userId, // USER ID TO GET FROM AUTH
         };
 
         // ###### SAVE MY LAST ANSWER BEFORE SUBMITTING #######
@@ -208,6 +219,8 @@ export default {
 </script>
 
 <style scoped>
+@import "../../assets/styles/font.css";
+
 .onboarding-container {
   display: flex;
   justify-content: center;
@@ -236,11 +249,11 @@ export default {
 h2 {
   font-size: 36px;
   margin-bottom: 20px;
-  font-family: "Fredoka One", cursive;
+  font-family: "FredokaOne-Regular";
 }
 
 .option-label {
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins-Regular", sans-serif;
   display: inline-block;
   margin-right: 20px;
   margin-bottom: 10px;
@@ -252,7 +265,7 @@ h2 {
   border-radius: 4px;
   width: 300px;
   margin-top: 10px;
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins-Regular", sans-serif;
 }
 
 .next-button {
@@ -265,7 +278,7 @@ h2 {
   font-size: 16px;
   margin-top: 20px;
   align-self: right;
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins-Regular", sans-serif;
 }
 
 .next-button:hover {
