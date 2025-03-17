@@ -7,14 +7,14 @@ import Onboarding2 from "../screens/adopter/Onboarding2.vue";
 
 const routes = [
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    path: "/login",
+    name: "Login",
+    component: Login,
   },
   {
-    path: '/signup',
-    name: 'SignUp',
-    component: SignUp
+    path: "/signup",
+    name: "SignUp",
+    component: SignUp,
   },
   {
     path: '/welcome',
@@ -31,12 +31,11 @@ const routes = [
     name: 'Onboarding2',
     component: Onboarding2
   }
-
 ];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 });
 
 export default router;
