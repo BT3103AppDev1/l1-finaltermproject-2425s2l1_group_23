@@ -1,17 +1,18 @@
 <template>
+    <MarketPlaceHeader
+        :userName="'MingHan'"
+        @search="handleSearch"
+        @filter-category="handleCategoryFilter"
+    />
     <div class="marketplace-container">
-      <header class="header">
-        <h1>Marketplace</h1>
-      </header>
-  
-      <section class="search-bar">
+      <!-- <section class="search-bar">
         <input
           type="text"
           placeholder="Search for pets..."
           v-model="searchQuery"
           @input="searchPets"
         />
-      </section>
+      </section> -->
   
       <section class="pet-list">
         <Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />
@@ -24,9 +25,10 @@
   import { db } from '../../../firebase/firebase.js';
   import { collection, getDocs } from 'firebase/firestore';
   import Listing from '../../components/Listing.vue';
+  import MarketPlaceHeader from './MarketPlaceHeader.vue';
   
   export default {
-    components: { Listing },
+    components: { Listing, MarketPlaceHeader },
     setup() {
       const pets = ref([]);
       const searchQuery = ref("");
@@ -41,6 +43,8 @@
             const userData = doc.data();
             const userId = doc.id; // Match document ID
   
+            // usersMap is a dictionary where the key is the user ID
+            // and the value is an object with the owner's name and image
             usersMap[userId] = {
               owner: `${userData.firstName} ${userData.lastName}`,
               ownerImage: userData.profileImage || "https://placekitten.com/50/50",
