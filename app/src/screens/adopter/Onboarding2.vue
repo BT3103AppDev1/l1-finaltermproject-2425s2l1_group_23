@@ -1,53 +1,85 @@
 <template>
-    <div class = "onboarding-container">
-        <div class ="logo-container">
-            <img src="@/assets/images/PawfectHome.png" alt="Pawfect Home Logo" class="logo" />
-        </div>
+  <img
+    src="@/assets/images/PawfectHome.png"
+    alt="Pawfect Home Logo"
+    class="logo"
+  />
+  <div class="onboarding-container">
+    <div class="logo-container"></div>
 
-        <div class = "text-container">
-            <h1>Find Your Perfect Pet Companion!</h1>
+    <div class="text-container fade-in-left">
+      <h1>Find Your Perfect Pet Companion!</h1>
 
-            <p> Looking for a furry (or feathery!) friend? We'll help 
-            match you with a pet that fits your lifestyle!
-            </p>
-        </div>
-        
-
-        <div class = "image-container"> 
-                <img src="@/assets/images/onboarding2-petsbackground.png" alt="Background Shape" class="background-image" />
-                <img src="@/assets/images/onboarding2-pets.png" alt="Pets" class="foreground-image" />
-        </div>
-
-        <button class="btn" @click="goToNextPage">Continue</button>
-
+      <p>
+        Looking for a furry (or feathery!) friend? We'll help match you with a
+        pet that fits your lifestyle!
+      </p>
     </div>
+
+    <div class="image-container">
+      <img
+        src="@/assets/images/onboarding/onboarding2-petsbackground.png"
+        alt="Background Shape"
+        class="background-image"
+      />
+      <img
+        src="@/assets/images/onboarding/onboarding2-pets.png"
+        alt="Pets"
+        class="foreground-image"
+      />
+    </div>
+
+    <button class="btn fade-in-left delay-2" @click="goToNextPage">
+      Continue
+    </button>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "Onboarding2",
-        methods: {
-            goToNextPage() {
-                // change "onboarding" to the path of next onboarding page in index.js
-                this.$router.push("/onboarding"); 
-            },
-        },
-    };
+export default {
+  name: "Onboarding2",
+  methods: {
+    goToNextPage() {
+      this.$router.push("/onboarding-questions");
+    },
+  },
+};
 </script>
 
 <style scoped>
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in-left {
+  animation: fadeInLeft 1s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.delay-1 {
+  animation: fadeInLeft 1.5s ease-in-out;
+}
+
+.delay-2 {
+  animation: fadeInLeft 2s ease-in-out;
+}
+
 .onboarding-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   text-align: center;
-  height: 100vh;
+  height: auto;
   background-color: #f7f3eb;
   position: relative;
-  padding-top: 100px;
 }
-
 
 .logo-container {
   position: absolute;
@@ -56,54 +88,49 @@
 }
 
 .logo {
-  width: 169px; 
+  width: 169px;
   height: 50px;
 }
 
-
 h1 {
-  font-family: "FredokaOne-Regular";
+  font-family: FredokaOne-Regular;
   font-size: 53px;
   color: #000000;
   text-align: center;
   white-space: nowrap;
-  width:100%;
+  width: 100%;
   margin-bottom: 15px;
-
 }
 
 p {
-  font-family: "Raleway-Bold", sans-serif;
+  font-family: Raleway-Bold;
   font-size: 25px;
-  color: #222F61;
-  width:654px;
+  color: #222f61;
+  width: 654px;
   text-align: left;
-
 }
 
 .image-container {
   position: absolute;
-  bottom: 50px; 
+  bottom: 50px;
   left: 50%;
   transform: translateX(-50%);
-  width: 600px; 
+  width: 600px;
   height: auto;
-
 }
 
 .background-image {
   width: 200%;
   position: absolute;
-  bottom:0;
+  top: 1em;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1;
 }
 
 .foreground-image {
   width: 170%;
   position: absolute;
-  bottom: 0;
+  top: 9.2em;
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
@@ -112,27 +139,25 @@ p {
 .btn {
   width: 166px;
   height: 58px;
-  font-family: "Raleway-Bold";
+  font-family: Raleway-Bold;
   font-size: 16px;
   font-weight: bold;
-  color: #222F61;
-  background-color: #F7F3EB;
-  border: 2px solid #222F61;
+  color: #222f61;
+  background-color: #f7f3eb;
+  border: 2px solid #222f61;
   border-radius: 30px;
   cursor: pointer;
   margin-top: 20px;
   box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
-  position:absolute;
-  bottom: 100px;
-  right:130px;
+  position: absolute;
+  top: 52em;
+  right: 5em;
 }
 
 .btn:hover {
-  background-color: #222F61;
+  background-color: #222f61;
   color: white;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
 }
-
-
 </style>
