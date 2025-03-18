@@ -214,6 +214,8 @@ const register = async () => {
     router.push("/onboarding");
   } catch (error) {
     console.error("Error registering user:", error);
+    alert("Error registering user: " + error.message);
+    return;
   }
 };
 </script>

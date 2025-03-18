@@ -1,6 +1,6 @@
 <template>
   <div class="onboarding-container">
-    <div v-if="currentStep < questions.length">
+    <div class="question-image-container" v-if="currentStep < questions.length">
       <div class="question-container">
         <img
           src="../../assets/images/onboardingQn/onboardingRat.png"
@@ -28,6 +28,8 @@
               {{ option }}
             </label>
             <!-- Show textbox if "Other" is selected -->
+            <!-- Only activated when "showOtherInput" function is true -->
+            <!-- i.e. to say user clicked "Other" -->
             <div class="other-box" v-if="showOtherInput">
               <input
                 type="text"
@@ -36,6 +38,7 @@
                 class="text-input"
               />
             </div>
+            <!-- ################ end of textbox ################### -->
           </div>
 
           <!-- Single Choice -->
@@ -46,7 +49,9 @@
               class="option-label"
             >
               <input type="radio" :value="option" v-model="selectedOptions" />
+              <!-- radio button: only one radio button in the group can be selected at once -->
               {{ option }}
+              <!-- Displays the LABEL of radio button -->
             </label>
           </div>
 
@@ -101,10 +106,11 @@ console.log(arr2); Output: ["you", "are", "gay", 4, 5]
 export default {
   data() {
     return {
+      // Initialize everything
       currentStep: 0,
-      selectedOptions: [],
+      selectedOptions: [], // v-model will two-way binding and update this for everytime the user clicks on their options
       questions: onboardingQuestions,
-      userId: 1,
+      userId: null,
       responses: {}, // Initialize the responses object
       showOtherInput: false, // Track whether "Other" is selected
       otherInputValue: "", // Store the value entered in the "Other" textbox
@@ -112,7 +118,8 @@ export default {
   },
   computed: {
     currentQuestion() {
-      return this.questions[this.currentStep];
+      return this.questions[this.currentStep]; // Sieve out the questions in JSON format from the onboardingQuestion.js
+      // onboardingQuestions[qn_num] to get current qn
     },
   },
   methods: {
@@ -132,7 +139,7 @@ export default {
       this.$router.push("/home");
     },
     async nextQuestion() {
-      const currentKey = this.currentQuestion.key;
+      const currentKey = this.currentQuestion.key; // this question key matches the firestore's
 
       // Validation for multiple-choice questions
       if (this.currentQuestion.type === "multiple") {
@@ -191,8 +198,16 @@ export default {
         // Create document structure matching your Firestore
         const docData = {
           ...this.responses,
+          /* eg.
+          {
+            preferred_species: "Dog",
+            previous_experience: "Some experience",
+            age_preference: "Adult",
+            restrictions: "No allergies"
+          }
+          */
           timestamp: new Date(),
-          user_id: user ? user.uid : null, // USER ID TO GET FROM AUTH
+          user_id: user ? user.uid : null, // Check if user exists. if it does, assign user.uid (document id) to user_id. null if not authenticated
         };
 
         // ###### SAVE MY LAST ANSWER BEFORE SUBMITTING #######
@@ -227,6 +242,12 @@ export default {
 <style scoped>
 @import "../../assets/styles/font.css";
 
+.question-image-container {
+  justify-self: auto;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
 .onboarding-container {
   display: flex;
   justify-content: center;
