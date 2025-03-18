@@ -1,9 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Login from '../screens/common/Login.vue';
-import SignUp from '../screens/common/SignUp.vue';
-import Welcome from '../screens/common/Welcome.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import Login from "../screens/common/Login.vue";
+import SignUp from "../screens/common/SignUp.vue";
+import Welcome from "../screens/common/Welcome.vue";
 import Onboarding1 from "../screens/common/Onboarding1.vue";
 import Onboarding2 from "../screens/adopter/Onboarding2.vue";
+import PetListing from "../screens/lister/PetListing.vue";
+import OnboardingQn from "../screens/adopter/OnboardingQn.vue";
+import MarketPlace from "../screens/adopter/MarketPlace.vue";
 
 const routes = [
   {
@@ -17,20 +20,35 @@ const routes = [
     component: SignUp,
   },
   {
-    path: '/welcome',
-    name: 'Welcome',
-    component: Welcome
+    path: "/",
+    name: "Welcome",
+    component: Welcome,
   },
   {
-    path: '/onboarding1',
-    name: 'Onboarding1',
-    component: Onboarding1
+    path: "/onboarding",
+    name: "Onboarding1",
+    component: Onboarding1,
   },
   {
-    path: '/onboarding2',
-    name: 'Onboarding2',
-    component: Onboarding2
-  }
+    path: "/onboarding-adopters",
+    name: "Onboarding2",
+    component: Onboarding2,
+  },
+  {
+    path: "/petlisting",
+    name: "PetListing",
+    component: PetListing,
+  },
+  {
+    path: "/onboarding-questions",
+    name: "OnboardingQn",
+    component: OnboardingQn,
+  },
+  {
+    path: "/home",
+    name: "MarketPlace",
+    component: MarketPlace,
+  },
 ];
 
 const router = createRouter({

@@ -6,30 +6,13 @@
   </div> -->
 
   <!-- This is where pages will be rendered -->
-  <router-view/>
+  <router-view />
 </template>
 
 <script>
 export default {
-  name: 'App'
-}
+  name: "App",
+};
 </script>
 
-<style>
-#nav {
-  padding: 20px;
-  background-color: #f8f9fa;
-  text-align: center;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-  text-decoration: none;
-  margin: 0 15px;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<style></style>

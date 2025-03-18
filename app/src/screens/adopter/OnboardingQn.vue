@@ -128,6 +128,9 @@ export default {
         }
       }
     },
+    goToNextPage() {
+      this.$router.push("/home");
+    },
     async nextQuestion() {
       const currentKey = this.currentQuestion.key;
 
@@ -189,7 +192,7 @@ export default {
         const docData = {
           ...this.responses,
           timestamp: new Date(),
-          user_id: this.userId, // USER ID TO GET FROM AUTH
+          user_id: user ? user.uid : null, // USER ID TO GET FROM AUTH
         };
 
         // ###### SAVE MY LAST ANSWER BEFORE SUBMITTING #######
@@ -210,6 +213,9 @@ export default {
         await addDoc(collection(db, "Adopter_Onboarding"), docData);
         console.log("Responses saved successfully!");
         this.currentStep++; // Move to completion screen
+        setTimeout(() => {
+          this.goToNextPage();
+        }, 3000);
       } catch (error) {
         console.error("Error saving responses:", error);
       }
@@ -249,11 +255,11 @@ export default {
 h2 {
   font-size: 36px;
   margin-bottom: 20px;
-  font-family: "FredokaOne-Regular";
+  font-family: FredokaOne-Regular;
 }
 
 .option-label {
-  font-family: "Poppins-Regular", sans-serif;
+  font-family: Poppins-Regular;
   display: inline-block;
   margin-right: 20px;
   margin-bottom: 10px;
@@ -265,7 +271,7 @@ h2 {
   border-radius: 4px;
   width: 300px;
   margin-top: 10px;
-  font-family: "Poppins-Regular", sans-serif;
+  font-family: Poppins-Regular;
 }
 
 .next-button {
@@ -278,7 +284,7 @@ h2 {
   font-size: 16px;
   margin-top: 20px;
   align-self: right;
-  font-family: "Poppins-Regular", sans-serif;
+  font-family: Poppins-Regular;
 }
 
 .next-button:hover {
