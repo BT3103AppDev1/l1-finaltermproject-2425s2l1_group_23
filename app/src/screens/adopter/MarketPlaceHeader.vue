@@ -2,13 +2,21 @@
   <div class="marketplace-container">
     <!-- Header Section (Logo + Welcome Message) -->
     <header class="header">
-      <img class="logo" src="../../assets/images/PawfectHome-Logo.png" alt="Logo" />
-      <h1>Welcome, MingHan!</h1>
+      <img
+        class="logo"
+        src="../../assets/images/PawfectHome-Logo.png"
+        alt="Logo"
+      />
+      <h1>Welcome, Ming Han!</h1>
     </header>
 
     <!-- Search Bar -->
     <div class="search-container">
-      <input type="text" placeholder="Search for your new furry friend..." v-model="searchQuery" />
+      <input
+        type="text"
+        placeholder="Search for your new furry friend..."
+        v-model="searchQuery"
+      />
       <button @click="searchPets">Search</button>
     </div>
 

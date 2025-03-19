@@ -82,17 +82,6 @@ import { db } from "../../../firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { onboardingQuestions } from "./onboardingQuestions";
 import { getAuth } from "firebase/auth";
-
-const auth = getAuth();
-
-const user = auth.currentUser;
-
-if (user) {
-  console.log("User ID:", user.uid);
-} else {
-  console.log("No user is signed in.");
-}
-
 /* FYI
 ... is a spread operator. When used with arrays, 
 the spread operator expands the elements of the array into individual elements
@@ -196,6 +185,16 @@ export default {
     async submitResponses() {
       try {
         // Create document structure matching your Firestore
+        const auth = getAuth();
+
+        const user = auth.currentUser;
+
+        if (user) {
+          console.log("User ID:", user.uid);
+        } else {
+          console.log("No user is signed in.");
+          return;
+        }
         const docData = {
           ...this.responses,
           /* eg.

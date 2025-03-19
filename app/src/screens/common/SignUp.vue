@@ -34,12 +34,19 @@
               type="text"
               placeholder="Samuel"
               v-model="firstname"
+              style="color: #222f61; width: 100%"
               required
             />
           </div>
           <div class="signup-form-input">
             <p>Last name</p>
-            <input type="text" placeholder="Tan" v-model="lastname" required />
+            <input
+              type="text"
+              placeholder="Tan"
+              v-model="lastname"
+              style="color: #222f61; width: 100%"
+              required
+            />
           </div>
           <div class="signup-form-input">
             <p>Email</p>
@@ -47,6 +54,7 @@
               type="text"
               placeholder="pawfecthome@pawmail.com"
               v-model="email"
+              style="color: #222f61; width: 100%"
               required
             />
           </div>
@@ -56,6 +64,7 @@
               type="text"
               placeholder="81234567"
               v-model="contactNumber"
+              style="color: #222f61; width: 100%"
               required
             />
             <p
@@ -71,6 +80,7 @@
               type="password"
               placeholder="Password"
               v-model="password"
+              style="color: #222f61; width: 100%"
               required
             />
           </div>
@@ -81,6 +91,7 @@
               placeholder="Re-Enter Password"
               v-model="confirmPassword"
               required
+              style="color: #222f61; width: 100%"
             />
             <p v-if="passwordMismatch && confirmPassword" class="error-message">
               Passwords do not match
