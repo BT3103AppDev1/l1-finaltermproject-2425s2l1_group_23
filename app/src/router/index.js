@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../screens/common/Login.vue';
 import SignUp from '../screens/common/SignUp.vue';
 import Welcome from '../screens/common/Welcome.vue';
+import PetProfile from '../screens/common/PetProfile.vue';
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: '/welcome',
     name: 'Welcome',
     component: Welcome
+  },
+  {
+    path: '/petprofile',
+    name: 'PetProfile',
+    component: PetProfile
   }
 ];
 
