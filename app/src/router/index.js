@@ -1,35 +1,65 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Login from '../screens/common/Login.vue';
-import SignUp from '../screens/common/SignUp.vue';
-import Welcome from '../screens/common/Welcome.vue';
-import PetProfile from '../screens/common/PetProfile.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import Login from "../screens/common/Login.vue";
+import SignUp from "../screens/common/SignUp.vue";
+import Welcome from "../screens/common/Welcome.vue";
+import Onboarding1 from "../screens/common/Onboarding1.vue";
+import Onboarding2 from "../screens/adopter/Onboarding2.vue";
+import PetListing from "../screens/lister/PetListing.vue";
+import OnboardingQn from "../screens/adopter/OnboardingQn.vue";
+import MarketPlace from "../screens/adopter/MarketPlace.vue";
+import PetProfile from "../screens/adopter/PetProfile.vue";
 
 const routes = [
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    path: "/login",
+    name: "Login",
+    component: Login,
   },
   {
-    path: '/signup',
-    name: 'SignUp',
-    component: SignUp
+    path: "/signup",
+    name: "SignUp",
+    component: SignUp,
   },
   {
-    path: '/welcome',
-    name: 'Welcome',
-    component: Welcome
+    path: "/",
+    name: "Welcome",
+    component: Welcome,
   },
   {
-    path: '/petprofile',
-    name: 'PetProfile',
-    component: PetProfile
-  }
+    path: "/onboarding",
+    name: "Onboarding1",
+    component: Onboarding1,
+  },
+  {
+    path: "/onboarding-adopters",
+    name: "Onboarding2",
+    component: Onboarding2,
+  },
+  {
+    path: "/petlisting",
+    name: "PetListing",
+    component: PetListing,
+  },
+  {
+    path: "/onboarding-questions",
+    name: "OnboardingQn",
+    component: OnboardingQn,
+  },
+  {
+    path: "/home",
+    name: "MarketPlace",
+    component: MarketPlace,
+  },
+  {
+    path: "/pet-profile",
+    name: "PetProfile",
+    component: PetProfile,
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 });
 
 export default router;
