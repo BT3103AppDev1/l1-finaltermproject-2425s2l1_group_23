@@ -155,4 +155,6 @@ export default {
   justify-content: center;
   margin-top: 30px;
 }
+/* new change! */
 </style>
+
