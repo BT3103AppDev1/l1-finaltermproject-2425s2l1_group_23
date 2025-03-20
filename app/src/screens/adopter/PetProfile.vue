@@ -102,6 +102,13 @@
 
 <style scoped>
 @import url("../../assets/styles/font.css");
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
 .fixed-container {
     display: flex;
     flex-direction: column;
@@ -109,7 +116,51 @@
     justify-content: center;
     gap: 1.25em;
     margin-top: 3.125em;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 10em;
 }
+
+.scrollable-container {
+    padding: 5em;
+    overflow-y: auto; /*for scrolling*/
+    flex-grow: 1;
+    margin-left: 50%;
+}
+
+/* if width too small, then pic can become scrollable*/
+@media (max-width: 1024px) {
+    .fixed-container {
+        position: relative;
+        height: auto;
+        margin-bottom: 2em;
+    }
+    .content {
+        flex-direction: column;
+    }
+
+    .fixed-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25em;
+        margin-top: 3.125em;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+    .scrollable-container {
+        margin-top: -5em;
+        padding: 5em;
+        overflow-y: auto; /*for scrolling*/
+        flex-grow: 1;
+        margin-left: 0%;
+    }
+}
+
+
 .profile-img {
     width: 25em;
     height: 31.25em;
@@ -145,6 +196,10 @@ treat-img {
     align-items: center;
 }
 
+.circle-button:hover, .rectangular-button:hover {
+    cursor: pointer;
+}
+
 .treat-button {
     display: flex;
     align-items: center;
@@ -172,7 +227,7 @@ treat-img {
 
 .pet-intro-header {
     align-items: center;
-    margin-left: 1.75em;
+    margin-left: 0em;
 }
 
 .age, .gender, .subheader{
@@ -197,11 +252,20 @@ treat-img {
 }
 
 .info-header {
-    font-family: 'Raleway-SemiBold'
+    font-family: 'Raleway-SemiBold';
+}
+
+.subheader {
+    margin-bottom: -0.75em;
 }
 
 .values {
     display: flex;
+}
+
+.subtitle {
+    font-family: 'Raleway-Medium';
+    margin-left: 2em;
 }
 
 </style>
