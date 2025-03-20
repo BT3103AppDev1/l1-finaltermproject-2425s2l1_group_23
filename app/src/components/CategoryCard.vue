@@ -27,6 +27,7 @@
   </script>
   
   <style scoped>
+  @import url("../assets/styles/font.css");
   /* Outer box that holds both sections */
   .category-container {
     display: flex;
@@ -50,7 +51,7 @@
   
   /* Emoji inside the top box */
   .emoji {
-    font-size: 50px;
+    font-size: 60px;
   }
   
   /* Bottom box for category name */
@@ -58,15 +59,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: -10px;
     width: 100%;
   }
   
   /* Category Name */
   .category-name {
-    font-family: "FredokaOne-Regular";
-    font-size: 18px;
-    font-weight: bold;
-    color: #222f61;
+    font-family: "Raleway-Bold";
+    font-size: 20px;
+    color: #222F61;
   }
   </style>
   
