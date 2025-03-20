@@ -165,8 +165,11 @@ const updateProfile = async () => {
 
 <style scoped>
 @import url("../../assets/styles/font.css");
+
 .error-message {
-  color: red;
+  color: #ff0000;
+  font-size: 0.8em;
+  margin-top: 0.5em;
 }
 
 .edit-profile-container {
@@ -174,12 +177,12 @@ const updateProfile = async () => {
   margin: auto;
   background-color: #f9f0e1;
   padding: 2em;
-  border-radius: 15px;
-  font-family: 'Poppins', sans-serif;
+  border-radius: 1em;
+  font-family: "Poppins", sans-serif;
 }
 
 .main-heading {
-  font-size: 1.8rem;
+  font-size: 2em;
   font-weight: bold;
   margin-bottom: 1em;
 }
@@ -191,8 +194,8 @@ const updateProfile = async () => {
 }
 
 .profile-image {
-  width: 60px;
-  height: 60px;
+  width: 4em;
+  height: 4em;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -222,10 +225,10 @@ const updateProfile = async () => {
 }
 
 .form-input-group input {
-  padding: 0.6em;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 0.9rem;
+  padding: 0.8em;
+  border-radius: 0.5em;
+  border: 0.05em solid #ddd;
+  font-size: 0.9em;
   background-color: #ffffff;
 }
 
@@ -236,12 +239,12 @@ const updateProfile = async () => {
 .reset-password-btn {
   position: absolute;
   right: 0;
-  top: 35px;
+  top: 2.2em;
   background: none;
   border: none;
   color: #8a8989;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   text-decoration: underline;
 }
 
@@ -252,28 +255,29 @@ const updateProfile = async () => {
 
 .upload-title {
   font-weight: bold;
+  font-size: 1em;
 }
 
 .upload-description {
-  font-size: 0.8rem;
+  font-size: 0.8em;
   color: #6e6e6e;
   margin-bottom: 1em;
 }
 
 .upload-box {
-  border: 1px dashed #ccc;
-  border-radius: 10px;
+  border: 0.1em dashed #ccc;
+  border-radius: 0.8em;
   padding: 2em;
   text-align: center;
   background-color: #faf6f1;
-  font-size: 0.9rem;
+  font-size: 0.9em;
   color: #7a7a7a;
 }
 
 .browse-button {
   background-color: #9f9c9c;
   color: white;
-  border-radius: 8px;
+  border-radius: 0.5em;
   padding: 0.5em 1em;
   border: none;
   cursor: pointer;
@@ -290,20 +294,21 @@ const updateProfile = async () => {
 .cancel-btn,
 .save-btn {
   padding: 0.6em 2em;
-  border-radius: 20px;
+  border-radius: 2em;
   border: none;
   font-weight: bold;
   cursor: pointer;
+  font-size: 0.9em;
 }
 
 .cancel-btn {
-  background-color: #fff;
+  background-color: #ffffff;
   color: #000;
-  border: 1px solid #9c9c9c;
+  border: 0.05em solid #9c9c9c;
 }
 
 .save-btn {
   background-color: #222f61;
-  color: #fff;
+  color: #ffffff;
 }
 </style>
