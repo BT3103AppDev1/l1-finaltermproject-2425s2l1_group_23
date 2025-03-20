@@ -27,17 +27,17 @@
     <!-- Pet Categories -->
     <section class="category-filter">
       <div class="categories">
-        <button
+        <CategoryCard
           v-for="category in petCategories"
           :key="category.name"
-          class="category-btn"
-          @click="filterByCategory(category.name)"
-        >
-          {{ category.emoji }} {{ category.name }}
-        </button>
+          :name="category.name"
+          :emoji="category.emoji"
+          @filter-category="filterByCategory"
+        />
       </div>
-      <button class="filter-btn">🔍 Filter</button>
     </section>
+    
+
 
     <div class="div-text"> 
       <h1> Our cutest additions... </h1>
@@ -51,12 +51,11 @@
 </template>
 
 <script>
+import CategoryCard from "@/components/CategoryCard.vue";
+
 export default {
-  props: {
-    userName: {
-      type: String,
-      default: "User",
-    },
+  components: {
+    CategoryCard,
   },
   data() {
     return {
@@ -72,15 +71,13 @@ export default {
     };
   },
   methods: {
-    searchPets() {
-      this.$emit("search", this.searchQuery);
-    },
     filterByCategory(category) {
       this.$emit("filter-category", category);
     },
   },
 };
 </script>
+
 
 <style scoped>
 @import url("../../assets/styles/font.css");
@@ -147,14 +144,22 @@ export default {
 /* Pet Categories */
 .category-filter {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center the categories */
   width: 100%;
+  margin-top: 20px;
 }
 
 .categories {
   display: flex;
-  gap: 15px;
+  justify-content: space-between; /* Ensures even spacing from start to end */
+  gap: 20px; /* Keeps some spacing between items */
+  flex-wrap: nowrap; /* Prevents wrapping */
+  width: 100%; /* Ensure it spans the full width */
+  max-width: 1200px; /* Adjust to match the container */
+  margin: 0 auto; /* Centers the entire row */
 }
+
+
 
 .category-btn {
   background: #d3cff9;
