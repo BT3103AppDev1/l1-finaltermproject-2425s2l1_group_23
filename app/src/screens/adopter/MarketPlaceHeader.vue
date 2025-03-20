@@ -20,6 +20,10 @@
       <button @click="searchPets">Search</button>
     </div>
 
+    <div class="div-text"> 
+      <h1> What kind of pet are you looking for? </h1>
+    </div>
+
     <!-- Pet Categories -->
     <section class="category-filter">
       <div class="categories">
@@ -34,6 +38,10 @@
       </div>
       <button class="filter-btn">🔍 Filter</button>
     </section>
+
+    <div class="div-text"> 
+      <h1> Our cutest additions... </h1>
+    </div>
 
     <!-- Pet Listings -->
     <section class="pet-list">
@@ -75,6 +83,8 @@ export default {
 </script>
 
 <style scoped>
+@import url("../../assets/styles/font.css");
+
 /* Main Container */
 .marketplace-container {
   display: flex;
@@ -96,6 +106,10 @@ export default {
   justify-content: flex-start;
 }
 
+.header h1 { 
+  font-family: "FredokaOne-Regular";
+  font-size: 24px
+}
 .logo {
   width: 60px; /* Adjust as needed */
   height: auto;
@@ -105,6 +119,7 @@ export default {
 .search-container {
   display: flex;
   align-items: center;
+  width: 100%;
   gap: 10px;
   margin-top: 15px; /* Separate from header */
 }
@@ -116,12 +131,24 @@ export default {
   border: 2px solid #222f61;
 }
 
+.div-text { 
+  width: 100%;
+  align-items: center;
+  justify-items: flex-start;
+  margin-top: 10px;
+}
+
+.div-text h1 {
+  font-family: "FredokaOne-Regular";
+  font-size: 30px;
+  margin-top: 20px;
+}
+
 /* Pet Categories */
 .category-filter {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: 20px;
 }
 
 .categories {
@@ -153,7 +180,7 @@ export default {
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: -10px;
 }
 /* new change! */
 </style>
