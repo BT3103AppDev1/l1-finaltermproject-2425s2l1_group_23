@@ -14,11 +14,13 @@
     <div class="search-container">
       <input
         type="text"
-        placeholder="Search for your new furry friend..."
+        placeholder="🔎 Search for your new furry friend..."
         v-model="searchQuery"
       />
       <button @click="searchPets">Search</button>
     </div>
+
+
 
     <div class="div-text"> 
       <h1> What kind of pet are you looking for? </h1>
@@ -116,17 +118,45 @@ export default {
 .search-container {
   display: flex;
   align-items: center;
-  width: 100%;
   gap: 10px;
-  margin-top: 15px; /* Separate from header */
+  width: 100%; /* Make sure the container takes full width */
+  max-width: 600px; /* Adjust width as needed */
 }
 
 .search-container input {
-  padding: 10px;
-  width: 100em;
-  border-radius: 5px;
+  flex: 1; /* Makes the input expand to fill the space */
+  padding: 12px 16px;
+  border-radius: 7px;
   border: 2px solid #222f61;
+  font-family: "Raleway-SemiBold";
+  font-size: 16px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
+
+.search-container input:focus {
+  outline: none;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.2);
+  border-color: #1a237e;
+}
+
+/* Search Button Styling */
+.search-container button {
+  background-color: #222f61;
+  color: white;
+  font-family: "Raleway-Bold";
+  font-size: 16px;
+  border: none;
+  border-radius: 7px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.search-container button:hover {
+  background-color: #1a1f4f;
+}
+
 
 .div-text { 
   width: 100%;
