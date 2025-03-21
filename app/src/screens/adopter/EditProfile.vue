@@ -13,32 +13,86 @@
       <div class="form-row">
         <div class="form-input-group">
           <label>First Name</label>
-        <input v-model="firstName" type="text" required />
+        <input v-model="firstName" :placeholder="originalFirstName" type="text" required />
       </div>
 
         <div class="form-input-group">
           <label>Last Name</label>
-          <input v-model="lastName" type="text" required />
+          <input v-model="lastName" :placeholder="originalLastName" type="text" required />
         </div>
       </div>
 
       <div class="form-input-group">
         <label>Email</label>
-        <input v-model="email" type="email" required />
+        <input v-model="email" :placeholder="originalEmail" type="email" required />
         <p v-if="email && !isEmailValid" class="error-message">Invalid email format</p>
       </div>
 
       <div class="form-input-group">
         <label>Contact Number</label>
-        <input v-model="contactNumber" type="text" required />
+        <input v-model="contactNumber" :placeholder="originalContactNumber" type="text" required />
         <p v-if="contactNumber && !isContactNumberValid" class="error-message">Invalid contact number</p>
       </div>
 
+  
+
       <div class="form-input-group password-group">
         <label>Password</label>
-        <input v-model="password" type="password" />
-        <button type="button" class="reset-password-btn" @click="resetPassword">Reset Password</button>
+        <input type="password" placeholder="********************" disabled />
+        <button type="button" class="reset-password-btn" @click="resetPassword">
+          Reset Password
+        </button>
       </div>
+
+
+      <div class="upload-certificate">
+        <label>Upload your pet ownership course certificate</label>
+        <p v-if = "!selectedFileName">
+          You have not uploaded a pet ownership course certificate.<br />
+          To adopt a dog or cat, you must first upload your pet ownership course certificate.
+        </p>
+
+        <div 
+          class="file-upload-box"
+          @dragover.prevent
+          @dragenter.prevent
+          @drop.prevent="handleFileDrop"
+          >
+        <img 
+          src="@/assets/images/editprofile/exportlogo.png" 
+          alt="Export Logo" 
+          class="exportlogo" 
+        />
+        <p>Select your file or drag and drop</p>
+        <small>png, pdf, jpg, docx accepted <br> </small>
+
+        <input 
+          type="file"
+          ref="fileInput"
+          accept=".png, .pdf, .jpg, .jpeg, .docx"
+          style="display: none"
+          @change="handleFileSelect"
+        />
+
+        <button 
+          type="button" 
+          class="browse-btn" 
+          @click="triggerFileInput"
+        >
+          Browse
+        </button>
+        <p v-if="selectedFileName">
+          Uploaded: <a :href="selectedFileURL" target="_blank">{{ selectedFileName }}</a>
+          <button type="button" class="remove-btn" @click="removeFile">
+            Remove
+          </button>
+        </p>
+
+
+  </div>
+</div>
+
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
       <div class="buttons-group">
         <button type="button" class="cancel-btn" @click="cancelEdit">Cancel</button>
@@ -55,11 +109,18 @@ import { getAuth, updateEmail, updatePassword, sendPasswordResetEmail } from "fi
 import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
 import { app } from "../../../firebase/firebase.js";
 import defaultProfileImage from "@/assets/images/editprofile/Default_pfp.jpg"; // Default profile pic
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
+import { deleteObject } from "firebase/storage";
+import { deleteField } from "firebase/firestore";
+
 
 const auth = getAuth(app);
 const db = getFirestore(app);
-const user = auth.currentUser;
+const storage = getStorage(app);
 
+// user details
+const user = auth.currentUser;
 const firstName = ref("");
 const lastName = ref("");
 const email = ref(user?.email || "");
@@ -68,11 +129,25 @@ const password = ref("");
 const profileImage = ref(null);
 const errorMessage = ref("");
 
+// to display user's details in the form(placeholder)
+const originalFirstName = ref("");
+const originalLastName = ref("");
+const originalEmail = ref("");
+const originalContactNumber = ref("");
+
+// for certificate uploads
+const fileInput = ref(null);
+const selectedFile = ref(null);
+const selectedFileName = ref("");
+const selectedFileURL = ref("");
+const newCertificateURL = ref("");
+
 //Email Validation
 const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value));
 
 //Contact Number Validation
 const isContactNumberValid = computed(() => /^[89][0-9]{7}$/.test(contactNumber.value));
+
 
 //Load User Data from Firestore on component Mount
 onMounted(async () => {
@@ -81,54 +156,98 @@ onMounted(async () => {
   const userDoc = await getDoc(doc(db, "Users", user.uid));// Fetch user data from Firestore
   if (userDoc.exists()) {
     const userData = userDoc.data();
+    originalFirstName.value = userData.firstName;
+    originalLastName.value = userData.lastName;
+    originalEmail.value = userData.email;
+    originalContactNumber.value = userData.contactNumber;
+
     firstName.value = userData.firstName;
     lastName.value = userData.lastName;
     email.value = userData.email;
     contactNumber.value = userData.contactNumber;
     profileImage.value = userData.profileImage || defaultProfileImage;
+
+    // fetch certiciate picture if available
+    if (userData.certificate_picture) {
+      selectedFileURL.value = userData.certificate_picture;
+      selectedFileName.value = userData.certificate_picture.split("/").pop(); // Show file name
+    }
   }
 });
 
-//Reset Password
-const resetPassword = async () => {
-  if (!isEmailValid.value) {
-    errorMessage.value = "Enter a valid email to reset password!";
-    return;
+//pet ownership certificate validation
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
+const handleFileSelect = (event) => {
+  selectedFile.value = event.target.files[0];
+  selectedFileName.value = selectedFile.value ? selectedFile.value.name : '';
+};
+
+const handleFileDrop = (event) => {
+  selectedFile.value = event.dataTransfer.files[0];
+  selectedFileName.value = selectedFile.value ? selectedFile.value.name : '';
+  newCertificateURL.value = "";// Reset new URL since we haven't uploaded yet
+};
+
+const uploadFile = async () => {
+  if (!selectedFile.value) {
+    alert("Please select a file first!");
+    return null; // return null if no file is selected
   }
 
   try {
-    await sendPasswordResetEmail(auth, email.value);
-    alert("Password reset email sent!");
+    const storageReference = storageRef(storage, `certificates/${user.uid}/${selectedFile.value.name}`);
+    
+    // Upload file
+    await uploadBytes(storageReference, selectedFile.value);
+    
+    // Get file URL
+    const downloadURL = await getDownloadURL(storageReference);
+    return downloadURL;
+   
   } catch (error) {
-    console.error("Error sending reset email:", error);
-    errorMessage.value = "Error resetting password: " + error.message;
+    console.error("File upload failed:", error);
+    alert("File upload failed: " + error.message);
+    return null; // Return null in case of an error
   }
 };
 
+// remove file function
+const removeFile = () => {
+  selectedFile.value = null;
+  selectedFileName.value = "";
+  selectedFileURL.value = "";
+};
 
+
+// take user's back to previous page if user press cancel button
 const cancelEdit = () => {
   window.history.back();
 };
 
-
 const updateProfile = async () => {
   errorMessage.value = "";
+
+  //Validate email format
   if (!isEmailValid.value) {
-    alert("Invalid Email Format")
+    alert("Invalid Email Format");
     errorMessage.value = "Invalid Email Format";
     return;
   }
 
+  //Validate contact number format
   if (!isContactNumberValid.value) {
-    alert("Invalid contact number")
+    alert("Invalid contact number");
     errorMessage.value = "Invalid contact number!";
     return;
   }
 
   try {
-    //Check if email already exists in Firestore**
-    const usersRef = db.collection("Users");
-    const querySnapshot = await usersRef.where("email", "==", email.value).get();
+    //Check if email is already taken
+    const usersRef = collection(db, "Users");
+    const querySnapshot = await getDocs(query(usersRef, where("email", "==", email.value)));
 
     if (!querySnapshot.empty && email.value !== user.email) {
       alert("This email is already registered. Please use another email.");
@@ -136,27 +255,46 @@ const updateProfile = async () => {
       return;
     }
 
+    //If the user changed email, update in Firebase Authentication
     if (email.value !== user.email) {
       await updateEmail(user, email.value);
     }
 
-    if (password.value) {
-      await updatePassword(user, password.value);
+    if (selectedFile.value) {
+      newCertificateURL.value = await uploadFile();
     }
 
-    //updating firestore data
+    //If a new certificate was uploaded, store the new URL
+    //If the user removed the certificate, delete it from Firestore & Storage
+    let certificateUpdate = {};
+    if (newCertificateURL.value) {
+      certificateUpdate = { certificate_picture: newCertificateURL.value };
+    } else if (!selectedFileName.value && selectedFileURL.value) {
+      // User removed the file -> delete from Firebase
+      const fileRef = storageRef(storage, selectedFileURL.value);
+      await deleteObject(fileRef);
+      certificateUpdate = { certificate_picture: deleteField() };
+    }
+
+
+    //Update Firestore with new details, including certificate if uploaded
     const userDocRef = doc(db, "Users", user.uid);
     await updateDoc(userDocRef, {
       firstName: firstName.value,
       lastName: lastName.value,
       email: email.value,
       contactNumber: contactNumber.value,
+      ...certificateUpdate //Only update certificate if a new file was uploaded
     });
+
+    //Update UI after saving
+    selectedFileURL.value = newCertificateURL.value || "";
+    selectedFileName.value = newCertificateURL.value ? newCertificateURL.value.split("/").pop() : "";
 
     alert("Profile updated successfully!");
   } catch (error) {
     console.error("Error updating profile:", error);
-    alert("Error Upating Profile:  " + error.message);
+    alert("Error Updating Profile: " + error.message);
     errorMessage.value = "Error updating profile: " + error.message;
   }
 };
@@ -175,10 +313,17 @@ const updateProfile = async () => {
 .edit-profile-container {
   width: 70%;
   margin: auto;
-  background-color: #f9f0e1;
+  background-color: F5F5F5;
   padding: 2em;
   border-radius: 1em;
   font-family: "Poppins", sans-serif;
+}
+
+.logo {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  width: 5em;
 }
 
 .main-heading {
@@ -194,10 +339,13 @@ const updateProfile = async () => {
 }
 
 .profile-image {
-  width: 4em;
-  height: 4em;
+  width: 5em;
+  height: 5em;
   border-radius: 50%;
   object-fit: cover;
+  position: absolute;
+  top: 1em;
+  right: 20em;
 }
 
 .form-section {
@@ -248,30 +396,25 @@ const updateProfile = async () => {
   text-decoration: underline;
 }
 
-.upload-section {
-  margin-top: 1em;
-  text-align: left;
-}
-
-.upload-title {
-  font-weight: bold;
-  font-size: 1em;
-}
-
-.upload-description {
-  font-size: 0.8em;
-  color: #6e6e6e;
-  margin-bottom: 1em;
-}
-
-.upload-box {
-  border: 0.1em dashed #ccc;
-  border-radius: 0.8em;
-  padding: 2em;
+.upload-certificate {
+  background: #f9f9f9;
+  padding: 1.5em;
+  border-radius: 0.75em;
   text-align: center;
-  background-color: #faf6f1;
-  font-size: 0.9em;
-  color: #7a7a7a;
+  margin-bottom: 1.5em;
+}
+
+.file-upload-box {
+  border: 0.15em dashed #ccc;
+  padding: 1.5em;
+  border-radius: 0.75em;
+  cursor: pointer;
+}
+
+.file-upload-box p {
+  margin: 0;
+  font-size: 1em;
+  color: #555;
 }
 
 .browse-button {
@@ -303,12 +446,14 @@ const updateProfile = async () => {
 
 .cancel-btn {
   background-color: #ffffff;
-  color: #000;
+  color: #222f61;
   border: 0.05em solid #9c9c9c;
 }
+
 
 .save-btn {
   background-color: #222f61;
   color: #ffffff;
 }
+
 </style>
