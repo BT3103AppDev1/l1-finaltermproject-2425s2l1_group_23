@@ -4,21 +4,13 @@
         @search="handleSearch"
         @filter-category="handleCategoryFilter"
     />
-    <div class="marketplace-container">
-      <!-- <section class="search-bar">
-        <input
-          type="text"
-          placeholder="Search for pets..."
-          v-model="searchQuery"
-          @input="searchPets"
-        />
-      </section> -->
-  
-      <section class="pet-list">
-        <Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />
-      </section>
-    </div>
-  </template>
+
+  <div class="marketplace-container">
+    <section class="pet-list">
+      <Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />
+    </section>
+  </div>
+</template>
   
   <script>
   import { ref, onMounted, computed } from 'vue';
@@ -100,7 +92,8 @@
   .marketplace-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    margin-left: 150px;
     padding: 20px;
     background-color: #f7f3eb;
   }
@@ -129,12 +122,10 @@
     border-radius: 5px;
   }
   
-  /* new commit */
-  
   .pet-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: center;
+    justify-content: flex-start;
   }
   </style>

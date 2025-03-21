@@ -10,17 +10,17 @@
       <h1>Welcome, Ming Han!</h1>
     </header>
 
-    <!-- Search Bar -->
-    <div class="search-container">
-      <input
-        type="text"
-        placeholder="🔎 Search for your new furry friend..."
-        v-model="searchQuery"
-      />
-      <button @click="searchPets">Search</button>
+    <!-- Search Bar (Now Properly Centered) -->
+    <div class="search-wrapper">
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="🔎 Search for your new furry friend..."
+          v-model="searchQuery"
+        />
+        <button @click="searchPets">Search</button>
+      </div>
     </div>
-
-
 
     <div class="div-text"> 
       <h1> What kind of pet are you looking for? </h1>
@@ -39,8 +39,6 @@
       </div>
     </section>
     
-
-
     <div class="div-text"> 
       <h1> Our cutest additions... </h1>
     </div>
@@ -80,7 +78,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 @import url("../../assets/styles/font.css");
 
@@ -88,7 +85,7 @@ export default {
 .marketplace-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* Ensures everything is centered */
   padding: 20px;
   background-color: #f7f3eb;
   max-width: 1200px;
@@ -99,39 +96,50 @@ export default {
 .header {
   display: flex;
   align-items: center;
-  gap: 15px;
   width: 100%;
+  margin-left: -180px;
+  gap: 100px;
   padding: 10px 20px;
   justify-content: flex-start;
 }
 
 .header h1 { 
   font-family: "FredokaOne-Regular";
-  font-size: 24px
+  font-size: 24px;
 }
+
 .logo {
   width: 60px; /* Adjust as needed */
   height: auto;
+}
+
+/* Search Bar Wrapper (To Center the Whole Search Area) */
+.search-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 10px;
 }
 
 /* Search Bar */
 .search-container {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: -10px;
   gap: 10px;
-  width: 100%; /* Make sure the container takes full width */
-  max-width: 600px; /* Adjust width as needed */
 }
 
 .search-container input {
-  flex: 1; /* Makes the input expand to fill the space */
+  flex: 1;
   padding: 12px 16px;
   border-radius: 7px;
   border: 2px solid #222f61;
   font-family: "Raleway-SemiBold";
   font-size: 16px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  position: relative;
+  text-align: left;
 }
 
 .search-container input:focus {
@@ -150,18 +158,16 @@ export default {
   border-radius: 7px;
   padding: 12px 24px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
 .search-container button:hover {
   background-color: #1a1f4f;
 }
 
-
+/* Section Titles */
 .div-text { 
   width: 100%;
-  align-items: center;
-  justify-items: flex-start;
+  justify-content: flex-start;
   margin-top: 10px;
 }
 
@@ -181,15 +187,13 @@ export default {
 
 .categories {
   display: flex;
-  justify-content: space-between; /* Ensures even spacing from start to end */
-  gap: 20px; /* Keeps some spacing between items */
-  flex-wrap: nowrap; /* Prevents wrapping */
-  width: 100%; /* Ensure it spans the full width */
-  max-width: 1200px; /* Adjust to match the container */
-  margin: 0 auto; /* Centers the entire row */
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
-
-
 
 .category-btn {
   background: #d3cff9;
@@ -217,6 +221,4 @@ export default {
   justify-content: center;
   margin-top: -10px;
 }
-/* new change! */
 </style>
-
