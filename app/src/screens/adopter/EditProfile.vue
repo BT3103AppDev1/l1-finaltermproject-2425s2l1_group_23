@@ -2,7 +2,7 @@
   <div class="edit-profile-container">
     <img src="@/assets/images/PawfectHome-logo.png" alt="Pawfect Home Logo" class="logo" />
 
-    <h1>Edit Profile</h1>
+    <h1 class = "edit-profile">Edit Profile</h1>
     <div class="profile-image-container">
       <img :src="profileImage || defaultProfileImage" class="profile-image" alt="Profile Picture" />
     </div>
@@ -39,15 +39,15 @@
       <div class="form-input-group password-group">
         <label>Password</label>
         <input type="password" placeholder="********************" disabled />
-        <button type="button" class="reset-password-btn" @click="resetPassword">
-          Reset Password
-        </button>
       </div>
+      <button type="button" class="reset-password-btn" @click="resetPassword">
+          Reset Password
+      </button>
 
 
       <div class="upload-certificate">
-        <label>Upload your pet ownership course certificate</label>
-        <p v-if = "!selectedFileName">
+        <label class="upload-label">Upload your pet ownership course certificate</label>
+        <p v-if = "!selectedFileName" class = "upload-description">
           You have not uploaded a pet ownership course certificate.<br />
           To adopt a dog or cat, you must first upload your pet ownership course certificate.
         </p>
@@ -81,7 +81,7 @@
         >
           Browse
         </button>
-        <p v-if="selectedFileName">
+        <p v-if="selectedFileName" class="uploaded-file">
           Uploaded: <a :href="selectedFileURL" target="_blank">{{ selectedFileName }}</a>
           <button type="button" class="remove-btn" @click="removeFile">
             Remove
@@ -120,16 +120,16 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 // user details
-const user = auth.currentUser;
+const user = auth.currentUser; //get currently logged-in user
 const firstName = ref("");
 const lastName = ref("");
-const email = ref(user?.email || "");
+const email = ref(user?.email || ""); //get currently logged-in user's email
 const contactNumber = ref("");
 const password = ref("");
 const profileImage = ref(null);
 const errorMessage = ref("");
 
-// to display user's details in the form(placeholder)
+// to display user's details in the form (placeholder)
 const originalFirstName = ref("");
 const originalLastName = ref("");
 const originalEmail = ref("");
@@ -139,8 +139,8 @@ const originalContactNumber = ref("");
 const fileInput = ref(null);
 const selectedFile = ref(null);
 const selectedFileName = ref("");
-const selectedFileURL = ref("");
-const newCertificateURL = ref("");
+const selectedFileURL = ref(""); // Stores existing Firestore certificate URL
+const newCertificateURL = ref(""); // Stores new uploaded certificate URL
 
 //Email Validation
 const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value));
@@ -167,7 +167,7 @@ onMounted(async () => {
     contactNumber.value = userData.contactNumber;
     profileImage.value = userData.profileImage || defaultProfileImage;
 
-    // fetch certiciate picture if available
+    // fetch certiciate if available
     if (userData.certificate_picture) {
       selectedFileURL.value = userData.certificate_picture;
       selectedFileName.value = userData.certificate_picture.split("/").pop(); // Show file name
@@ -205,7 +205,7 @@ const uploadFile = async () => {
     
     // Get file URL
     const downloadURL = await getDownloadURL(storageReference);
-    return downloadURL;
+    return downloadURL;  // Return new certificate URL
    
   } catch (error) {
     console.error("File upload failed:", error);
@@ -304,6 +304,9 @@ const updateProfile = async () => {
 <style scoped>
 @import url("../../assets/styles/font.css");
 
+.edit-profile {
+  font-family: 'Fredoka One';
+}
 .error-message {
   color: #ff0000;
   font-size: 0.8em;
@@ -390,18 +393,36 @@ const updateProfile = async () => {
   top: 2.2em;
   background: none;
   border: none;
-  color: #8a8989;
+  color: 7C7C7C;
   cursor: pointer;
   font-size: 0.8em;
   text-decoration: underline;
 }
 
+
 .upload-certificate {
-  background: #f9f9f9;
+  background-color:F5F5F5;
   padding: 1.5em;
   border-radius: 0.75em;
   text-align: center;
   margin-bottom: 1.5em;
+}
+
+.upload-label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #222;
+  display: block;
+  margin-bottom: 0.5em;
+}
+ 
+.upload-description {
+  font-family: Raleway Semibold;
+  font-size: 0.95em;
+  color: #7c7c7c;
+  line-height: 1.5;
+  margin-bottom: 1em;
 }
 
 .file-upload-box {
@@ -450,10 +471,18 @@ const updateProfile = async () => {
   border: 0.05em solid #9c9c9c;
 }
 
+.cancel-btn:hover {
+  background-color: whitesmoke;
+}
+
 
 .save-btn {
   background-color: #222f61;
   color: #ffffff;
+}
+
+.save-btn:hover {
+  background-color: #004080;
 }
 
 </style>
