@@ -38,7 +38,7 @@
 
       <div class="form-input-group password-group">
         <label>Password</label>
-        <input type="password" placeholder="********************" disabled />
+        <input type="password" placeholder="*************************" disabled />
       </div>
       <button type="button" class="reset-password-btn" @click="resetPassword">
           Reset Password
@@ -46,11 +46,14 @@
 
 
       <div class="upload-certificate">
-        <label class="upload-label">Upload your pet ownership course certificate</label>
-        <p v-if = "!selectedFileName" class = "upload-description">
-          You have not uploaded a pet ownership course certificate.<br />
-          To adopt a dog or cat, you must first upload your pet ownership course certificate.
+        <div class="upload-info">
+          <label class="upload-label">Upload your pet ownership course certificate</label>
+          <p v-if = "!selectedFileName" class = "upload-description">
+            You have not uploaded a pet ownership course certificate.<br />
+            To adopt a dog or cat, you must first upload your pet ownership course certificate.
         </p>
+        </div>
+        
 
         <div 
           class="file-upload-box"
@@ -305,7 +308,7 @@ const updateProfile = async () => {
 @import url("../../assets/styles/font.css");
 
 .edit-profile {
-  font-family: 'Fredoka One';
+  font-family: "FredokaOne-Regular";
 }
 .error-message {
   color: #ff0000;
@@ -314,12 +317,12 @@ const updateProfile = async () => {
 }
 
 .edit-profile-container {
+  font-family: "Poppins", sans-serif;
+  padding: 2em;
   width: 70%;
   margin: auto;
   background-color: F5F5F5;
-  padding: 2em;
   border-radius: 1em;
-  font-family: "Poppins", sans-serif;
 }
 
 .logo {
@@ -370,6 +373,8 @@ const updateProfile = async () => {
 }
 
 .form-input-group label {
+  font-family: "Raleway-SemiBold";
+  color: #1c1c1c;
   font-weight: bold;
   margin-bottom: 0.4em;
   text-align: left;
@@ -383,20 +388,21 @@ const updateProfile = async () => {
   background-color: #ffffff;
 }
 
+/* password */
 .password-group {
   position: relative;
 }
 
 .reset-password-btn {
-  position: absolute;
-  right: 0;
-  top: 2.2em;
+  font-family: "Poppins-Medium";
+  color: #7C7C7C;
+  font-style: italic;
+  position: relative;
+  left: 95em;
   background: none;
   border: none;
-  color: 7C7C7C;
   cursor: pointer;
   font-size: 0.8em;
-  text-decoration: underline;
 }
 
 
@@ -406,46 +412,68 @@ const updateProfile = async () => {
   border-radius: 0.75em;
   text-align: center;
   margin-bottom: 1.5em;
+ 
 }
 
+.upload-info {
+  text-align: left;
+  margin-left: -1.5em;
+}
+
+
 .upload-label {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Raleway-SemiBold";
   font-size: 1.1em;
-  font-weight: 600;
-  color: #222;
+  color: #1c1c1c;
   display: block;
-  margin-bottom: 0.5em;
 }
  
 .upload-description {
-  font-family: Raleway Semibold;
+  font-family: "Raleway-Light";
+  color: #1c1c1c;
   font-size: 0.95em;
-  color: #7c7c7c;
   line-height: 1.5;
-  margin-bottom: 1em;
 }
 
 .file-upload-box {
   border: 0.15em dashed #ccc;
   padding: 1.5em;
   border-radius: 0.75em;
-  cursor: pointer;
+  cursor: pointer;     
+  width: 100%;  
+  margin-left: -1.5em;
 }
 
 .file-upload-box p {
-  margin: 0;
+  font-family: "Raleway-SemiBold";
+  color: #000000;
+  margin-bottom: 1em;
   font-size: 1em;
-  color: #555;
 }
 
-.browse-button {
-  background-color: #9f9c9c;
-  color: white;
+.file-upload-box small {
+  font-family: "Poppins-Regular";
+  color: #000000;
+  opacity: 0.7;
+
+}
+
+.browse-btn {
+  font-family: "Poppins-Bold";
+  color: #F7F3EB;
+  background-color: #858585;
+  font-size:12px;
+  width: 12.8em;           
+  height: 3.3em;   
   border-radius: 0.5em;
   padding: 0.5em 1em;
   border: none;
   cursor: pointer;
-  margin-top: 1em;
+  margin-top: 3em;
+}
+
+.browse-btn:hover {
+  background-color:  grey ;
 }
 
 .buttons-group {
@@ -457,17 +485,21 @@ const updateProfile = async () => {
 
 .cancel-btn,
 .save-btn {
+  font-family: "Raleway-Bold";
   padding: 0.6em 2em;
   border-radius: 2em;
+  width: 10.375em; 
+  height: 3.625em; 
   border: none;
   font-weight: bold;
   cursor: pointer;
   font-size: 0.9em;
+  font-size: 16;
 }
 
 .cancel-btn {
-  background-color: #ffffff;
   color: #222f61;
+  background-color: #ffffff;
   border: 0.05em solid #9c9c9c;
 }
 
