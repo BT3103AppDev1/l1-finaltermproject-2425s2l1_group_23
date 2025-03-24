@@ -31,7 +31,7 @@
           />
         </div>
       </div>
-      <p><button class="forgot-password">Forgot password</button></p>
+      <p><button class="forgot-password" @click="forgotPassword">Forgot password</button></p>
       <div class="buttons">
         <p><button class="login-button" @click="login">Login</button></p>
         <p>
@@ -65,6 +65,10 @@ const goToNextPage = (isPetLister) => {
   } else {
     router.push("/home");
   }
+};
+
+const forgotPassword = () => {
+  router.push("/forget-password");
 };
 
 const login = async () => {

@@ -7,6 +7,7 @@ import Onboarding2 from "../screens/adopter/Onboarding2.vue";
 import PetListing from "../screens/lister/PetListing.vue";
 import OnboardingQn from "../screens/adopter/OnboardingQn.vue";
 import MarketPlace from "../screens/adopter/MarketPlace.vue";
+import ForgetPassword from "../screens/common/ForgetPassword.vue";
 import PetProfile from "../screens/adopter/PetProfile.vue";
 
 const routes = [
@@ -49,6 +50,11 @@ const routes = [
     path: "/home",
     name: "MarketPlace",
     component: MarketPlace,
+  },
+  {
+    path: "/forget-password",
+    name: "ForgetPassword",
+    component: ForgetPassword,
   },
   {
     path: "/pet-profile",
