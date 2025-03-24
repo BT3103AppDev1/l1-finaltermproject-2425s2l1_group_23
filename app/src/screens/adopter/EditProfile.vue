@@ -537,7 +537,7 @@ const updateProfile = async () => {
   color: #7c7c7c;
   font-style: italic;
   position: relative;
-  left: 95em;
+  left: 71em;
   background: none;
   border: none;
   cursor: pointer;
