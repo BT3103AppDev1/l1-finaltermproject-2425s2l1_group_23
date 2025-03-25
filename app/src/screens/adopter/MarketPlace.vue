@@ -1,11 +1,11 @@
 <template>
-    <MarketPlaceHeader
-        :userName="'MingHan'"
-        @search="handleSearch"
-        @filter-category="handleCategoryFilter"
-    />
-    <div class="marketplace-container">
-      <!-- <section class="search-bar">
+  <MarketPlaceHeader
+    :userName="'MingHan'"
+    @search="handleSearch"
+    @filter-category="handleCategoryFilter"
+  />
+  <div class="marketplace-container">
+    <!-- <section class="search-bar">
         <input
           type="text"
           placeholder="Search for pets..."
@@ -128,8 +128,6 @@
     border: 2px solid #222f61;
     border-radius: 5px;
   }
-  
-  /* new commit */
   
   .pet-list {
     display: flex;
