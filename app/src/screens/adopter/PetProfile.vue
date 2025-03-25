@@ -3,10 +3,10 @@
         <div class="fixed-container">
             <img src="@/assets/images/PetProfileMockUp/ProfileImage.jpg" alt="ProfileImage" class="profile-img"/>
             <div class = "treat-button">
-                <button class = "rectangular-button">
+                <button class = "rectangular-button" @click="sendTreat":disabled="treatSent">
                     <p class="treat-button-text">🐾 Like this pet? <span class="treat-button-bolded-text">Send a treat!</span></p>
                 </button>
-                <button class= "circle-button">
+                <button class= "circle-button" @click="sendTreat":disabled="treatSent">
                     <img src = "@/assets/images/PetProfileMockUp/TreatButton.png" alt="TreatButton" class="treat-img"/>
                 </button>
             </div>
@@ -121,12 +121,13 @@
 <script>
 
 import { db } from "../../../firebase/firebase.js";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, increment } from "firebase/firestore";
 
 export default {
     data() {
         return {
-        petData: {}
+        petData: {},
+        treatSent: false 
         };
     },
 
@@ -161,6 +162,24 @@ export default {
                 }
             } catch (error) {
                 console.log("Error fetching pet listing", error);
+            }
+        },
+
+        async sendTreat() {
+            /* get pet listing id here */
+            let petListingId = "testing"; /* this will be changed once marketplace set up a fn to send the listing id to here */
+            
+            const petDocRef = doc(db, "Pet_Listings", petListingId);
+
+            /* get the doc with the pet listing id here */
+            try {
+                await updateDoc(petDocRef, {
+                    numTreats: increment(1)
+                })
+                this.treatSent = true;
+                console.log("Treat successfully sent to pet listing!");
+            } catch (error) {
+                console.log("Error sending treat", error);
             }
         }
     }
@@ -301,6 +320,7 @@ treat-img {
     align-items: center;
     justify-content: center;
     margin-left: 0em;
+    margin-bottom: -2em;
 }
 
 .age, .gender, .subheader{
@@ -314,10 +334,6 @@ treat-img {
 .pet-age, .pet-gender {
     font-family: 'Raleway-SemiBold';
     font-size: 1em;
-}
-
-.pet-gender {
-    color: blue;
 }
 
 .icon {
