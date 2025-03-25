@@ -125,17 +125,7 @@
           <button type="button" class="browse-btn" @click="triggerFileInput">
             Browse
           </button>
-          <!---
-          <p v-if="selectedFileName" class="uploaded-file">
-            Uploaded:
-            <a :href="selectedFileURL" target="_blank">{{
-              selectedFileName
-            }}</a>
-            <button type="button" class="remove-btn" @click="removeFile">
-              Remove
-            </button>
-          </p>
-        -->
+          
           <p v-if="selectedFileName" class="uploaded-file">
             Uploaded:
             <a
@@ -164,6 +154,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
 import {
   getAuth,
   updateEmail,
@@ -184,11 +175,17 @@ import defaultProfileImage from "@/assets/images/editprofile/Default_pfp.jpg"; /
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import { deleteObject } from "firebase/storage";
-//import { deleteField } from "firebase/firestore";
+
 
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
+const router = useRouter();
+
+const resetPassword = () => {
+  router.push("/reset-password");
+};
+
 
 /*
 // for TESTING: artificially log in
@@ -294,13 +291,7 @@ const fetchUserData = async () => {
     contactNumber.value = userData.contactNumber;
     profileImage.value = userData.profileImage || defaultProfileImage;
 
-    /*
-    // fetch certiciate if available
-    if (userData.certificate_picture) {
-      selectedFileURL.value = userData.certificate_picture;
-      selectedFileName.value = userData.certificate_picture.split("/").pop(); // Show file name
-    }
-      */
+    
     // Fetch certificate if available
     if (userData.certificate_base64) {
       selectedFileBase64.value = userData.certificate_base64;
@@ -428,10 +419,7 @@ const updateProfile = async () => {
       ...certificateUpdate, //Only update certificate if a new file was uploaded
     });
 
-    //selectedFileURL.value = ""; // Clear the URL since we're not using it
-    //selectedFileName.value = ""; // Clear the file name
-    //selectedFileBase64.value = "";
-
+    
     alert("Profile updated successfully!");
   } catch (error) {
     console.error("Error updating profile:", error);

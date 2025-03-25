@@ -8,6 +8,7 @@ import PetListing from "../screens/lister/PetListing.vue";
 import OnboardingQn from "../screens/adopter/OnboardingQn.vue";
 import MarketPlace from "../screens/adopter/MarketPlace.vue";
 import EditProfile from "../screens/adopter/EditProfile.vue";
+import ResetPassword from "../screens/adopter/ResetPassword.vue";
 
 const routes = [
   {
@@ -55,6 +56,12 @@ const routes = [
     name: "EditProfile",
     component: EditProfile,
 
+  },
+
+  {
+    path: "/reset-password",
+    name: "ResetPassword",
+    component: ResetPassword,
   },
 ];
 
