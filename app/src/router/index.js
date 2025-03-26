@@ -11,6 +11,9 @@ import ForgetPassword from "../screens/common/ForgetPassword.vue";
 import PetProfile from "../screens/adopter/PetProfile.vue";
 import EditProfile from "../screens/adopter/EditProfile.vue";
 import ResetPassword from "../screens/adopter/ResetPassword.vue";
+import AddListing1 from "../screens/lister/AddListing1.vue";
+import AddListing2 from "../screens/lister/AddListing2.vue";
+
 
 
 const routes = [
@@ -75,6 +78,18 @@ const routes = [
     path: "/reset-password",
     name: "ResetPassword",
     component: ResetPassword,
+  },
+
+  {
+    path: '/addlisting1',
+    name: 'AddListing1',
+    component: AddListing1,
+  },
+
+  {
+    path: "/addlisting2",
+    name: "AddListing2",
+    component: AddListing2,
   },
 ];
 
