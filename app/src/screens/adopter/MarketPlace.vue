@@ -1,11 +1,11 @@
 <template>
-  <MarketPlaceHeader
-    :userName="'MingHan'"
-    @search="handleSearch"
-    @filter-category="handleCategoryFilter"
-  />
-  <div class="marketplace-container">
-    <!-- <section class="search-bar">
+    <MarketPlaceHeader
+        :userName="'MingHan'"
+        @search="handleSearch"
+        @filter-category="handleCategoryFilter"
+    />
+    <div class="marketplace-container">
+      <!-- <section class="search-bar">
         <input
           type="text"
           placeholder="Search for pets..."
@@ -100,7 +100,8 @@
   .marketplace-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    margin-left: 150px;
     padding: 20px;
     background-color: #f7f3eb;
   }
@@ -133,6 +134,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: center;
+    justify-content: flex-start;
   }
   </style>
