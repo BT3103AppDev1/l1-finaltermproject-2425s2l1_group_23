@@ -107,11 +107,24 @@
             </div> 
             
             <div class="report-button">
-                <button class = "red-button">
+                <button class = "red-button" @click="reportClick">
                     <img src = "@/assets/images/PetProfileMockUp/FlagIcon.png" alt="FlagIcon" class="icon"/>
                 </button>
-                <button class= "text-button">
+                <button class= "text-button" @click="reportClick">
                     <p class="report-text">Report</p>
+                </button>
+            </div>
+
+        </div>
+        <div class="report-background" v-if="reportButtonClicked">
+            <div class="report-modal">
+                <p class="report-header">Report this listing? 🚩</p>
+                <p class="report-subtitle"> Please report this listing only if you believe it violates our community guidelines. Unnecessary reports can delay our response to genuine concerns. Thank you for helping us maintain a safe and trustworthy community.</p>
+                <button class="continue-button">
+                    <p class="continue-text">Continue</p>
+                </button>
+                <button class="cancel-button" @click="reportUnclick">
+                    <p class="cancel-text">Cancel</p>
                 </button>
             </div>
         </div>
@@ -121,13 +134,14 @@
 <script>
 
 import { db } from "../../../firebase/firebase.js";
-import { getDoc, doc, updateDoc, increment } from "firebase/firestore";
+import { getDoc, doc, updateDoc, increment, arrayUnion } from "firebase/firestore";
 
 export default {
     data() {
         return {
         petData: {},
-        treatSent: false 
+        treatSent: false,
+        reportButtonClicked: false
         };
     },
 
@@ -142,6 +156,8 @@ export default {
             it will lead to this page, hence must send the pet listing id to this page
             */
 
+            /* get user id here */
+            let userId = 'testing';
             /* get pet listing id here */
             let petListingId = "testing"; /* this will be changed once marketplace set up a fn to send the listing id to here */
             
@@ -157,6 +173,12 @@ export default {
                     /* grab the pet details here */
                     this.petData = docSnap.data();
                     console.log("Document data:", docSnap.data());
+                    
+                    if (this.petData.users.includes(userId)) {
+                    this.treatSent = true;
+                    console.log("Treat already sent to pet listing!");
+                    return;
+                }
                 } else {
                     console.log("No such pet in firebase")
                 }
@@ -165,22 +187,44 @@ export default {
             }
         },
 
+        async treatStatus() {
+
+        },
+
+
         async sendTreat() {
             /* get pet listing id here */
             let petListingId = "testing"; /* this will be changed once marketplace set up a fn to send the listing id to here */
-            
+            let userId = 'testing';
             const petDocRef = doc(db, "Pet_Listings", petListingId);
 
             /* get the doc with the pet listing id here */
             try {
-                await updateDoc(petDocRef, {
-                    numTreats: increment(1)
-                })
-                this.treatSent = true;
-                console.log("Treat successfully sent to pet listing!");
+                if (this.treatSent) {
+                    /* get user id here, change when got actual user alrd*/
+                    console.log("Treat already sent to pet listing!");
+                    return;
+                } else {
+                    await updateDoc(petDocRef, {
+                        numTreats: increment(1),
+                        users:  arrayUnion(userId)
+                    })
+                    this.treatSent = true;
+                    console.log("Treat successfully sent to pet listing!");
+
+                }
             } catch (error) {
                 console.log("Error sending treat", error);
             }
+        },
+
+        reportClick() {
+            this.reportButtonClicked = true;
+            console.log("Report button clicked");
+        },
+
+        reportUnclick() {
+            this.reportButtonClicked = false;
         }
     }
 }
@@ -363,6 +407,7 @@ treat-img {
     border-radius: 2em;
     align-items: center;
     justify-content: center;
+    transition: background-color 0.3s ease-in-out, transform 0.4s ease-in-out;
 }
 
 .report-button {
@@ -371,6 +416,12 @@ treat-img {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.red-button:hover {
+    background-color: rgb(218, 112, 113);
+    transform: scale(1.2);
+    transition: background-color 0.3s ease-in-out, transform 0.4s ease-in-out;
 }
 
 .report-text {
@@ -421,6 +472,75 @@ treat-img {
 
 .info {
     margin-bottom: 2em;
+}
+
+.report-background {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.report-modal {
+    background-color: #ffffff;
+    width: 45em;
+    height: 27em;
+    border-radius: 1.5em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.report-header {
+    font-family: 'FredokaOne-Regular';
+    font-size: 2em;
+    color: #696868;
+    margin: 0em;
+}
+
+.report-subtitle {
+    font-family: 'Raleway-Regular';
+    font-size: 1em;
+    color: #000000;
+    text-align: center;
+    padding: 0 9em;
+}
+
+.continue-button{
+    background-color: #8C9DE1;
+    border-width: 0em;
+    border-radius: 1em;
+    width: 15em;
+    height: 3em;
+    margin: 1em;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    cursor: pointer;
+}
+
+.continue-button:hover {
+    background-color: #c3cef9;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.continue-text {
+    font-family: 'Raleway-Bold';
+    font-size: 1.25em;
+    color: #ffffff;
+}
+
+.cancel-button {
+    background-color: rgba(0,0,0,0);
+    border-width: 0em;
+    font-family: 'Raleway-Regular';
+    margin-top: -1.5em;
+    cursor: pointer;
 }
 
 </style>
