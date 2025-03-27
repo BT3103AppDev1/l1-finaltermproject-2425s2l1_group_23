@@ -1,11 +1,27 @@
 <template>
-    <nav class="listers-navbar">
-      <img src="@/assets/images/navbar/home.png" alt="Home" class="icon" />
-      <img src="@/assets/images/navbar/chat.png" alt="Chat" class="icon" />
-      <img src="@/assets/images/navbar/edit.png" alt="Edit" class="icon" />
+    <div class="adopters-navbar">
+      <!-- Home (MarketPlace.vue) -->
+      <router-link to="/home" class="icon-button">
+        <img src="@/assets/images/navbar/home.png" alt="Home" class="icon" />
+      </router-link>
+  
+      <!-- Chat  -->
+      <router-link to="/chat" class="icon-button">
+        <img src="@/assets/images/navbar/chat.png" alt="Chat" class="icon" />
+      </router-link>
+  
+      <!-- Edit Profile (EditProfile.vue) -->
+      <router-link to="/editprofile" class="icon-button">
+        <img src="@/assets/images/navbar/edit.png" alt="Edit" class="icon" />
+      </router-link>
+  
       <div class="spacer"></div>
-      <img src="@/assets/images/navbar/logout-icon.png" alt="Logout" class="icon" />
-    </nav>
+  
+      <!-- Logout (redirect to Login.vue -->
+      <router-link to="/login" class="icon-button">
+        <img src="@/assets/images/navbar/logout.png" alt="Logout" class="icon" />
+      </router-link>
+    </div>
   </template>
   
   <script>
@@ -15,31 +31,39 @@
   </script>
   
   <style scoped>
-  .listers-navbar {
+  .Listers-navbar {
     width: 80px;
-    height: 100vh;
+    height: calc(90vh - 100px);
     background-color: #c9d0e0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding: 20px 0;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
     position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
+    top: 100px;
+    border-radius: 20px;
+
+  }
+  .router-link-exact-active .icon {
+  filter: brightness(1.4); 
+        opacity: 1;
+}
+
+  .icon-button {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
   }
   
   .icon {
-    width: 32px;
-    height: 32px;
-    margin: 30px 0;
-    cursor: pointer;
+    width: 24px;
+    height: 24px;
     transition: transform 0.2s ease;
   }
   
-  .icon:hover {
+  .icon-button:hover .icon {
     transform: scale(1.1);
   }
   

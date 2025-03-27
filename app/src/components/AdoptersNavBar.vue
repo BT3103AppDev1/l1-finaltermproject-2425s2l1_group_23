@@ -45,8 +45,8 @@
     align-items: center;
     position: fixed;
     top: 100px;
-    left: 0;
-    z-index: 100;
+    border-radius: 20px;
+
   }
   .router-link-exact-active .icon {
   filter: brightness(1.4); 
