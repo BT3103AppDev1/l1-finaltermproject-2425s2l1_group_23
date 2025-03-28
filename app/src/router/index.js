@@ -13,6 +13,7 @@ import EditProfile from "../screens/adopter/EditProfile.vue";
 import ResetPassword from "../screens/adopter/ResetPassword.vue";
 import AddListing1 from "../screens/lister/AddListing1.vue";
 import AddListing2 from "../screens/lister/AddListing2.vue";
+import AddListing3 from "../screens/lister/AddListing3.vue";
 
 
 
@@ -81,8 +82,8 @@ const routes = [
   },
 
   {
-    path: '/addlisting1',
-    name: 'AddListing1',
+    path: "/addlisting1",
+    name: "AddListing1",
     component: AddListing1,
   },
 
@@ -91,6 +92,13 @@ const routes = [
     name: "AddListing2",
     component: AddListing2,
   },
+
+  {
+    path: "/addlisting3",
+    name: "AddListing3",
+    component: AddListing3,
+  },
+
 ];
 
 const router = createRouter({

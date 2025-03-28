@@ -50,7 +50,7 @@
   import { ref } from "vue";
   import { useRouter } from "vue-router";
   import { getAuth, onAuthStateChanged } from "firebase/auth";
-  import { getFirestore, collection, addDoc } from "firebase/firestore";
+  import { doc, getFirestore, collection, addDoc } from "firebase/firestore";
   import { app } from "../../../firebase/firebase.js";
 
   
@@ -70,11 +70,16 @@
     }
   
     try {
-      await addDoc(collection(db, "Pet_Listings"), {
+        const docRef = await addDoc(collection(db, "Pet_Listings"), {
         petType: petType.value,
         userID: user.uid,
         createdAt: new Date()
-      });
+    });
+
+
+    console.log("Stored listing ID:", docRef.id);
+      localStorage.setItem("currentPetListingId", docRef.id);
+      
   
       router.push("/addlisting2"); // Redirect to next screen
     } catch (error) {
@@ -84,7 +89,7 @@
   };
   </script>
   
-  
+
   <style scoped>
   @import url("../../assets/styles/font.css");
   
