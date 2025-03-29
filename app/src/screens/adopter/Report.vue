@@ -85,25 +85,33 @@ export default {
             const petDocRef = doc(db, "Reports", petListingId);
             const petListingsRef = doc(db, "Pet_Listings", petListingId);
             const userDocRef = doc(db, "Users", userId);
-            
+
+            /* If no option was selected, user will be alerted to select a reason */
             if (!this.selectedOption) {
                 alert("Please select a reason for reporting.");
                 return;
             }
+
+            /* If no elaboration was given, user will be alerted to give an elaboration */
             if (!this.reason) {
                 alert("Please provide an explanation.");
                 return;
             }
+
+            /* If not enough elaboration was given, user will be alerted to give more elaboration, reason behind it is for administrator to have a more effective review of the report*/
             if (this.selectedOption === "Others" && this.reason.length < 10) {
                 alert("Please provide a more detailed explanation.");
                 return;
             }
+
+            /* If too much elaboration was given, user will be alerted to shorten their elaboration for administrator to efficiently review a report */
             if (this.reason.length > 500) {
                 alert("Please provide a shorter explanation.");
                 return;
             }
 
             try {
+                /* Check if the pet listing exists */
                 const petListingDoc = await getDoc(petListingsRef);
                 console.log("Pet Listing Document:", petListingDoc.data());
                 
@@ -114,6 +122,7 @@ export default {
                     return;
                 }
 
+                /* Check if the user has already reported this pet listing */
                 if (petListingData.userReports.includes(userId)) {
                     alert("You have already reported this pet listing.");
                     return;
@@ -125,20 +134,23 @@ export default {
                     userId: userId
                 };
 
-                /* get the doc with the pet listing id here */
+                /* Add in the report data in the Reports collection */
                 await updateDoc(petDocRef, {
                     users: arrayUnion(reportData),
                 });
 
+                /* Add in the userId to the array of users, userReports, that have reported the pet in the Pet_Listings collection */
                 await updateDoc(petListingsRef, {
                     userReports: arrayUnion(userId),
                 });
 
+                 /* Add in the petListingId to the array of pets, reportedPets, in the Users collection such that we will not render the reported pet listing in the user's marketplace */
                 await updateDoc(userDocRef, {
                     reportedPets: arrayUnion(petListingId),
                 });
 
                 console.log("Report successfully sent to pet listing");
+                /* Alert will be shown to users who have successfully sent in a report */
                 this.alertEnabled=true;
             } catch (error) {
                 console.log("Error sending report", error);
@@ -147,6 +159,7 @@ export default {
         },
 
         goToMarketplace() {
+            /* Nsavigate to the marketplace page and send the userId along */
             this.router.push(`/home/${this.userId}`); //to transport the userId to marketplace
         }
     }
