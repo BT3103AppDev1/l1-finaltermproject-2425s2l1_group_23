@@ -1,10 +1,6 @@
 <template>
   <div class="onboarding-container">
-    <img
-      src="@/assets/images/PawfectHome.png"
-      alt="Pawfect Home Logo"
-      class="logo"
-    />
+    <Logo />
 
     <h1 class="fade-in delay1">Are you a Lister or an Adopter?</h1>
     <div class="buttons fade-in delay2">
@@ -31,10 +27,14 @@
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { app } from "../../../firebase/firebase.js";
+import Logo from "../../components/Logo.vue";
 
 const db = getFirestore(app);
 export default {
   name: "Onboarding1",
+  components: {
+    Logo,
+  },
   methods: {
     async goToNextPage(userType) {
       const auth = getAuth(app);
@@ -45,6 +45,7 @@ export default {
 
         if (userType === "lister") {
           this.$router.push("/petlisting");
+          console.log(user);
         } else {
           this.$router.push("/onboarding-adopters");
         }
