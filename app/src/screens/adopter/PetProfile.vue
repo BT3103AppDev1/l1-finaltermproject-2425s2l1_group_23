@@ -120,7 +120,7 @@
             <div class="report-modal">
                 <p class="report-header">Report this listing? 🚩</p>
                 <p class="report-subtitle"> Please report this listing only if you believe it violates our community guidelines. Unnecessary reports can delay our response to genuine concerns. Thank you for helping us maintain a safe and trustworthy community.</p>
-                <button class="continue-button">
+                <button class="continue-button" @click="goToReport">
                     <p class="continue-text">Continue</p>
                 </button>
                 <button class="cancel-button" @click="reportUnclick">
@@ -135,14 +135,20 @@
 
 import { db } from "../../../firebase/firebase.js";
 import { getDoc, doc, updateDoc, increment, arrayUnion } from "firebase/firestore";
+import { useRouter } from "vue-router";
 
 export default {
     data() {
         return {
         petData: {},
         treatSent: false,
-        reportButtonClicked: false
+        reportButtonClicked: false,
         };
+    },
+
+    setup() {
+        const router = useRouter();
+        return { router };
     },
 
     mounted() {
@@ -225,6 +231,14 @@ export default {
 
         reportUnclick() {
             this.reportButtonClicked = false;
+        },
+
+        goToReport() {
+            const petListingId = "testing"; /* this will be changed once marketplace set up a fn to send the listing id to here */  
+            const userId = 'testing';
+            this.router.push(`/report/${petListingId}/${userId}`); //to transport the userId to report
+            console.log("Navigating to report page:", petListingId, userId);
+
         }
     }
 }

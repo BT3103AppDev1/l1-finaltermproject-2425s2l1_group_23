@@ -9,6 +9,7 @@ import OnboardingQn from "../screens/adopter/OnboardingQn.vue";
 import MarketPlace from "../screens/adopter/MarketPlace.vue";
 import ForgetPassword from "../screens/common/ForgetPassword.vue";
 import PetProfile from "../screens/adopter/PetProfile.vue";
+import Report from "../screens/adopter/Report.vue";
 
 const routes = [
   {
@@ -47,7 +48,7 @@ const routes = [
     component: OnboardingQn,
   },
   {
-    path: "/home",
+    path: "/home/:userId",
     name: "MarketPlace",
     component: MarketPlace,
   },
@@ -60,6 +61,11 @@ const routes = [
     path: "/pet-profile",
     name: "PetProfile",
     component: PetProfile,
+  },
+  {
+    path: "/report/:petListingId/:userId",
+    name: "Report",
+    component: Report,
   },
 ];
 
