@@ -14,14 +14,16 @@
       <button class="email-button"><img class="icon" src="@/assets/images/marketplaceHeader/emailIcon.png" alt="Email Icon" /></button>
     </header>
 
-    <!-- Search Bar -->
-    <div class="search-container">
-      <input
-        type="text"
-        placeholder="Search for your new furry friend..."
-        v-model="searchQuery"
-      />
-      <button @click="searchPets">Search</button>
+    <!-- Search Bar (Now Properly Centered) -->
+    <div class="search-wrapper">
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="🔎 Search for your new furry friend..."
+          v-model="searchQuery"
+        />
+        <button @click="searchPets">Search</button>
+      </div>
     </div>
 
     <div class="div-text"> 
@@ -31,18 +33,16 @@
     <!-- Pet Categories -->
     <section class="category-filter">
       <div class="categories">
-        <button
+        <CategoryCard
           v-for="category in petCategories"
           :key="category.name"
-          class="category-btn"
-          @click="filterByCategory(category.name)"
-        >
-          {{ category.emoji }} {{ category.name }}
-        </button>
+          :name="category.name"
+          :emoji="category.emoji"
+          @filter-category="filterByCategory"
+        />
       </div>
-      <button class="filter-btn">🔍 Filter</button>
     </section>
-
+    
     <div class="div-text"> 
       <h1> Our cutest additions... </h1>
     </div>
@@ -55,12 +55,11 @@
 </template>
 
 <script>
+import CategoryCard from "@/components/CategoryCard.vue";
+
 export default {
-  props: {
-    userName: {
-      type: String,
-      default: "User",
-    },
+  components: {
+    CategoryCard,
   },
   data() {
     return {
@@ -76,9 +75,6 @@ export default {
     };
   },
   methods: {
-    searchPets() {
-      this.$emit("search", this.searchQuery);
-    },
     filterByCategory(category) {
       this.$emit("filter-category", category);
     },
@@ -93,7 +89,7 @@ export default {
 .marketplace-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* Ensures everything is centered */
   padding: 20px;
   background-color: #f7f3eb;
   max-width: 1200px;
@@ -104,7 +100,6 @@ export default {
 .header {
   display: flex;
   align-items: center;
-  gap: 15px;
   width: 100%;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
@@ -132,6 +127,14 @@ export default {
   height: auto;
 }
 
+/* Search Bar Wrapper (To Center the Whole Search Area) */
+.search-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
 .email-button {
   background-color: rgba(0,0,0,0);
   border-width: 0em;
@@ -141,22 +144,49 @@ export default {
 .search-container {
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
+  margin-top: -10px;
   gap: 10px;
-  margin-top: 15px; /* Separate from header */
 }
 
 .search-container input {
-  padding: 10px;
-  width: 100em;
-  border-radius: 5px;
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 7px;
   border: 2px solid #222f61;
+  font-family: "Raleway-SemiBold";
+  font-size: 16px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
 }
 
+.search-container input:focus {
+  outline: none;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.2);
+  border-color: #1a237e;
+}
+
+/* Search Button Styling */
+.search-container button {
+  background-color: #222f61;
+  color: white;
+  font-family: "Raleway-Bold";
+  font-size: 16px;
+  border: none;
+  border-radius: 7px;
+  padding: 12px 24px;
+  cursor: pointer;
+}
+
+.search-container button:hover {
+  background-color: #1a1f4f;
+}
+
+/* Section Titles */
 .div-text { 
   width: 100%;
-  align-items: center;
-  justify-items: flex-start;
+  justify-content: flex-start;
   margin-top: 10px;
 }
 
@@ -169,13 +199,19 @@ export default {
 /* Pet Categories */
 .category-filter {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center the categories */
   width: 100%;
+  margin-top: 20px;
 }
 
 .categories {
   display: flex;
-  gap: 15px;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .category-btn {
@@ -204,6 +240,4 @@ export default {
   justify-content: center;
   margin-top: -10px;
 }
-/* new change! */
 </style>
-

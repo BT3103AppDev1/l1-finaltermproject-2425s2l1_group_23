@@ -100,7 +100,8 @@
   .marketplace-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    margin-left: 150px;
     padding: 20px;
     background-color: #f7f3eb;
   }
@@ -129,12 +130,10 @@
     border-radius: 5px;
   }
   
-  /* new commit */
-  
   .pet-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: center;
+    justify-content: flex-start;
   }
   </style>
