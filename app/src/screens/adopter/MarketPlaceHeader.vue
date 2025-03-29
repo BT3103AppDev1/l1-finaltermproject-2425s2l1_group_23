@@ -2,12 +2,16 @@
   <div class="marketplace-container">
     <!-- Header Section (Logo + Welcome Message) -->
     <header class="header">
-      <img
-        class="logo"
-        src="../../assets/images/PawfectHome-Logo.png"
-        alt="Logo"
-      />
-      <h1>Welcome, Ming Han!</h1>
+      <div class="header-content">
+        <img
+          class="logo"
+          src="../../assets/images/PawfectHome-Logo.png"
+          alt="Logo"
+        />
+        <h1>Welcome, Ming Han!</h1>
+
+      </div>
+      <button class="email-button"><img class="icon" src="@/assets/images/marketplaceHeader/emailIcon.png" alt="Email Icon" /></button>
     </header>
 
     <!-- Search Bar -->
@@ -102,17 +106,35 @@ export default {
   align-items: center;
   gap: 15px;
   width: 100%;
-  padding: 10px 20px;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
   justify-content: flex-start;
 }
 
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
 .header h1 { 
   font-family: "FredokaOne-Regular";
-  font-size: 24px
+  font-size: 24px;
 }
+
+.icon {
+  width: 2.5em;
+  height: 2.5em;
+}
+
 .logo {
   width: 60px; /* Adjust as needed */
   height: auto;
+}
+
+.email-button {
+  background-color: rgba(0,0,0,0);
+  border-width: 0em;
 }
 
 /* Search Bar */

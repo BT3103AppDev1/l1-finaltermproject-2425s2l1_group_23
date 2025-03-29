@@ -160,7 +160,7 @@ export default {
 
         goToMarketplace() {
             /* Nsavigate to the marketplace page and send the userId along */
-            this.router.push(`/home/${this.userId}`); //to transport the userId to marketplace
+            this.router.push(`/home/${this.userId}`); //to transport the userId to marketplace, put on hold first
         }
     }
 }
