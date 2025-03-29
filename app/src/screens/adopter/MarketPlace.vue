@@ -4,6 +4,9 @@
     @search="handleSearch"
     @filter-category="handleCategoryFilter"
   />
+  <button class="edit-profile-button">
+    <router-link to="/editprofile">Edit Profile</router-link>
+  </button>
   <div class="marketplace-container">
     <!-- <section class="search-bar">
         <input
@@ -14,9 +17,6 @@
         />
       </section> -->
     <!-- Add a button to navigate to Edit Profile -->
-    <button class="edit-profile-button">
-      <router-link to="/editprofile">Edit Profile</router-link>
-    </button>
 
     <section class="pet-list">
       <Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />

@@ -9,6 +9,8 @@ import OnboardingQn from "../screens/adopter/OnboardingQn.vue";
 import MarketPlace from "../screens/adopter/MarketPlace.vue";
 import EditProfile from "../screens/adopter/EditProfile.vue";
 import ResetPassword from "../screens/adopter/ResetPassword.vue";
+import AdminLogin from "../screens/admin/AdminLogin.vue";
+import AdminPage from "../screens/admin/AdminPage.vue";
 
 const routes = [
   {
@@ -55,13 +57,24 @@ const routes = [
     path: "/editprofile",
     name: "EditProfile",
     component: EditProfile,
-
   },
 
   {
     path: "/reset-password",
     name: "ResetPassword",
     component: ResetPassword,
+  },
+
+  {
+    path: "/admin-login",
+    name: "AdminLogin",
+    component: AdminLogin,
+  },
+
+  {
+    path: "/admin-page",
+    name: "AdminPage",
+    component: AdminPage,
   },
 ];
 
