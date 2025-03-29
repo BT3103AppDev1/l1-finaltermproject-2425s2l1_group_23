@@ -101,7 +101,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-left: 150px;
     padding: 20px;
     background-color: #f7f3eb;
   }

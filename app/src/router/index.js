@@ -11,6 +11,7 @@ import ForgetPassword from "../screens/common/ForgetPassword.vue";
 import PetProfile from "../screens/adopter/PetProfile.vue";
 import EditProfile from "../screens/adopter/EditProfile.vue";
 import ResetPassword from "../screens/adopter/ResetPassword.vue";
+import Email from "../screens/adopter/Email.vue";
 
 import Report from "../screens/adopter/Report.vue";
 
@@ -81,6 +82,11 @@ const routes = [
     path: "/report/:petListingId/:userId",
     name: "Report",
     component: Report,
+  },
+  {
+    path: "/email/:userId",
+    name: "Email",
+    component: Email,
   },
 ];
 

@@ -11,7 +11,10 @@
         <h1>Welcome, Ming Han!</h1>
 
       </div>
-      <button class="email-button"><img class="icon" src="@/assets/images/marketplaceHeader/emailIcon.png" alt="Email Icon" /></button>
+      <div class="email">
+        <button class="email-button" @click="goToEmails"><img class="icon" src="@/assets/images/marketplaceHeader/emailIcon.png" alt="Email Icon" /></button>
+        <span v-if="emailsUnread > 0" class="email-notification">{{ emailsUnread }}</span>
+      </div>
     </header>
 
     <!-- Search Bar (Now Properly Centered) -->
@@ -56,14 +59,18 @@
 
 <script>
 import CategoryCard from "@/components/CategoryCard.vue";
+import { db } from "../../../firebase/firebase.js";
+import { doc, getDoc } from "firebase/firestore";
 
 export default {
   components: {
     CategoryCard,
   },
+
   data() {
     return {
       searchQuery: "",
+      emailsUnread: 0,
       petCategories: [
         { name: "Dogs", emoji: "🐶" },
         { name: "Cats", emoji: "🐱" },
@@ -75,10 +82,35 @@ export default {
     };
   },
   methods: {
+    async fetchUnreadEmails() {
+      try {
+        const userId = "testing"; // Replace with the actual user ID
+        const userDocRef = doc(db, "Users", userId);
+        const userDocSnapshot = await getDoc(userDocRef);
+
+        if (userDocSnapshot.exists()) {
+          this.emailsUnread = userDocSnapshot.data().emailsUnread || 0;
+          console.log("Unread emails count:", this.emailsUnread);
+        } else {
+          console.error("User document does not exist.");
+        }
+      } catch (error) {
+        console.error("Error fetching unread emails:", error);
+      }
+    },
+
     filterByCategory(category) {
       this.$emit("filter-category", category);
     },
+    goToEmails() {
+      let userId = 'testing';
+      this.$router.push(`/email/${userId}`); // Navigate to the Emails screen
+    },
   },
+
+  mounted() {
+    this.fetchUnreadEmails();
+  }
 };
 </script>
 
@@ -138,6 +170,7 @@ export default {
 .email-button {
   background-color: rgba(0,0,0,0);
   border-width: 0em;
+  cursor: pointer;
 }
 
 /* Search Bar */
@@ -239,5 +272,25 @@ export default {
   gap: 20px;
   justify-content: center;
   margin-top: -10px;
+}
+
+.email-notification {
+    display: flex;
+    width: 1em;
+    height: 1em;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Raleway-Regular';
+    color: white;
+    font-size: 0.8em;
+    background-color: #e18c8c;
+    border-radius: 50%;
+    margin-top: -3em;
+    margin-left: -0.8em;
+}
+.email {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

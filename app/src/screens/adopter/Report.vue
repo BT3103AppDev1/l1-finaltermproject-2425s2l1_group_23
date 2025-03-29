@@ -46,7 +46,7 @@
 <script>
 
 import { db } from "../../../firebase/firebase.js";
-import { getDoc, doc, updateDoc, increment, arrayUnion } from "firebase/firestore";
+import { getDoc, doc, updateDoc, arrayUnion, collection , setDoc, addDoc, increment } from "firebase/firestore";
 import { useRouter } from "vue-router";
 
 export default {
@@ -63,6 +63,7 @@ export default {
             petListingId: "",
             userId: "",
             alertEnabled: false,
+            timestamp: new Date().toISOString(),
         };
     },
 
@@ -85,6 +86,7 @@ export default {
             const petDocRef = doc(db, "Reports", petListingId);
             const petListingsRef = doc(db, "Pet_Listings", petListingId);
             const userDocRef = doc(db, "Users", userId);
+            const emailsRef = collection(db, "Emails");
 
             /* If no option was selected, user will be alerted to select a reason */
             if (!this.selectedOption) {
@@ -131,12 +133,14 @@ export default {
                 const reportData = {
                     selectedOption: this.selectedOption,
                     explanation: this.reason,
-                    userId: userId
+                    userId: userId,
+                    timestamp: this.timestamp,
                 };
 
                 /* Add in the report data in the Reports collection */
-                await updateDoc(petDocRef, {
-                    users: arrayUnion(reportData),
+                await setDoc(petDocRef, {
+                    petListingId: petListingId,
+                    reports: arrayUnion(reportData),
                 });
 
                 /* Add in the userId to the array of users, userReports, that have reported the pet in the Pet_Listings collection */
@@ -147,7 +151,49 @@ export default {
                  /* Add in the petListingId to the array of pets, reportedPets, in the Users collection such that we will not render the reported pet listing in the user's marketplace */
                 await updateDoc(userDocRef, {
                     reportedPets: arrayUnion(petListingId),
+                    emailsUnread: increment(1),
                 });
+
+                const userDocSnapshot = await getDoc(userDocRef);
+                if (!userDocSnapshot.exists()) {
+                    alert("User does not exist.");
+                    return;
+                }
+
+                const userData = userDocSnapshot.data();
+
+
+                await addDoc(emailsRef, {
+                    userId: userId,
+                    petListingId: petListingId,
+                    senderId: "Pawfect Home Team",
+                    subject: "Your Report Summary",
+                    content: `
+                    Dear ${userData.firstName},
+
+                    Thank you for helping us keep Pawfect Home safe! 💙
+                    Your report was submitted on ${new Date(this.timestamp).toLocaleDateString()}.
+
+                    Here are the details of your report:
+
+                    Pet Details:
+                    - Pet Listing Name: ${petListingData.petName}
+                    - Pet Breed: ${petListingData.petBreed}
+                    - Pet Age: ${petListingData.petAge}
+                    - Pet Price: ${petListingData.petPrice}
+
+                    Reason for Reporting:
+                    - Reason: ${this.selectedOption}
+                    - Explanation: ${this.reason}
+
+                    Our team will review your report within 3-5 business days and take appropriate action. Thank you for helping us maintain a safe community.
+
+                    Best regards,
+                    Pawfect Home Team
+                    `,
+                    timestamp: this.timestamp,
+                    isRead: false, // Mark the message as unread initially
+                })
 
                 console.log("Report successfully sent to pet listing");
                 /* Alert will be shown to users who have successfully sent in a report */
