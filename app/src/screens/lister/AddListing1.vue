@@ -47,7 +47,7 @@
   </template>
   
   <script setup>
-  import { ref } from "vue";
+  import { ref,onMounted } from "vue";
   import { useRouter } from "vue-router";
   import { getAuth, onAuthStateChanged } from "firebase/auth";
   import { doc, getFirestore, collection, addDoc } from "firebase/firestore";
@@ -61,32 +61,31 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
   
-  const goNext = async () => {
-    const user = auth.currentUser;
   
-    if (!user) {
-      alert("You must be logged in");
-      return;
+  onMounted(() => {
+  const saved = localStorage.getItem("petType");
+  try {
+    if (saved) {
+      // Handle both old string version and object version
+      petType.value = typeof saved === "string" && saved.includes("{")
+        ? JSON.parse(saved).petType
+        : saved;
     }
-  
-    try {
-        const docRef = await addDoc(collection(db, "Pet_Listings"), {
-        petType: petType.value,
-        userID: user.uid,
-        createdAt: new Date()
-    });
+  } catch (e) {
+    console.error("Error parsing petType from localStorage", e);
+    petType.value = "Dog"; // fallback default
+  }
+});
+
+  const goNext = () => {
+  // Save pet type to localStorage
+  const petTypeObj = { petType: petType.value };
+  localStorage.setItem("petType", petType.value);
 
 
-    console.log("Stored listing ID:", docRef.id);
-      localStorage.setItem("currentPetListingId", docRef.id);
-      
-  
-      router.push("/addlisting2"); // Redirect to next screen
-    } catch (error) {
-      console.error("Failed to save listing:", error);
-      alert("Error saving listing. Please try again.");
-    }
-  };
+  router.push("/addlisting2");
+};
+
   </script>
   
 

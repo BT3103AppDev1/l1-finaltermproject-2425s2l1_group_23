@@ -14,6 +14,9 @@ import ResetPassword from "../screens/adopter/ResetPassword.vue";
 import AddListing1 from "../screens/lister/AddListing1.vue";
 import AddListing2 from "../screens/lister/AddListing2.vue";
 import AddListing3 from "../screens/lister/AddListing3.vue";
+import AddListing4 from "../screens/lister/AddListing4.vue";
+import PetProfilePreview from "../screens/lister/PetProfilePreview.vue";
+
 
 
 
@@ -97,6 +100,18 @@ const routes = [
     path: "/addlisting3",
     name: "AddListing3",
     component: AddListing3,
+  },
+
+  {
+    path: "/addlisting4",
+    name: "AddListing4",
+    component: AddListing4,
+  },
+
+  {
+    path: "/petprofilepreview",
+    name: "PetProfilePreview",
+    component: PetProfilePreview,
   },
 
 ];

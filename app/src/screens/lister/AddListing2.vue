@@ -63,6 +63,8 @@ import { getAuth } from "firebase/auth";
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { app } from "../../../firebase/firebase.js";
 import defaultImage from "../../assets/images/addlisting/Defaultpfp.jpg";
+import { onMounted } from 'vue'
+
 
 
 const auth = getAuth(app);
@@ -83,6 +85,21 @@ const router = useRouter();
   const fileInput = ref(null);
   const imageBase64 = ref("");
   
+  onMounted(() => {
+  const saved = JSON.parse(localStorage.getItem("petBasicsInfo") || "{}");
+
+  pet.value.name = saved.name || "";
+  pet.value.breed = saved.breed || "";
+  pet.value.gender = saved.gender || "";
+  pet.value.dob = saved.dob || "";
+  pet.value.weight = saved.weight || "";
+  pet.value.height = saved.height || "";
+
+  if (saved.petPhotoBase64) {
+    previewUrl.value = `data:image/jpeg;base64,${saved.petPhotoBase64}`;
+    imageBase64.value = saved.petPhotoBase64;
+  }
+});
 
 
   function triggerFileInput() {
@@ -124,48 +141,28 @@ function removeImage() {
     router.push("/addlisting1");
   }
 
-  async function submitForm() {
-  const user = auth.currentUser;
-  if (!user) {
-    alert("You must be logged in");
-    return;
-  }
-
-  const listingId = localStorage.getItem("currentPetListingId");
-  console.log("Retrieved listing ID:", listingId);
-
-  if (!listingId) {
-    alert("No pet listing in progress.");
-    return;
-  }
-
-  // Ensure that the pet object fields are not empty
+  function submitForm() {
+  // Check that all required fields are filled
   if (!pet.value.name || !pet.value.breed || !pet.value.gender || !pet.value.dob || !pet.value.weight || !pet.value.height) {
     alert("All fields must be filled out.");
     return;
   }
 
+  // Store pet basic info to localStorage
+  const petBasics = {
+    name: pet.value.name,
+    breed: pet.value.breed,
+    gender: pet.value.gender,
+    dob: pet.value.dob,
+    weight: pet.value.weight,
+    height: pet.value.height,
+    petPhotoBase64: imageBase64.value || ""
+  };
 
-  try {
-    const petRef = doc(db, "Pet_Listings", listingId);
+  localStorage.setItem("petBasicsInfo", JSON.stringify(petBasics));
 
-    // Update Firestore with pet data and photo URL
-    await updateDoc(petRef, {
-      petName: pet.value.name,
-      petBreed: pet.value.breed,
-      petGender: pet.value.gender,
-      petDOB: pet.value.dob,
-      petWeight: pet.value.weight,
-      petHeight: pet.value.height,
-      petPhotoBase64: imageBase64.value || ""
-    });
-
-    // Redirect to the next step (addlisting3)
-    router.push("/addlisting3");
-  } catch (err) {
-    console.error("Error saving pet data:", err);
-    alert("Failed to save. Try again.");
-  }
+  // Go to next screen (AddListing3)
+  router.push("/addlisting3");
 }
 
   </script>
@@ -300,6 +297,7 @@ function removeImage() {
   }
   
   label {
+    font-family: "Raleway-Medium";
     display: flex;
     flex-direction: column;
     font-size: 0.85em;
