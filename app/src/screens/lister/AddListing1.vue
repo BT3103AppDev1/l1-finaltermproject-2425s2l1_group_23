@@ -90,118 +90,116 @@
   
 
   <style scoped>
-  @import url("../../assets/styles/font.css");
-  
-  .listing-page-container {
-    background-color: #f7f3eb;
-    min-height: 100vh;
-    padding: 2em;
-    font-family: "Poppins", sans-serif;
-  }
-  
-  .logo-container {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    padding-left: 1em;
-  }
-  
-  .main-content {
-    display: flex;
-    justify-content: center;
-    margin-top: 2em;
-  }
-  
-  .image-and-text {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4em;
-    max-width: 90em;
-    margin: 0 auto;
-    padding-left: 10em;
-  }
-  
-  .pet-image-container {
-    position: relative;
-    width: fit-content;
-    height: auto;
-  }
-  
-  .petbg {
-    position: relative;
-    z-index: 0;
-    top: 5em;
-  }
-  
-  .pet {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width:50em;
-    z-index: 0;
-    top:3em;
-  }
-  
-  .title {
-    font-family: "FredokaOne-Regular";
-    font-size: 46px;
-    color: #333333;
-    margin-bottom: 1em;
-    width: 23em;
-    text-align: left;
-  }
-  
-  .form-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align:centre;
-    z-index: 1;
-  }
-  
-  .pet-options {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5em;
-    margin-bottom: 2em;
-    align-items: flex-start;
-  }
-  
-  .pet-option {
-    font-family: "Poppins-Regular";
-    font-size: 16px;
-    color: #333333;
-    display: block;
-  }
+@import url("../../assets/styles/font.css");
 
-  .row {
+.listing-page-container {
+  background-color: #f7f3eb;
+  min-height: 100vh;
+  padding: 2em;
+  font-family: "Poppins", sans-serif;
+}
+
+.logo-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 1em;
+}
+
+.main-content {
+  display: flex;
+  justify-content: center;
+  margin-top: 2em;
+}
+
+.image-and-text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4em;
+  max-width: 90em;
+  margin: 0 auto;
+  padding-left: 10em;
+}
+
+.pet-image-container {
+  position: relative;
+  width: fit-content;
+  height: auto;
+}
+
+.petbg {
+  position: relative;
+  z-index: 0;
+  top: 5em;
+}
+
+.pet {
+  position: absolute;
+  top: 3em;
+  left: 0;
+  width: 50em;
+  z-index: 0;
+}
+
+.title {
+  font-family: "FredokaOne-Regular";
+  font-size: 2.875em; /* 46px */
+  color: #333333;
+  margin-bottom: 1em;
+  width: 23em;
+  text-align: left;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  z-index: 1;
+}
+
+.pet-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  margin-bottom: 2em;
+  align-items: flex-start;
+}
+
+.pet-option {
+  font-family: "Poppins-Regular";
+  font-size: 1em; /* 16px */
+  color: #333333;
+  display: block;
+}
+
+.row {
   display: flex;
   gap: 1.5em;
-   }
+}
 
-  .button-wrapper {
-    text-align: center;
-    margin-right: 45em;
-    margin-top: 2em;
-   }
+.button-wrapper {
+  text-align: center;
+  margin-right: 45em;
+  margin-top: 2em;
+}
 
-  
-  .next-button {
-    background-color: #222f61;
-    color: white;
-    font-family: "Poppins-Bold";
-    border: none;
-    border-radius: 1.5em;
-    padding: 0.8em 2em;
-    font-size: 16px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    width: 181px;
-    height:54px;
-  }
-  
-  .next-button:hover {
-    transform: scale(1.05);
-  }
-  </style>
+.next-button {
+  background-color: #222f61;
+  color: white;
+  font-family: "Poppins-Bold";
+  border: none;
+  border-radius: 1.5em;
+  padding: 0.8em 2em;
+  font-size: 1em; /* 16px */
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 11.3em; /* ~181px */
+  height: 3.375em; /* ~54px */
+}
+
+.next-button:hover {
+  transform: scale(1.05);
+}
+</style>

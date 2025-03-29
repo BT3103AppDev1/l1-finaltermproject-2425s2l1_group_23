@@ -8,7 +8,7 @@ import PetListing from "../screens/lister/PetListing.vue";
 import OnboardingQn from "../screens/adopter/OnboardingQn.vue";
 import MarketPlace from "../screens/adopter/MarketPlace.vue";
 import ForgetPassword from "../screens/common/ForgetPassword.vue";
-import PetProfile from "../screens/adopter/PetProfile.vue";
+import PetProfile from "../screens/adopter/PetProfilePreview.vue";
 import EditProfile from "../screens/adopter/EditProfile.vue";
 import ResetPassword from "../screens/adopter/ResetPassword.vue";
 import AddListing1 from "../screens/lister/AddListing1.vue";

@@ -3,7 +3,7 @@
     <div class="preview-box">
       <div class="left-section">
         <img :src="imageSrc" alt="Pet Photo" class="pet-image" />
-        <h2 class="preview-title">This is a Preview of {{ pet.name }}'s Profile!</h2>
+        <h2 class="preview-title">This is a Preview of {{ pet.petName }}'s Profile!</h2>
         <div class="preview-buttons">
           <button @click="goBack" class="btn secondary">Back</button>
           <button @click="submitToDatabase" class="btn primary">Submit</button>
@@ -11,78 +11,80 @@
       </div>
 
       <div class="right-section">
-  <h1>My name is ... <span>{{ pet.name }}</span></h1>
-  <p>
-    <span>👤</span> {{ pet.dob ? calculateAge(pet.dob) + ' years old' : '' }}<br />
-    <span>{{ pet.gender === 'Male' ? '♂️' : '♀️' }}</span><br />
-    <strong>Breed:</strong> {{ pet.breed }}<br />
-    <strong>Pet Type:</strong> {{ pet.petType }}
-  </p>
+        <h1>My name is ... <span>{{ pet.petName }}</span></h1>
+        <p>
+          <span>👤</span> {{ pet.dob ? calculateAge(pet.dob) : '' }}<br />
+          <span v-if="pet.petGender">
+            {{ pet.petGender === 'Male' ? '♂️ Male' : '♀️ Female' }}
+          </span><br />
+          <strong>Breed:</strong> {{ pet.petBreed }}<br />
+          <strong>Pet Type:</strong> {{ pet.petType }}
+        </p>
 
-  <div class="section">
-    <strong>⭐ Personality</strong>
-    <div class="tags">
-      <span v-for="trait in pet.temperament" :key="trait" class="tag">{{ trait }}</span>
-    </div>
-  </div>
+        <div class="section">
+          <strong>⭐ Personality</strong>
+          <div class="tags">
+            <span v-for="trait in pet.petPersonalityTemperament" :key="trait" class="tag">{{ trait }}</span>
+          </div>
+        </div>
 
-  <div class="section">
-    <strong>👥 Socialisation</strong>
-    <div class="tags">
-      <span v-for="s in pet.socialisation" :key="s" class="tag">{{ s }}</span>
-    </div>
-  </div>
+        <div class="section">
+          <strong>👥 Socialisation</strong>
+          <div class="tags">
+            <span v-for="s in pet.petPersonalitySocialisation" :key="s" class="tag">{{ s }}</span>
+          </div>
+        </div>
 
-  <div class="section">
-    <strong>🕺 Lifestyle</strong>
-    <div class="tags">
-      <span v-if="pet.activity" class="tag">{{ pet.activity }}</span>
-      <span v-if="pet.training" class="tag">{{ pet.training }}</span>
-    </div>
-  </div>
+        <div class="section">
+          <strong>🕺 Lifestyle</strong>
+          <div class="tags">
+            <span v-if="pet.petLifestyleActivity" class="tag">{{ pet.petLifestyleActivity }}</span>
+            <span v-if="pet.petLifestyleTraining" class="tag">{{ pet.petLifestyleTraining }}</span>
+          </div>
+        </div>
 
-  <div class="section">
-    <strong>🩺 Medical Information</strong>
-    <p>Weight: <span class="tag">{{ pet.weight }} kg</span></p>
-    <p>Height: <span class="tag">{{ pet.height }} cm</span></p>
-    <p>Vaccination status:</p>
-    <div class="tags">
-      <span v-for="v in pet.vaccinations" :key="v" class="tag">{{ v }}</span>
-    </div>
-  </div>
+        <div class="section">
+          <strong>🩺 Medical Information</strong>
+          <p>Weight: <span class="tag">{{ pet.petWeight }} kg</span></p>
+          <p>Height: <span class="tag">{{ pet.petHeight }} cm</span></p>
+          <p>Vaccination status:</p>
+          <div class="tags">
+            <span v-for="v in pet.petVax" :key="v" class="tag">{{ v }}</span>
+          </div>
+        </div>
 
-  <div class="section">
-    <strong>🍖 Dietary Preferences & Needs</strong>
-    <p>Diet type:</p>
-    <div class="tags">
-      <span v-for="d in pet.diet" :key="d" class="tag">{{ d }}</span>
-    </div>
-    <p>Favourite food or snacks:</p>
-    <div class="tags">
-      <span v-for="f in pet.favFood" :key="f" class="tag">{{ f }}</span>
-    </div>
-    <p>Allergies:</p>
-    <div class="tags">
-      <span v-for="a in pet.allergies" :key="a" class="tag">{{ a }}</span>
-    </div>
-  </div>
+        <div class="section">
+          <strong>🍖 Dietary Preferences & Needs</strong>
+          <p>Diet type:</p>
+          <div class="tags">
+            <span class="tag">{{ pet.petDiet }}</span>
+          </div>
+          <p>Favourite food or snacks:</p>
+          <div class="tags">
+            <span v-for="f in pet.petFavFood" :key="f" class="tag">{{ f }}</span>
+          </div>
+          <p>Allergies:</p>
+          <div class="tags">
+            <span v-for="a in pet.petAllergies" :key="a" class="tag">{{ a }}</span>
+          </div>
+        </div>
 
-  <div class="section" v-if="pet.triggers && pet.triggers.length">
-    <strong>🚫 Fears / Triggers</strong>
-    <div class="tags">
-      <span v-for="t in pet.triggers" :key="t" class="tag">{{ t }}</span>
-    </div>
-  </div>
+        <div class="section" v-if="pet.petTriggers && pet.petTriggers.length">
+          <strong>🚫 Fears / Triggers</strong>
+          <div class="tags">
+            <span v-for="t in pet.petTriggers" :key="t" class="tag">{{ t }}</span>
+          </div>
+        </div>
 
-  <div class="section" v-if="pet.price">
-    <strong>💰 Adoption Fee</strong>
-    <p><span class="tag">${{ pet.price }}</span></p>
-  </div>
-</div>
-
+        <div class="section" v-if="pet.petPrice">
+          <strong>💰 Adoption Fee</strong>
+          <p><span class="tag">${{ pet.petPrice }}</span></p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -121,13 +123,24 @@ function goBack() {
 function calculateAge(dob) {
   const birthDate = new Date(dob);
   const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
+
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+  const days = today.getDate() - birthDate.getDate();
+
+  if (days < 0) months--; // adjust for incomplete month
+  if (months < 0) {
+    years--;
+    months += 12;
   }
-  return age;
+
+  if (years < 1) {
+    return `${months} month${months !== 1 ? 's' : ''} old`;
+  } else {
+    return `${years} year${years !== 1 ? 's' : ''} old`;
+  }
 }
+
 
 async function submitToDatabase() {
   const user = auth.currentUser;
@@ -136,24 +149,47 @@ async function submitToDatabase() {
     return;
   }
 
+  const firestorePayload = {
+    petName: pet.value.petName,
+    petBreed: pet.value.petBreed,
+    petGender: pet.value.petGender,
+    dob: pet.value.dob,
+    petAge: calculateAge(pet.value.dob),
+    petWeight: pet.value.petWeight,
+    petHeight: pet.value.petHeight,
+    petPhotoBase64: pet.value.petPhotoBase64 || "",
+    petType: pet.value.petType || "",
+
+    petVax: pet.value.petVax,
+    petAllergies: pet.value.petAllergies,
+    petDiet: pet.value.petDiet,
+    petFavFood: pet.value.petFavFood,
+    petLifestyleTraining: pet.value.petLifestyleTraining,
+    petLifestyleActivity: pet.value.petLifestyleActivity,
+    petPersonalityTemperament: pet.value.petPersonalityTemperament,
+    petPersonalitySocialisation: pet.value.petPersonalitySocialisation,
+    petTriggers: pet.value.petTriggers,
+    petPrice: pet.value.petPrice,
+
+    userID: user.uid,
+    createdAt: serverTimestamp()
+  };
+
   try {
-    await addDoc(collection(db, "Pet_Listings"), {
-      ...pet.value,
-      userID: user.uid,
-      createdAt: serverTimestamp()
-    });
+    await addDoc(collection(db, "Pet_Listings"), firestorePayload);
 
     alert("Pet profile submitted successfully!");
     localStorage.removeItem("petType");
     localStorage.removeItem("petBasicsInfo");
     localStorage.removeItem("petLifestyleInfo");
     localStorage.removeItem("fullPetListingData");
-    router.push("/lister-home");
+    router.push("/pet-listing");
   } catch (err) {
     console.error("Error submitting pet profile:", err);
     alert("Failed to save pet details.");
   }
 }
+
 </script>
 
 <style scoped>
@@ -168,10 +204,10 @@ async function submitToDatabase() {
   display: flex;
   gap: 2em;
   max-width: 1000px;
-  background: white;
+  background: #fdfaf6;
   padding: 2em;
   border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+
 }
 .left-section {
   text-align: center;

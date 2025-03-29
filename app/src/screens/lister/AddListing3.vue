@@ -147,18 +147,18 @@ import { onMounted } from 'vue'
   onMounted(() => {
   const saved = JSON.parse(localStorage.getItem("petLifestyleInfo") || "{}");
 
-  // Fill in each property if it exists in saved data
-  pet.value.vaccinations = saved.vaccinations || [];
-  pet.value.allergies = saved.allergies || [];
-  pet.value.diet = saved.diet || [];
-  pet.value.favFood = saved.favFood || [];
-  pet.value.training = saved.training || [];
-  pet.value.activity = saved.activity || "";
-  pet.value.temperament = saved.temperament || [];
-  pet.value.socialisation = saved.socialisation || [];
-  pet.value.triggers = saved.triggers || [];
-  pet.value.price = saved.price || null;
+  pet.value.vaccinations = saved.petVax || [];
+  pet.value.allergies = saved.petAllergies || [];
+  pet.value.diet = saved.petDiet || [];
+  pet.value.favFood = saved.petFavFood || [];
+  pet.value.training = saved.petLifestyleTraining || [];
+  pet.value.activity = saved.petLifestyleActivity || "";
+  pet.value.temperament = saved.petPersonalityTemperament || [];
+  pet.value.socialisation = saved.petPersonalitySocialisation || [];
+  pet.value.triggers = saved.petTriggers || [];
+  pet.value.price = saved.petPrice || null;
 });
+
 
 
 
@@ -167,6 +167,7 @@ import { onMounted } from 'vue'
     router.push("/addlisting2");
   }
   
+ 
   function submitForm() {
   if (!pet.value.vaccinations || pet.value.vaccinations.length === 0) {
     alert("Please fill in the required field: Vaccination Status");
@@ -174,21 +175,22 @@ import { onMounted } from 'vue'
   }
 
   const lifestyleInfo = {
-    vaccinations: pet.value.vaccinations,
-    allergies: pet.value.allergies,
-    diet: pet.value.diet,
-    favFood: pet.value.favFood,
-    training: pet.value.training,
-    activity: pet.value.activity,
-    temperament: pet.value.temperament,
-    socialisation: pet.value.socialisation,
-    triggers: pet.value.triggers,
-    price: pet.value.price,
+    petVax: pet.value.vaccinations,
+    petAllergies: pet.value.allergies,
+    petDiet: pet.value.diet,
+    petFavFood: pet.value.favFood,
+    petLifestyleTraining: pet.value.training,
+    petLifestyleActivity: pet.value.activity,
+    petPersonalityTemperament: pet.value.temperament,
+    petPersonalitySocialisation: pet.value.socialisation,
+    petTriggers: pet.value.triggers,
+    petPrice: pet.value.price,
   };
 
   localStorage.setItem("petLifestyleInfo", JSON.stringify(lifestyleInfo));
   router.push("/addlisting4");
 }
+
 
   </script>
   
