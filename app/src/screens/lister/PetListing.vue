@@ -16,13 +16,26 @@ export default {
   name: "PetListing",
   setup() {
     const router = useRouter();
+
     const goToAddListing = () => {
+
+      localStorage.removeItem("petType");
+      localStorage.removeItem("petBasicsInfo");
+      localStorage.removeItem("petLifestyleInfo");
+      localStorage.removeItem("fullPetListingData");
+
+  
+      sessionStorage.removeItem("cameFromPreview");
+
+
       router.push("/addlisting1");
     };
+
     return { goToAddListing };
   },
 };
 </script>
+
 
 <style scoped>
 .pet-listing {

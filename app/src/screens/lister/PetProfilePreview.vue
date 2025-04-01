@@ -1,90 +1,115 @@
 <template>
-  <div class="preview-container">
-    <div class="preview-box">
-      <div class="left-section">
-        <img :src="imageSrc" alt="Pet Photo" class="pet-image" />
-        <h2 class="preview-title">This is a Preview of {{ pet.petName }}'s Profile!</h2>
-        <div class="preview-buttons">
-          <button @click="goBack" class="btn secondary">Back</button>
-          <button @click="submitToDatabase" class="btn primary">Submit</button>
+  <div class="content">
+    <div class="fixed-container">
+      
+      <img :src="imageSrc" alt="ProfileImage" class="profile-img" />
+      <p class="preview-title styled-preview">This is a Preview of 
+        <br> {{ pet.petName }}'s Profile!</p>
+        <div class="form-buttons">
+        <button @click="goBack" class="secondary">Back</button>
+        <button @click="submitToDatabase" class="primary">Submit</button>
+      </div>
+    </div>
+   
+
+    <div class="scrollable-container">
+      <div class="pet-intro-header">
+        <p class="header">My name is...</p>
+        <p id="pet-name" class="pet-name">{{ pet.petName }}</p>
+      </div>
+
+      <div class="basic-info">
+        <div class="age">
+          <img src="@/assets/images/PetProfileMockUp/BirthdayIcon.png" alt="BirthdayIcon" class="icon" />
+          <p id="pet-age" class="pet-age">{{ pet.dob ? calculateAge(pet.dob) : '' }}</p>
+        </div>
+
+        <div class="gender">
+          <img src="@/assets/images/PetProfileMockUp/GenderIcon.png" alt="GenderIcon" class="icon" />
+          <p id="pet-gender" class="pet-gender">{{ pet.petGender }}</p>
         </div>
       </div>
 
-      <div class="right-section">
-        <h1>My name is ... <span>{{ pet.petName }}</span></h1>
-        <p>
-          <span>👤</span> {{ pet.dob ? calculateAge(pet.dob) : '' }}<br />
-          <span v-if="pet.petGender">
-            {{ pet.petGender === 'Male' ? '♂️ Male' : '♀️ Female' }}
-          </span><br />
-          <strong>Breed:</strong> {{ pet.petBreed }}<br />
-          <strong>Pet Type:</strong> {{ pet.petType }}
-        </p>
-
-        <div class="section">
-          <strong>⭐ Personality</strong>
-          <div class="tags">
-            <span v-for="trait in pet.petPersonalityTemperament" :key="trait" class="tag">{{ trait }}</span>
-          </div>
+      <div class="info">
+        <div class="subheader">
+          <img src="@/assets/images/PetProfileMockUp/BreedIcon.png" alt="BreedIcon" class="icon" />
+          <p class="info-header">Breed</p>
         </div>
+        <p class="pet-breed">{{ pet.petBreed }}</p>
+      </div>
 
-        <div class="section">
-          <strong>👥 Socialisation</strong>
-          <div class="tags">
-            <span v-for="s in pet.petPersonalitySocialisation" :key="s" class="tag">{{ s }}</span>
-          </div>
+      <div v-if="pet.petPersonalityTemperament?.length || pet.petPersonalitySocialisation?.length" class="info">
+        <div class="subheader">
+          <img src="@/assets/images/PetProfileMockUp/StarIcon.png" alt="StarIcon" class="icon" />
+          <p class="info-header">Personality</p>
         </div>
-
-        <div class="section">
-          <strong>🕺 Lifestyle</strong>
-          <div class="tags">
-            <span v-if="pet.petLifestyleActivity" class="tag">{{ pet.petLifestyleActivity }}</span>
-            <span v-if="pet.petLifestyleTraining" class="tag">{{ pet.petLifestyleTraining }}</span>
-          </div>
+        <div v-if="pet.petPersonalityTemperament?.length" class="values">
+          <p class="subtitle">Temperament</p>
+          <p class="value" v-for="(item, index) in pet.petPersonalityTemperament" :key="index">{{ item }}</p>
         </div>
-
-        <div class="section">
-          <strong>🩺 Medical Information</strong>
-          <p>Weight: <span class="tag">{{ pet.petWeight }} kg</span></p>
-          <p>Height: <span class="tag">{{ pet.petHeight }} cm</span></p>
-          <p>Vaccination status:</p>
-          <div class="tags">
-            <span v-for="v in pet.petVax" :key="v" class="tag">{{ v }}</span>
-          </div>
+        <div v-if="pet.petPersonalitySocialisation?.length" class="values">
+          <p class="subtitle">Socialisation</p>
+          <p class="value" v-for="(item, index) in pet.petPersonalitySocialisation" :key="index">{{ item }}</p>
         </div>
+      </div>
 
-        <div class="section">
-          <strong>🍖 Dietary Preferences & Needs</strong>
-          <p>Diet type:</p>
-          <div class="tags">
-            <span class="tag">{{ pet.petDiet }}</span>
-          </div>
-          <p>Favourite food or snacks:</p>
-          <div class="tags">
-            <span v-for="f in pet.petFavFood" :key="f" class="tag">{{ f }}</span>
-          </div>
-          <p>Allergies:</p>
-          <div class="tags">
-            <span v-for="a in pet.petAllergies" :key="a" class="tag">{{ a }}</span>
-          </div>
+      <div v-if="pet.petLifestyleActivity || pet.petLifestyleTraining?.length" class="info">
+        <div class="subheader">
+          <img src="@/assets/images/PetProfileMockUp/BallIcon.png" alt="BallIcon" class="icon" />
+          <p class="info-header">Lifestyle</p>
         </div>
-
-        <div class="section" v-if="pet.petTriggers && pet.petTriggers.length">
-          <strong>🚫 Fears / Triggers</strong>
-          <div class="tags">
-            <span v-for="t in pet.petTriggers" :key="t" class="tag">{{ t }}</span>
-          </div>
+        <div v-if="pet.petLifestyleActivity" class="values">
+          <p class="subtitle">Activity level</p>
+          <p class="value">{{ pet.petLifestyleActivity }}</p>
         </div>
+        <div v-if="pet.petLifestyleTraining?.length" class="values">
+          <p class="label">Training level:</p>
+        <span class="value">{{ pet.petLifestyleTraining }}</span> 
 
-        <div class="section" v-if="pet.petPrice">
-          <strong>💰 Adoption Fee</strong>
-          <p><span class="tag">${{ pet.petPrice }}</span></p>
+        </div>
+      </div>
+
+      <div class="info">
+        <div class="subheader">
+          <img src="@/assets/images/PetProfileMockUp/SyringeIcon.png" alt="SyringeIcon" class="icon" />
+          <p class="info-header">Medical Information</p>
+        </div>
+        <div class="values">
+          <p class="subtitle">Weight</p>
+          <p class="value">{{ pet.petWeight }} kg</p>
+        </div>
+        <div class="values">
+          <p class="subtitle">Height</p>
+          <p class="value">{{ pet.petHeight }} kg</p>
+        </div>
+        <div v-if="pet.petVax?.length" class="values">
+          <p class="subtitle">Vaccination status</p>
+          <p class="value" v-for="(item, index) in pet.petVax" :key="index">{{ item }}</p>
+        </div>
+      </div>
+
+      <div v-if="pet.petDiet?.length || pet.petFavFood?.length || pet.petAllergies?.length" class="info">
+        <div class="subheader">
+          <img src="@/assets/images/PetProfileMockUp/PetFoodIcon.png" alt="PetFoodIcon" class="icon" />
+          <p class="info-header">Dietary Preferences & Needs</p>
+        </div>
+        <div v-if="pet.petDiet?.length" class="values">
+          <p class="subtitle">Diet type</p>
+          <span class="value">{{ pet.petDiet }}</span>
+         
+        </div>
+        <div v-if="pet.petFavFood?.length" class="values">
+          <p class="subtitle">Favourite food or snacks</p>
+          <p class="value" v-for="(item, index) in pet.petFavFood" :key="index">{{ item }}</p>
+        </div>
+        <div v-if="pet.petAllergies?.length" class="values">
+          <p class="subtitle">Allergies</p>
+          <p class="value" v-for="(item, index) in pet.petAllergies" :key="index">{{ item }}</p>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -117,6 +142,7 @@ onMounted(() => {
 });
 
 function goBack() {
+  sessionStorage.setItem("cameFromPreview", "true");
   router.push("/addlisting4");
 }
 
@@ -128,7 +154,7 @@ function calculateAge(dob) {
   let months = today.getMonth() - birthDate.getMonth();
   const days = today.getDate() - birthDate.getDate();
 
-  if (days < 0) months--; // adjust for incomplete month
+  if (days < 0) months--;
   if (months < 0) {
     years--;
     months += 12;
@@ -140,7 +166,6 @@ function calculateAge(dob) {
     return `${years} year${years !== 1 ? 's' : ''} old`;
   }
 }
-
 
 async function submitToDatabase() {
   const user = auth.currentUser;
@@ -159,7 +184,6 @@ async function submitToDatabase() {
     petHeight: pet.value.petHeight,
     petPhotoBase64: pet.value.petPhotoBase64 || "",
     petType: pet.value.petType || "",
-
     petVax: pet.value.petVax,
     petAllergies: pet.value.petAllergies,
     petDiet: pet.value.petDiet,
@@ -170,7 +194,6 @@ async function submitToDatabase() {
     petPersonalitySocialisation: pet.value.petPersonalitySocialisation,
     petTriggers: pet.value.petTriggers,
     petPrice: pet.value.petPrice,
-
     userID: user.uid,
     createdAt: serverTimestamp()
   };
@@ -189,86 +212,248 @@ async function submitToDatabase() {
     alert("Failed to save pet details.");
   }
 }
-
 </script>
 
-<style scoped>
-.preview-container {
-  padding: 2em;
-  display: flex;
-  justify-content: center;
-  background-color: #fdfaf6;
-  min-height: 100vh;
-}
-.preview-box {
-  display: flex;
-  gap: 2em;
-  max-width: 1000px;
-  background: #fdfaf6;
-  padding: 2em;
-  border-radius: 20px;
 
-}
-.left-section {
-  text-align: center;
-}
-.pet-image {
-  width: 280px;
-  height: auto;
-  border-radius: 20px;
-  object-fit: cover;
-  margin-bottom: 1em;
-}
+<style scoped>
+@import url("../../assets/styles/font.css");
+
 .preview-title {
-  font-family: 'FredokaOne-Regular';
-  font-size: 24px;
+  font-family: 'FredokaOne-Regular', sans-serif;
+  font-size: 1.3em;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: #000;
 }
-.preview-buttons {
+
+.styled-preview {
+  font-size: 1.5em;
+  color: #2f2f2f;
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.8em;
+}
+
+.form-buttons {
   display: flex;
   justify-content: center;
-  gap: 1em;
-  margin-top: 1em;
+  gap: 5em;
+  margin-top: 2em;
 }
-.right-section {
-  font-family: 'Poppins', sans-serif;
-  flex: 1;
-}
-h1 span {
-  font-weight: 600;
-  font-size: 1.5em;
-}
-.section {
-  margin-top: 1em;
-}
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em;
-  margin-top: 0.5em;
-}
-.tag {
-  background: #dbeafe;
-  padding: 0.3em 0.8em;
-  border-radius: 20px;
-  font-size: 0.9em;
-  font-weight: 500;
-  color: #1e3a8a;
-}
-.btn {
-  padding: 0.7em 1.5em;
-  font-size: 1em;
-  border-radius: 25px;
-  cursor: pointer;
+
+button {
+  margin-top: -3em;
+  padding: 0.8em 2em;
   font-weight: bold;
   border: none;
+  border-radius: 1.5625em; 
+  font-size: 1em;
+  cursor: pointer;
+  box-shadow: 0em 0.125em 0.375em rgba(0, 0, 0, 0.2);
 }
-.primary {
+
+button.primary {
   background-color: #222f61;
   color: white;
 }
-.secondary {
+
+button.secondary {
   background-color: white;
   color: #222f61;
-  border: 2px solid #222f61;
+  border: 0.125em solid #222f61; 
 }
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.fixed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25em;
+    margin-top: 3.125em;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 10%;
+
+}
+
+.scrollable-container {
+    padding: 2em;
+    overflow-y: auto; /*for scrolling*/
+    flex-grow: 1;
+    margin-left: 50%;
+    width: 80%;
+}
+
+
+
+/* if width too small, then pic can become scrollable*/
+@media (max-width: 1024px) {
+    .content {
+        flex-direction: column;
+    }
+
+    .fixed-container {
+        display: flex;
+        flex-direction: column;
+        margin-top: 3.125em;
+        height: 100%;
+        top: 0;
+        left: 0;
+        position: relative;
+        height: auto;
+        margin-bottom: 2em;
+    }
+    .scrollable-container {
+        margin-top: -3em;
+        padding: 2em;
+        overflow-y: auto; /*for scrolling*/
+        flex-grow: 1;
+        margin-left: 0%;
+        
+    }
+}
+
+
+.profile-img {
+    width: 25em;
+    height: 31.25em;
+    border-radius: 3.125em;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.btn {
+  font-family: 'FredokaOne-Regular', sans-serif;
+  font-size: 1em;
+  padding: 0.6em 2em;
+  border: none;
+  border-radius: 1em;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-button {
+  background-color: white;
+  color: #3f3f3f;
+  border: 2px solid #3f3f3f;
+}
+
+.back-button:hover {
+  background-color: #f1f1f1;
+  transform: translateY(-2px);
+}
+
+.submit-button {
+  background-color: #3f3f3f;
+  color: white;
+}
+
+.submit-button:hover {
+  background-color: #555;
+  transform: translateY(-2px);
+}
+
+.basic-info {
+    display: flex;
+    gap: 2em;
+    margin-top: 1.25em;
+}
+
+
+.header {
+    font-family: 'FredokaOne-Regular';
+    color: #696969;
+    font-size: 2em;
+}
+
+.pet-name {
+    font-family: 'FredokaOne-Regular';
+    color: #000000;
+    font-size: 3em;
+    margin-top: 4em;
+}
+
+.pet-intro-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0em;
+    margin-bottom: -2em;
+}
+
+.age, .gender, .subheader{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5em;
+
+}
+
+.pet-age, .pet-gender {
+    font-family: 'Raleway-SemiBold';
+    font-size: 1em;
+}
+
+.icon {
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.info-header {
+    font-family: 'Raleway-SemiBold';
+}
+
+.subheader {
+    margin-bottom: -0.75em;
+}
+
+.subtitle {
+    font-family: 'Raleway-Medium';
+    margin: 0em;
+    align-self: center;
+}
+
+.values {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-left: 2em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+
+.value {
+    background-color: #8C9DE1;
+    border-radius: 1.5em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-family: 'Raleway-SemiBold';
+    color: #ffffff;
+    font-size: 1em;
+    margin: 0em;
+}
+
+.pet-breed {
+    font-family: 'Raleway-Medium';
+    margin-left: 2em;
+}
+
+.info {
+    margin-bottom: 2em;
+}
+
+
 </style>
