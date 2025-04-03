@@ -1,18 +1,26 @@
 <!-- Just a template replace with your own -->
 <template>
-  <div class="pet-listing">
-    <h1>Pet Listing</h1>
-    <p>This is a dummy template for the Pet Listing page.</p>
+  <div class = "layout"> 
+    <ListersNavBar />
+
+
   </div>
 </template>
 
 <script>
+import ListersNavBar from "@/components/ListersNavBar.vue";
 export default {
-  name: "PetListing",
+  components: {
+    ListersNavBar,
+  },
+  name: "PetListing", 
 };
 </script>
 
 <style scoped>
+.layout {
+  display: flex;
+}
 .pet-listing {
   display: flex;
   flex-direction: column;
