@@ -8,7 +8,11 @@
         </div>
       </div>
       <div class="pet-image-container">
-        <img :src="pet.petImage" alt="Pet Image" class="pet-image" />
+        <img
+    :src="pet.petPhotoBase64 ? `data:image/jpeg;base64,${pet.petPhotoBase64}` : 'https://cpet.tc.columbia.edu/uploads/1/8/4/5/18456699/testing-values-imgur_orig.png'"
+    alt="Pet Image"
+    class="pet-image"
+  />
       </div>
       <div class="pet-details">
         <div class="pet-name-age">
