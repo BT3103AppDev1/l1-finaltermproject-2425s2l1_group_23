@@ -7,10 +7,10 @@
         src="../../assets/images/PawfectHome-Logo.png"
         alt="Logo"
       />
-      <h1>Welcome, Ming Han!</h1>
+      <h1>Welcome, {{ userName }}!</h1>
     </header>
 
-    <!-- Search Bar (Now Properly Centered) -->
+    <!-- Search Bar -->
     <div class="search-wrapper">
       <div class="search-container">
         <input
@@ -22,8 +22,8 @@
       </div>
     </div>
 
-    <div class="div-text"> 
-      <h1> What kind of pet are you looking for? </h1>
+    <div class="div-text">
+      <h1>What kind of pet are you looking for?</h1>
     </div>
 
     <!-- Pet Categories -->
@@ -38,9 +38,9 @@
         />
       </div>
     </section>
-    
-    <div class="div-text"> 
-      <h1> Our cutest additions... </h1>
+
+    <div class="div-text">
+      <h1>Our cutest additions...</h1>
     </div>
 
     <!-- Pet Listings -->
@@ -50,8 +50,11 @@
   </div>
 </template>
 
+
 <script>
 import CategoryCard from "@/components/CategoryCard.vue";
+import { auth, db } from "../../../firebase/firebase.js";
+import { getDoc, doc } from "firebase/firestore";
 
 export default {
   components: {
@@ -59,6 +62,7 @@ export default {
   },
   data() {
     return {
+      userName: "", // dynamically fetched from Firebase
       searchQuery: "",
       petCategories: [
         { name: "Dogs", emoji: "🐶" },
@@ -70,13 +74,33 @@ export default {
       ],
     };
   },
+  async created() {
+    const user = auth.currentUser;
+    if (user) {
+      const userDocRef = doc(db, "Users", user.uid);
+      const userSnap = await getDoc(userDocRef);
+
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        this.userName = `${data.firstName} ${data.lastName}`;
+      } else {
+        console.error("User document not found.");
+      }
+    } else {
+      console.error("No user is currently logged in.");
+    }
+  },
   methods: {
+    searchPets() {
+      this.$emit("search", this.searchQuery);
+    },
     filterByCategory(category) {
       this.$emit("filter-category", category);
     },
   },
 };
 </script>
+
 
 <style scoped>
 @import url("../../assets/styles/font.css");
