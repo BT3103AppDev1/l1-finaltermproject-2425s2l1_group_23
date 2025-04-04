@@ -44,14 +44,23 @@
         placeholder="Type your message..."
         @keyup.enter="sendMessage"
       />
-      <button @click="sendMessage">Send</button>
+      <button @click="sendMessage">
+        <v-icon name="md-send-round" class="send-icon"></v-icon>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import { OhVueIcon, addIcons } from "oh-vue-icons";
+import { MdSendRound } from "oh-vue-icons/icons";
+
+addIcons(MdSendRound);
 export default {
   name: "ChatRoom",
+  components: {
+    "v-icon": OhVueIcon,
+  },
   props: {
     selectedChat: {
       type: Object,
@@ -111,7 +120,10 @@ export default {
 }
 
 .person h2 {
-  font-family: FredokaOne-Regular;
+  font-family: Raleway-SemiBold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .notification {
@@ -134,8 +146,8 @@ export default {
 }
 
 .pet h3 {
-  font-family: FredokaOne-Regular;
-  letter-spacing: 2px;
+  font-family: Poppins-SemiBold;
+  letter-spacing: 1.5px;
   font-size: 1.3em;
   margin: 0.6em 0;
 }
@@ -228,5 +240,11 @@ export default {
 
 .message-input button:hover {
   background-color: #707eb3;
+}
+
+.send-icon {
+  width: 20px;
+  height: 20px;
+  color: white;
 }
 </style>

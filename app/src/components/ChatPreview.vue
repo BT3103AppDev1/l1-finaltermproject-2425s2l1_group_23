@@ -10,16 +10,19 @@
       >
         <div class="item">
           <img
-            src="https://via.placeholder.com/50"
+            :src="chat.profileImage || 'https://via.placeholder.com/50'"
             alt="User Avatar"
             class="avatar"
           />
           <div class="text">
             <p class="name">
-              <strong>{{ chat.name }}</strong>
+              {{ chat.name }}
             </p>
-            <p class="message">{{ chat.lastMessage }}</p>
+            <p class="message">
+              {{ chat.lastMessage || "No messages yet" }}
+            </p>
           </div>
+          <span v-if="chat.unread" class="unread-indicator"></span>
         </div>
       </li>
     </ul>
@@ -27,29 +30,136 @@
 </template>
 
 <script>
+import { db } from "../../firebase/firebase";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  orderBy,
+  getDoc,
+  doc, // Make sure this is imported
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { onUnmounted } from "vue";
+
 export default {
   name: "ChatPreview",
   data() {
     return {
-      chats: [
-        // Sample chat data
-        { id: 1, name: "Ming Han", lastMessage: "Hello, I like your pet" },
-        {
-          id: 2,
-          name: "Piraveen Alexander",
-          lastMessage: "Your pet is adorable! Can I adopt it?",
-        },
-      ],
-      selectedChatId: null, // Track the currently active chat
+      chats: [],
+      selectedChatId: null,
+      currentUserId: null,
     };
   },
+  async created() {
+    const auth = getAuth();
+
+    // Listen for auth state changes
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        console.log("Current user:", user);
+        this.currentUserId = user.uid;
+        await this.fetchChatRooms(); // fetch chat rooms after user is authenticated
+      } else {
+        console.error("No user is signed in.");
+        // handle the case where no user is logged in (e.g., redirect to login page)
+        this.$router.push("/login");
+      }
+    });
+  },
   methods: {
-    selectChat(chatId) {
+    async fetchChatRooms() {
+      try {
+        // get usr current data
+        const userDocRef = doc(db, "Users", this.currentUserId);
+        const userDoc = await getDoc(userDocRef);
+
+        if (!userDoc.exists()) {
+          throw new Error("User document not found");
+        }
+
+        const userData = userDoc.data();
+        const isPetLister = userData.isPetLister;
+
+        // by pass the documentID then query the collection usiing composite index
+        const q = query(
+          collection(db, "ChatRooms"),
+          where("participants", "array-contains", this.currentUserId),
+          orderBy("latestTime", "desc"),
+          orderBy("__name__", "desc")
+        );
+
+        // 3. Set up real-time listener
+        const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+          const chatPromises = querySnapshot.docs.map(async (document) => {
+            const chatData = document.data();
+            const chatId = document.id;
+
+            // Get other participant's ID
+            const otherUserId = chatData.participants.find(
+              (id) => id !== this.currentUserId
+            );
+
+            // Get other user's details
+            const otherUserRef = doc(db, "Users", otherUserId);
+            const otherUserDoc = await getDoc(otherUserRef);
+
+            if (!otherUserDoc.exists()) return null;
+
+            const otherUserData = otherUserDoc.data();
+
+            // filter based on user type --> meaning that the if user is a petLister and the other user is also a petLister it will return a null and vice versa
+            if (
+              (isPetLister && otherUserData.isPetLister) ||
+              (!isPetLister && !otherUserData.isPetLister)
+            ) {
+              return null;
+            }
+
+            return {
+              id: chatId,
+              name: `${otherUserData.firstName} ${otherUserData.lastName}`,
+              lastMessage: chatData.latestMessage || "No messages yet",
+              profileImage:
+                otherUserData.profileImage || "https://via.placeholder.com/50",
+              unread:
+                chatData.hasRead === false &&
+                chatData.lastSender !== this.currentUserId,
+              otherUserId: otherUserId,
+            };
+          });
+
+          // wait for all promises and filter out nulls
+          this.chats = (await Promise.all(chatPromises)).filter(
+            (chat) => chat !== null
+          );
+        });
+
+        // clean up listener when component unmounts
+        onUnmounted(() => unsubscribe());
+      } catch (error) {
+        console.error("Error in fetchChatRooms:", error);
+      }
+    },
+    async selectChat(chatId) {
       this.selectedChatId = chatId;
-      this.$emit(
-        "chat-selected",
-        this.chats.find((chat) => chat.id === chatId)
-      );
+      const selectedChat = this.chats.find((chat) => chat.id === chatId);
+      this.$emit("chat-selected", {
+        id: chatId,
+        name: selectedChat.name,
+        profileImage: selectedChat.profileImage,
+        otherUserId: selectedChat.otherUserId,
+      });
+
+      // Mark as read when selected
+      if (selectedChat.unread) {
+        await updateDoc(doc(db, "ChatRooms", chatId), {
+          hasRead: true,
+        });
+      }
     },
   },
 };
@@ -77,6 +187,7 @@ ul {
 }
 
 .chat-item {
+  border-top: 1px solid #b4abab;
   border-bottom: 1px solid #b4abab;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -101,7 +212,7 @@ ul {
 
 .item img {
   border-radius: 50%;
-  margin-right: 10px;
+  margin: 0 10px;
   width: 50px;
   height: 50px;
 }
@@ -113,5 +224,15 @@ ul {
 .message {
   font-family: Raleway-Light;
   font-size: 1em;
+}
+
+.unread-indicator {
+  width: 20px;
+  height: 20px;
+  background-color: #8c9de1;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: 10px;
 }
 </style>
