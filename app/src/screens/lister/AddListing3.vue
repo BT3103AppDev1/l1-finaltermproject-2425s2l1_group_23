@@ -1,105 +1,129 @@
 <template>
-    <div class="listing-page">
-      <h1 class="title">Getting there!</h1>
+  <div class="listing-page">
+    <img src="@/assets/images/addlisting/greenbg.png" class="green-blob" />
+    <img src="@/assets/images/addlisting/pinkbg.png" class="pink-blob" />
+
+    <div class="form-wrapper">
+    <h1 class="title">Getting there!</h1>
+
+    <div class="form-grid">
+
+      <div class="field-box">
+        <label>Vaccination Status*</label>
+        <Multiselect
+          v-model="pet.vaccinations"
+          :options="vaccinationOptions"
+          mode="tags"
+          
+          close-on-select
+        />
+      </div>
+
+
+      <div class="field-box">
+        <label>Activity Level</label>
+        <Multiselect
+          v-model="pet.activity"
+          :options="activityOptions"
+     
+        />
+      </div>
+
+
+      <div class="field-box">
+        <label>Food Allergies</label>
+        <Multiselect
+          v-model="pet.allergies"
+          :options="allergyOptions"
+          mode="tags"
+
+          close-on-select
+        />
+      </div>
+
+
+      <div class="field-box">
+        <label>Temperament</label>
+        <Multiselect
+          v-model="pet.temperament"
+          :options="temperamentOptions"
+          mode="tags"
+
+          close-on-select
+        />
+      </div>
+
+ 
+      <div class="field-box">
+        <label>Diet Type</label>
+        <Multiselect
+          v-model="pet.diet"
+          :options="dietOptions"
+     
+        />
+      </div>
+
+
+      <div class="field-box">
+        <label>Socialisation</label>
+        <Multiselect
+          v-model="pet.socialisation"
+          :options="socialisationOptions"
+          mode="tags"
   
-      <div class="form-box">
-        <div class="form-section">
-          <label>Vaccination Status*</label>
-          <Multiselect
-            v-model="pet.vaccinations"
-            :options="vaccinationOptions"
-            mode="tags"
-            placeholder="Select Vaccination Status"
-            close-on-select
-            class="dropdown"
-          />
-  
-          <label>Food Allergies</label>
-          <Multiselect
-            v-model="pet.allergies"
-            :options="allergyOptions"
-            mode="tags"
-            placeholder="Select Food Allergies"
-            close-on-select
-            class="dropdown"
-          />
-  
-          <label>Diet Type</label>
-          <Multiselect
-            v-model="pet.diet"
-            :options="dietOptions"
-            placeholder="Select Diet"
-            class="dropdown"
-          />
-  
-          <label>Favourite Food / Treats</label>
-          <Multiselect
-            v-model="pet.favFood"
-            :options="favFoodOptions"
-            mode="tags"
-            placeholder="Select Favourite Food"
-            close-on-select
-            class="dropdown"
-          />
-  
-          <label>Training Level</label>
-          <Multiselect
-            v-model="pet.training"
-            :options="trainingOptions"
-            placeholder="Select Training Level"
-            class="dropdown"
-          />
-  
-          <label>Activity Level</label>
-          <Multiselect
-            v-model="pet.activity"
-            :options="activityOptions"
-            placeholder="Select Activity Level"
-            class="dropdown"
-          />
-  
-          <label>Temperament</label>
-          <Multiselect
-            v-model="pet.temperament"
-            :options="temperamentOptions"
-            mode="tags"
-            placeholder="Select Temperament"
-            close-on-select
-            class="dropdown"
-          />
-  
-          <label>Socialisation</label>
-          <Multiselect
-            v-model="pet.socialisation"
-            :options="socialisationOptions"
-            mode="tags"
-            placeholder="Select Socialisation"
-            close-on-select
-            class="dropdown"
-          />
-  
-          <label>Fears / Triggers</label>
-          <Multiselect
-            v-model="pet.triggers"
-            :options="triggerOptions"
-            mode="tags"
-            placeholder="Select Fears / Triggers"
-            close-on-select
-            class="dropdown"
-          />
-  
-          <label>Pet Price (SGD)</label>
-          <input v-model.number="pet.price" type="number" />
-        </div>
-  
-        <div class="form-buttons">
-          <button @click="goBack" class="secondary">Back</button>
-          <button @click="submitForm" class="primary">Next</button>
-        </div>
+          close-on-select
+        />
+      </div>
+
+
+      <div class="field-box">
+        <label>Favourite Food / Treats</label>
+        <Multiselect
+          v-model="pet.favFood"
+          :options="favFoodOptions"
+          mode="tags"
+
+          close-on-select
+        />
+      </div>
+
+
+      <div class="field-box">
+        <label>Fears / Triggers</label>
+        <Multiselect
+          v-model="pet.triggers"
+          :options="triggerOptions"
+          mode="tags"
+
+          close-on-select
+        />
+      </div>
+
+
+      <div class="field-box">
+        <label>Training Level</label>
+        <Multiselect
+          v-model="pet.training"
+          :options="trainingOptions"
+
+        />
+      </div>
+
+
+      <div class="field-box">
+        <label>Pet Price (SGD)</label>
+        <input v-model.number="pet.price" type="number" />
       </div>
     </div>
-  </template>
-  
+
+    <div class="form-buttons">
+      <button @click="goBack" class="secondary">Back</button>
+      <button @click="submitForm" class="primary">Next</button>
+    </div>
+  </div>
+</div>
+</template>
+
 
   
   <script setup>
@@ -145,19 +169,41 @@ import { onMounted } from 'vue'
 
 
   onMounted(() => {
-  const saved = JSON.parse(localStorage.getItem("petLifestyleInfo") || "{}");
+  const cameFromPreview = sessionStorage.getItem("cameFromPreview");
 
-  pet.value.vaccinations = saved.petVax || [];
-  pet.value.allergies = saved.petAllergies || [];
-  pet.value.diet = saved.petDiet || [];
-  pet.value.favFood = saved.petFavFood || [];
-  pet.value.training = saved.petLifestyleTraining || [];
-  pet.value.activity = saved.petLifestyleActivity || "";
-  pet.value.temperament = saved.petPersonalityTemperament || [];
-  pet.value.socialisation = saved.petPersonalitySocialisation || [];
-  pet.value.triggers = saved.petTriggers || [];
-  pet.value.price = saved.petPrice || null;
+  if (!cameFromPreview) {
+    // Fresh listing: clear all inputs
+    pet.value = {
+      vaccinations: [],
+      allergies: [],
+      diet: [],
+      favFood: [],
+      training: [],
+      activity: "",
+      temperament: [],
+      socialisation: [],
+      triggers: [],
+      price: null,
+    };
+  } else {
+    // Coming back from preview: restore inputs
+    const saved = JSON.parse(localStorage.getItem("petLifestyleInfo") || "{}");
+
+    pet.value.vaccinations = saved.petVax || [];
+    pet.value.allergies = saved.petAllergies || [];
+    pet.value.diet = saved.petDiet || [];
+    pet.value.favFood = saved.petFavFood || [];
+    pet.value.training = saved.petLifestyleTraining || [];
+    pet.value.activity = saved.petLifestyleActivity || "";
+    pet.value.temperament = saved.petPersonalityTemperament || [];
+    pet.value.socialisation = saved.petPersonalitySocialisation || [];
+    pet.value.triggers = saved.petTriggers || [];
+    pet.value.price = saved.petPrice || null;
+
+    sessionStorage.removeItem("cameFromPreview");
+  }
 });
+
 
 
 
@@ -195,61 +241,163 @@ import { onMounted } from 'vue'
   </script>
   
   <style scoped>
-  @import "@vueform/multiselect/themes/default.css";
-  @import url("../../assets/styles/font.css");
+@import "@vueform/multiselect/themes/default.css";
+@import url("../../assets/styles/font.css");
 
-  .title {
-    font-size: 40px;;
-    text-align: center;
-    margin-bottom: 1em;
-    font-family: "FredokaOne-Regular";
-  }
-  .form-box {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  label {
-    font-family: "Raleway-Medium";
-    display: block;
-    margin-top: 1em;
-    font-weight: 600;
-  }
-  input,
-  select {
-    width: 100%;
-    padding: 0.7em;
-    margin-top: 0.3em;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-family: "Poppins", sans-serif;
-  }
-  select[multiple] {
-    height: 6em;
-  }
-  .form-buttons {
+.listing-page {
+  padding: 2em;
+  font-family: "Poppins", sans-serif;
+  background-color: #f7f3eb;
+  min-height: 120vh;
+  position: relative;
+  overflow: hidden;
+
+}
+.form-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+  margin: 0 auto;
+  background-color: transparent;
+}
+
+.green-blob,
+.pink-blob {
+  position: absolute;
+  z-index: 0;
+  opacity: 0.7;
+}
+
+.green-blob {
+  top: 44%;
+  left: 40%;
+  width: 20em;
+  transform: rotate(5deg);
+  z-index: 0;
+}
+
+.pink-blob {
+  top: 10%;
+  right: 75%;
+  width: 16em;
+  transform: rotate(270deg);
+  z-index: 0;
+}
+
+
+.title {
+  font-size: 2.5em;
+  text-align: left;
+  margin-bottom: 1em;
+  font-family: "FredokaOne-Regular";
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5em 2.5em;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.field-box {
+  background-color: white;
+  padding: 1em 1.2em;
+  border: 1px solid #ccc;
+  border-radius: 0.75em;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.field-box label {
+  font-family: "Raleway-Medium";
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.3em;
+}
+
+.field-box input {
+  font-family: inherit;
+  font-size: 1em;
+  padding: 0.6em 0.9em;
+  border-radius: 0.5em;
+  border: 1px solid #ccc;
+}
+
+.form-buttons {
   display: flex;
   justify-content: center;
-  gap: 5em; /* space between buttons */
-  margin-top: 2em;
+  gap: 5em;
+  margin-top: 3em;
 }
-  button {
-    padding: 0.8em 2em;
-    font-weight: bold;
-    border: none;
-    border-radius: 25px;
-    font-size: 1em;
-    cursor: pointer;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
-  }
-  button.primary {
-    background-color: #222f61;
-    color: white;
-  }
-  button.secondary {
-    background-color: white;
-    color: #222f61;
-    border: 2px solid #222f61;
-  }
-  </style>
-  
+
+button {
+  padding: 0.8em 2em;
+  font-weight: bold;
+  border: none;
+  border-radius: 1.875em;
+  font-size: 1em;
+  cursor: pointer;
+  box-shadow: 0em 0.125em 0.375em rgba(0, 0, 0, 0.2);
+}
+
+button.primary {
+  background-color: #222f61;
+  color: white;
+}
+
+button.secondary {
+  background-color: white;
+  color: #222f61;
+  border: 0.125em solid #222f61;
+}
+
+:deep(.multiselect-single-label),
+:deep(.multiselect-single-label-text),
+:deep(.multiselect-tag) {
+  background-color: #8C9DE1 !important;  
+  color: #ffffff !important;
+  border-radius: 1.5em !important;     
+  font-family: 'Raleway-SemiBold', sans-serif;
+  font-size: 1em;
+  padding: 0.3em 0.5em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: none !important;
+}
+
+/*Hide the 'x' icon unless you want delete pills */
+:deep(.multiselect-tag-remove),
+:deep(.multiselect-clear),
+:deep(.multiselect-tag-icon) {
+  display: none !important;
+}
+
+
+:deep(.multiselect),
+:deep(.multiselect-wrapper),
+:deep(.multiselect-tags),
+:deep(.multiselect-single-label),
+:deep(.multiselect-search) {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+
+:deep(.multiselect-input) {
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 0 !important;
+  line-height: 1 !important;
+}
+
+
+</style>

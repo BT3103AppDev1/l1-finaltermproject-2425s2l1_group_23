@@ -1,3 +1,4 @@
+<!-- og -->
 <template>
     <div class="listing-page">
       <img src="@/assets/images/addlisting/greenbg.png" class="green-blob" />
@@ -88,23 +89,44 @@ const pet = ref({
   const imageBase64 = ref("");
   
   onMounted(() => {
-  const saved = JSON.parse(localStorage.getItem("petBasicsInfo") || "{}");
+  const cameFromPreview = sessionStorage.getItem("cameFromPreview");
 
-  pet.value.petName = saved.petName || "";
-  pet.value.petBreed = saved.petBreed || "";
-  pet.value.petGender = saved.petGender || "";
-  pet.value.dob = saved.dob || "";
-  pet.value.petWeight = saved.petWeight || "";
-  pet.value.petHeight = saved.petHeight || "";
+  if (!cameFromPreview) {
+    // Fresh start – reset all fields
+    pet.value = {
+      petName: "",
+      petBreed: "",
+      petGender: "",
+      dob: "",
+      petAge: "",
+      petWeight: "",
+      petHeight: ""
+    };
+    uploadedImage.value = null;
+    previewUrl.value = defaultImage;
+    imageBase64.value = "";
+  } else {
+    // Coming from preview – load saved data
+    const saved = JSON.parse(localStorage.getItem("petBasicsInfo") || "{}");
 
-  if (pet.value.dob) {
-    pet.value.petAge = calculateAge(pet.value.dob);
-  }
+    pet.value.petName = saved.petName || "";
+    pet.value.petBreed = saved.petBreed || "";
+    pet.value.petGender = saved.petGender || "";
+    pet.value.dob = saved.dob || "";
+    pet.value.petWeight = saved.petWeight || "";
+    pet.value.petHeight = saved.petHeight || "";
 
-  if (saved.petPhotoBase64) {
-    previewUrl.value = `data:image/jpeg;base64,${saved.petPhotoBase64}`;
-    imageBase64.value = saved.petPhotoBase64;
-    uploadedImage.value = true;
+    if (pet.value.dob) {
+      pet.value.petAge = calculateAge(pet.value.dob);
+    }
+
+    if (saved.petPhotoBase64) {
+      previewUrl.value = `data:image/jpeg;base64,${saved.petPhotoBase64}`;
+      imageBase64.value = saved.petPhotoBase64;
+      uploadedImage.value = true;
+    }
+
+    sessionStorage.removeItem("cameFromPreview");
   }
 });
 

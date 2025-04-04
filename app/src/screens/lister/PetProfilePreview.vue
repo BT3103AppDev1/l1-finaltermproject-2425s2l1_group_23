@@ -371,6 +371,7 @@ button.secondary {
     font-family: 'FredokaOne-Regular';
     color: #696969;
     font-size: 2em;
+    text-align:left;
 }
 
 .pet-name {
@@ -384,7 +385,7 @@ button.secondary {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 0em;
+    margin-left: -15.5em;
     margin-bottom: -2em;
 }
 
