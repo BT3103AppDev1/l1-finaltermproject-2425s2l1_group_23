@@ -3,14 +3,14 @@
     <!-- Person Section -->
     <div class="person">
       <img
-        src="https://via.placeholder.com/50"
+        :src="selectedChat.profileImage || 'https://via.placeholder.com/50'"
         alt="User Avatar"
         class="avatar"
       />
       <h2>{{ selectedChat.name }}</h2>
     </div>
 
-    <!-- Pet Section -->
+    <!-- Pet Section // stilll need to work on this logic -->
     <div class="notification">
       <div class="pet">
         <img
@@ -52,10 +52,23 @@
 </template>
 
 <script>
+import { db } from "../../firebase/firebase";
+import {
+  collection,
+  query,
+  onSnapshot,
+  orderBy,
+  addDoc,
+  updateDoc,
+  doc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import { MdSendRound } from "oh-vue-icons/icons";
 
 addIcons(MdSendRound);
+
 export default {
   name: "ChatRoom",
   components: {
@@ -69,29 +82,103 @@ export default {
   },
   data() {
     return {
-      messages: [
-        // Sample messages
-        { id: 1, sender: "Lister", text: "Hello, how can I help you?" },
-        { id: 2, sender: "Adopter", text: "I'm interested in your pet." },
-      ],
+      messages: [],
       newMessage: "",
+      currentUserId: null,
+      unsubscribeMessages: null,
     };
   },
+  async created() {
+    const auth = getAuth();
+    this.currentUserId = auth.currentUser.uid;
+    this.fetchMessages();
+  },
+  watch: {
+    selectedChat: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal) {
+          if (this.unsubscribeMessages) {
+            this.unsubscribeMessages(); // clean up previous listener
+          }
+          this.fetchMessages();
+        }
+      },
+    },
+  },
+  beforeUnmount() {
+    if (this.unsubscribeMessages) {
+      this.unsubscribeMessages(); // clean up listener when component is destroyed
+    }
+  },
   methods: {
-    sendMessage() {
-      if (this.newMessage.trim() !== "") {
-        this.messages.push({
-          id: this.messages.length + 1,
-          sender: "You", // Mark the sender as the user
-          text: this.newMessage,
-        });
-        this.newMessage = "";
+    fetchMessages() {
+      if (!this.selectedChat || !this.selectedChat.id) {
+        console.error("Invalid selectedChat");
+        return;
+      }
 
-        // Scroll to the bottom of the messages
+      const messagesRef = collection(
+        db,
+        "ChatRooms",
+        this.selectedChat.id,
+        "messages"
+      );
+      const q = query(messagesRef, orderBy("time", "asc"));
+      this.unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
+        this.messages = [];
+        querySnapshot.forEach((doc) => {
+          const messageData = doc.data();
+          this.messages.push({
+            id: doc.id,
+            sender:
+              messageData.from === this.currentUserId
+                ? "You"
+                : this.selectedChat.name,
+            text: messageData.content,
+            time: messageData.time?.toDate() || new Date(),
+          });
+        });
+
+        // scroll to bottom after messages load
         this.$nextTick(() => {
           const messagesContainer = this.$el.querySelector(".messages");
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          }
         });
+      });
+    },
+    async sendMessage() {
+      if (this.newMessage.trim() === "") return;
+
+      try {
+        // add new message to subcollection
+        const messagesRef = collection(
+          db,
+          "ChatRooms",
+          this.selectedChat.id,
+          "messages"
+        );
+        await addDoc(messagesRef, {
+          from: this.currentUserId,
+          to: this.selectedChat.otherUserId,
+          content: this.newMessage.trim(),
+          time: serverTimestamp(),
+        });
+
+        // update the chat room with latest message info
+        const chatRoomRef = doc(db, "ChatRooms", this.selectedChat.id);
+        await updateDoc(chatRoomRef, {
+          latestMessage: this.newMessage.trim(),
+          latestTime: serverTimestamp(),
+          hasRead: false,
+          lastSender: this.currentUserId,
+        });
+
+        this.newMessage = "";
+      } catch (error) {
+        console.error("Error sending message:", error);
       }
     },
   },
