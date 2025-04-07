@@ -20,7 +20,32 @@
         />
         <h3>Goldie</h3>
       </div>
-      <div class="treat"></div>
+      <!-- Treat button for Listers -->
+      <!-- 3 treat status: Accepted, Rejected, Pending -->
+      <div class="treat-l">
+        <button> 
+          <p>🦴 Accept Treat</p>
+        </button>
+        <button>
+          <p>❌ Reject</p>
+        </button>
+      </div>
+
+      <div class="treat-status-l">
+        <p>Treat accepted 🦴</p>
+        <p>Treat rejected...</p>
+      </div>
+
+      <!-- Treat button for Adopters -->
+      <div class="treat-l">
+        <p>Your treat is still on its way to pet.name. Hang tight!</p>
+      </div>
+
+      <div class="treat-status-l">
+        <p>pet.name has accepted your treat! 🦴</p>
+        <p>pet.name has rejected your treat...</p>
+
+      </div>
     </div>
 
     <!-- Messages Section -->
