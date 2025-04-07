@@ -166,7 +166,8 @@ export default {
 .overall-container {
     display: flex;
     flex-direction: column;
-    justify-items: center;
+    justify-content: center;
+    align-items: center;
     padding: 2em;
     background-color: #f7f3eb;
 }
