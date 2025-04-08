@@ -142,7 +142,7 @@
 import { db } from "../../../firebase/firebase.js";
 import { getDoc, doc, updateDoc, increment, arrayUnion, setDoc, query, collection, where, getDocs, addDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 
 export default {
     data() {
@@ -158,21 +158,29 @@ export default {
     },
 
     setup() {
-        const route = useRoute();
-        return { route };
+        const router = useRouter();
+        const petListingId = router.currentRoute.value.state?.petListingId || localStorage.getItem('currentPetId');
+        if (!petListingId) {
+            console.error("No pet listing ID provided");
+            router.push('/home'); // Redirect to marketplace if no ID is provided
+            return;
+        }
+    }, 
+
+    beforeUnmount() {
+        localStorage.removeItem('currentPetId'); // Remove petListingId from localStorage
     },
 
     created() {
-        this.petListingId = this.$route.query.petListingId || localStorage.getItem('currentPetId');
-  
+        // Retrieve petListingId from query parameters
+        this.petListingId = localStorage.getItem('currentPetId');
+
         if (!this.petListingId) {
             console.error("No pet listing ID provided");
-            this.$router.push('/home');
+            this.$router.push('/home'); // Redirect to marketplace if no ID is provided
             return;
         }
-        
-        // Store in localStorage in case of refresh
-        localStorage.setItem('currentPetId', this.petListingId);
+
         this.display();
     },
 

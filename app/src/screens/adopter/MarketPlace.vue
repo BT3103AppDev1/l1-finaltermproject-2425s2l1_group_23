@@ -1,6 +1,6 @@
 <template>
     <MarketPlaceHeader
-        :userName="'MingHan'"
+        :userName="userName"
         @search="handleSearch"
         @filter-category="handleCategoryFilter"
     />
@@ -18,10 +18,9 @@
         <div
           v-for="pet in filteredPets"
           :key="pet.petListingId"
-          @click="goToPetProfile(pet.petListingId)"
           class="listing-link"
         >
-          <Listing :pet="pet" />
+        <Listing :pet="pet" @click.native="goToPetProfile(pet.petListingId)" />
         </div>
       </section>
     </div>
@@ -34,6 +33,7 @@
   import Listing from '../../components/Listing.vue';
   import MarketPlaceHeader from './MarketPlaceHeader.vue';
   import { useRouter } from 'vue-router';
+  import { getAuth } from 'firebase/auth';
 
   
   export default {
@@ -43,12 +43,32 @@
       const router = useRouter();
       const pets = ref([]);
       const searchQuery = ref("");
+      const userName = ref("Guest");
+
+      const fetchUserName = async () => {
+        const auth = getAuth();
+        if (auth.currentUser) {
+          const userId = auth.currentUser.uid; // Get the logged-in user's UID
+          try {
+            const userDocRef = doc(db, "Users", userId); // Reference to the user's document
+            const userDocSnap = await getDoc(userDocRef);
+            if (userDocSnap.exists()) {
+              const userData = userDocSnap.data();
+              userName.value = userData.firstName || "Guest"; // Set the user's first name
+            } else {
+              console.error("No such user document in Firestore");
+            }
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        } else {
+          console.error("No user is currently logged in.");
+        }
+      };
 
       const goToPetProfile = (petListingId) => {
-        router.push({
-          name: "PetProfile",
-          query: { petListingId },
-        });
+        localStorage.setItem('currentPetId', petListingId); // Store petListingId in localStorage
+        router.push({ name: "PetProfile" }); // Navigate to PetProfile
       };
   
       const fetchPets = async () => {
@@ -83,7 +103,6 @@
               owner: "Unknown",
               ownerImage: "https://placekitten.com/50/50",
             };
-  
             return {
               petListingId: doc.id,
               owner: ownerData.owner,
@@ -101,7 +120,10 @@
         }
       };
   
-      onMounted(fetchPets);
+      onMounted(() => {
+        fetchUserName(); // Fetch the logged-in user's first name
+        fetchPets(); // Fetch the pets
+    });
   
       const filteredPets = computed(() => {
         return pets.value.filter(pet =>
@@ -158,6 +180,9 @@
   .listing-link {
     text-decoration: none;
     color: inherit;
+  }
+
+  .pet-list .listing {
     cursor: pointer;
   }
   </style>
