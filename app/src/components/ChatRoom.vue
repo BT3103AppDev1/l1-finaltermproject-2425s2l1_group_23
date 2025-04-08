@@ -14,11 +14,11 @@
     <div class="notification">
       <div class="pet">
         <img
-          src="https://via.placeholder.com/50"
+          v-bind:src="petData.petPhotoBase64  || 'https://via.placeholder.com/50'"
           alt="Pet Avatar"
           class="pet-avatar"
         />
-        <h3>Goldie</h3>
+        <h3>{{ petData.petName }}</h3>
       </div>
       <!-- Treat button for Listers -->
       <!-- 3 treat status: Accepted, Rejected, Pending -->
@@ -38,12 +38,12 @@
 
       <!-- Treat button for Adopters -->
       <div class="treat-l">
-        <p>Your treat is still on its way to pet.name. Hang tight!</p>
+        <p>Your treat is still on its way to {{ petData.petName }}. Hang tight!</p>
       </div>
 
       <div class="treat-status-l">
-        <p>pet.name has accepted your treat! 🦴</p>
-        <p>pet.name has rejected your treat...</p>
+        <p>{{ petData.petName }} has accepted your treat! 🦴</p>
+        <p>{{ petData.petName }} has rejected your treat...</p>
 
       </div>
     </div>
@@ -87,6 +87,7 @@ import {
   updateDoc,
   doc,
   serverTimestamp,
+  getDoc
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
@@ -111,12 +112,14 @@ export default {
       newMessage: "",
       currentUserId: null,
       unsubscribeMessages: null,
+      petData: {}
     };
   },
   async created() {
     const auth = getAuth();
     this.currentUserId = auth.currentUser.uid;
     this.fetchMessages();
+    this.display();
   },
   watch: {
     selectedChat: {
@@ -136,7 +139,37 @@ export default {
       this.unsubscribeMessages(); // clean up listener when component is destroyed
     }
   },
+
   methods: {
+    async display() {
+      /* so the logic is from marketplace page, when a user clicks on a listing,
+      it will lead to this page, hence must send the pet listing id to this page
+      */
+
+      /* get pet listing id here */
+      let petListingId = "testing"; /* this will be changed once marketplace set up a fn to send the listing id to here */
+      
+      const petDocRef = doc(db, "Pet_Listings", petListingId);
+
+      /* get the doc with the pet listing id here */
+      try {
+          const docSnap = await getDoc(petDocRef);
+          console.log("Fetching document:", petListingId);
+
+          if (docSnap.exists) {
+              console.log("Document data:", docSnap.data());
+              /* grab the pet details here */
+              this.petData = docSnap.data();
+              console.log("Document data:", docSnap.data());
+  
+          } else {
+              console.log("No such pet in firebase")
+          }
+      } catch (error) {
+          console.log("Error fetching pet listing", error);
+      }
+    },
+
     fetchMessages() {
       if (!this.selectedChat || !this.selectedChat.id) {
         console.error("Invalid selectedChat");

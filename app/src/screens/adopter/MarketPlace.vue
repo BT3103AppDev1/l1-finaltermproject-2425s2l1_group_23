@@ -15,7 +15,14 @@
       </section> -->
   
       <section class="pet-list">
-        <Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />
+        <div
+          v-for="pet in filteredPets"
+          :key="pet.petListingId"
+          @click="goToPetProfile(pet.petListingId)"
+          class="listing-link"
+        >
+          <Listing :pet="pet" />
+        </div>
       </section>
     </div>
   </template>
@@ -26,12 +33,23 @@
   import { collection, getDocs } from 'firebase/firestore';
   import Listing from '../../components/Listing.vue';
   import MarketPlaceHeader from './MarketPlaceHeader.vue';
+  import { useRouter } from 'vue-router';
+
   
   export default {
     components: { Listing, MarketPlaceHeader },
     setup() {
+
+      const router = useRouter();
       const pets = ref([]);
       const searchQuery = ref("");
+
+      const goToPetProfile = (petListingId) => {
+        router.push({
+          name: "PetProfile",
+          query: { petListingId },
+        });
+      };
   
       const fetchPets = async () => {
         try {
@@ -67,7 +85,7 @@
             };
   
             return {
-              id: doc.id,
+              petListingId: doc.id,
               owner: ownerData.owner,
               ownerImage: ownerData.ownerImage,
               petImage: 'https://i.pinimg.com/564x/7f/26/e7/7f26e71b2c84e6b16d4f6d3fd8a58bca.jpg',
@@ -91,7 +109,7 @@
         );
       });
   
-      return { pets, searchQuery, filteredPets };
+      return { pets, searchQuery, filteredPets, goToPetProfile };
     },
   };
   </script>
@@ -135,5 +153,11 @@
     flex-wrap: wrap;
     gap: 20px;
     justify-content: flex-start;
+  }
+
+  .listing-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
   }
   </style>

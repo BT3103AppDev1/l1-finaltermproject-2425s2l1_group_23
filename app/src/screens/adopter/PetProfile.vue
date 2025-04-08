@@ -3,12 +3,18 @@
         <div class="fixed-container">
             <img src="@/assets/images/PetProfileMockUp/ProfileImage.jpg" alt="ProfileImage" class="profile-img"/>
             <div class = "treat-button">
-                <button class = "rectangular-button" @click="sendTreat":disabled="treatSent">
+                <button v-if="treatSent === false" class = "rectangular-button" @click="sendTreat">
                     <p class="treat-button-text">🐾 Like this pet? <span class="treat-button-bolded-text">Send a treat!</span></p>
                 </button>
-                <button class= "circle-button" @click="sendTreat":disabled="treatSent">
+                <button v-if="treatSent === false" class= "circle-button" @click="sendTreat">
                     <img src = "@/assets/images/PetProfileMockUp/TreatButton.png" alt="TreatButton" class="treat-img"/>
                 </button>
+            </div>
+
+            <div class = "treat-acknowledgement">
+                <p v-if="treatSent === true && treatStatus === 'pending'" class="treat-acknowledgement-text">Your treat is on its way! 🦴</p>
+                <p v-if="treatStatus === 'rejected'" class="treat-acknowledgement-text">Your treat was rejected... 😔</p>
+                <p v-if="treatStatus === 'accepted'" class="treat-acknowledgement-text">Your treat was accepted 😊</p>
             </div>
         </div>
 
@@ -134,19 +140,45 @@
 <script>
 
 import { db } from "../../../firebase/firebase.js";
-import { getDoc, doc, updateDoc, increment, arrayUnion } from "firebase/firestore";
+import { getDoc, doc, updateDoc, increment, arrayUnion, setDoc, query, collection, where, getDocs, addDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { useRoute } from "vue-router";
 
 export default {
     data() {
         return {
         petData: {},
         treatSent: false,
-        reportButtonClicked: false
+        treatStatus: 'pending',
+        reportButtonClicked: false,
+        adopterId: null,
+        petListingId: null,
+        listerId: null,
         };
     },
 
-    mounted() {
+    setup() {
+        const route = useRoute();
+        return { route };
+    },
+
+    created() {
+        this.petListingId = this.$route.query.petListingId || localStorage.getItem('currentPetId');
+  
+        if (!this.petListingId) {
+            console.error("No pet listing ID provided");
+            this.$router.push('/home');
+            return;
+        }
+        
+        // Store in localStorage in case of refresh
+        localStorage.setItem('currentPetId', this.petListingId);
         this.display();
+    },
+
+    beforeUnmount() {
+        // Clean up localStorage when leaving the page
+        localStorage.removeItem('currentPetId');   
     },
 
     methods: {
@@ -157,28 +189,62 @@ export default {
             */
 
             /* get user id here */
-            let userId = 'testing';
+            const auth = getAuth();
+            if (auth.currentUser) {
+                this.adopterId = auth.currentUser.uid;
+            } else {
+                console.error("No user is currently logged in.");
+            }
             /* get pet listing id here */
-            let petListingId = "testing"; /* this will be changed once marketplace set up a fn to send the listing id to here */
             
-            const petDocRef = doc(db, "Pet_Listings", petListingId);
+            const petDocRef = doc(db, "Pet_Listings", this.petListingId);
 
             /* get the doc with the pet listing id here */
             try {
                 const docSnap = await getDoc(petDocRef);
-                console.log("Fetching document:", petListingId);
+                console.log("Fetching document:",this.petListingId);
 
                 if (docSnap.exists) {
                     console.log("Document data:", docSnap.data());
                     /* grab the pet details here */
                     this.petData = docSnap.data();
+                    this.listerId = this.petData.userID;
+                     
                     console.log("Document data:", docSnap.data());
                     
-                    if (this.petData.users.includes(userId)) {
-                    this.treatSent = true;
-                    console.log("Treat already sent to pet listing!");
-                    return;
-                }
+                    if (this.petData.users.includes(this.adopterId)) {
+                        this.treatSent = true;
+                        console.log("Treat already sent to pet listing!");
+                        return;
+                    }
+
+                    const chatRoomQuery = query(
+                        collection(db, "ChatRooms"),
+                        where("petListingId", "==", this.petListingId),
+                        where("adopterId", "==", this.adopterId),
+                        where ("listerId", "==", this.listerId)
+                    );
+
+                    const chatRoomSnap = await getDocs(chatRoomQuery);
+                    if (chatRoomSnap.empty) {
+                        console.log("No chat room found");
+                        return;
+                    } else {
+                        /* Check if treat status is pending */
+                        if (this.petData.treatStatus == 'pending') {
+                            this.treatStatus = 'pending';
+                            console.log("Treat is on its way!");
+                        } else if (this.petData.treatStatus == 'accepted') {
+                            this.treatStatus = 'accepted';
+                            console.log("Accepted treat status!");
+                        } else if (this.petData.treatStatus == 'rejected') {
+                            this.treatStatus = 'rejected';
+                            console.log("Rejected treat status!");
+                        } else {
+                            console.log("No treat status found");
+                        }
+
+                    }
                 } else {
                     console.log("No such pet in firebase")
                 }
@@ -187,15 +253,45 @@ export default {
             }
         },
 
-        async treatStatus() {
+        async createChatRoom(petListingId, adopterId, listerId) {   
+            const chatRoomsCollectionRef = collection(db, "ChatRooms");;
 
+            /* create chat room here */
+            try {
+                const chatRoomDocRef = await addDoc(chatRoomsCollectionRef, {
+                    petListingId: petListingId,
+                    adopterId: adopterId,
+                    listerId: listerId,
+                    latestTime: new Date(),
+                    latestMessage: "",
+                    treatStatus: 'pending',
+                });
+                console.log("Chat room successfully created!");
+
+                const messagesRef = collection(chatRoomDocRef, "messages");
+
+                await addDoc(messagesRef, {
+                    from: 'admin',
+                    to: adopterId,
+                    message: `Say hi to get things started! ${this.petData.petName} is waiting for your message so the lister can respond to your treat! 💬`,
+                    timestamp: new Date(),
+                });
+
+                await addDoc(messagesRef, {
+                    from: 'admin',
+                    to: listerId,
+                    message: `Paw-some! Someone sent a treat for ${this.petData.petName} 🦴✨ Say hi to see if it’s a match! ✨`,
+                    timestamp: new Date(),
+                });
+                console.log("Initial message added to the message subcollection");
+            } catch (error) {
+                console.log("Error creating chat room", error);
+            }
         },
-
 
         async sendTreat() {
             /* get pet listing id here */
             let petListingId = "testing"; /* this will be changed once marketplace set up a fn to send the listing id to here */
-            let userId = 'testing';
             const petDocRef = doc(db, "Pet_Listings", petListingId);
 
             /* get the doc with the pet listing id here */
@@ -207,10 +303,12 @@ export default {
                 } else {
                     await updateDoc(petDocRef, {
                         numTreats: increment(1),
-                        users:  arrayUnion(userId)
+                        users:  arrayUnion(this.adopterId)
                     })
                     this.treatSent = true;
                     console.log("Treat successfully sent to pet listing!");
+
+                    await this.createChatRoom(petListingId, this.adopterId, this.listerId);
 
                 }
             } catch (error) {
@@ -541,6 +639,21 @@ treat-img {
     font-family: 'Raleway-Regular';
     margin-top: -1.5em;
     cursor: pointer;
+}
+
+.treat-acknowledgement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.treat-acknowledgement-text {
+    font-family: 'Raleway-Medium';
+    font-size: 1em;
+    background-color: #8C9DE1;
+    color: #000000;
+    text-align: center;
+    padding: 0.9em;
+    border-radius: 0.5em;
 }
 
 </style>
