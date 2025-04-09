@@ -11,14 +11,13 @@ import ForgetPassword from "../screens/common/ForgetPassword.vue";
 import PetProfile from "../screens/adopter/PetProfilePreview.vue";
 import EditProfile from "../screens/adopter/EditProfile.vue";
 import ResetPassword from "../screens/adopter/ResetPassword.vue";
+import AdminLogin from "../screens/admin/AdminLogin.vue";
+import AdminPage from "../screens/admin/AdminPage.vue";
 import AddListing1 from "../screens/lister/AddListing1.vue";
 import AddListing2 from "../screens/lister/AddListing2.vue";
 import AddListing3 from "../screens/lister/AddListing3.vue";
 import AddListing4 from "../screens/lister/AddListing4.vue";
 import PetProfilePreview from "../screens/lister/PetProfilePreview.vue";
-
-
-
 
 const routes = [
   {
@@ -75,7 +74,6 @@ const routes = [
     path: "/editprofile",
     name: "EditProfile",
     component: EditProfile,
-
   },
  
   {
@@ -85,6 +83,18 @@ const routes = [
   },
 
   {
+
+    path: "/admin-login",
+    name: "AdminLogin",
+    component: AdminLogin,
+  },
+
+  {
+    path: "/admin-page",
+    name: "AdminPage",
+    component: AdminPage,
+  },
+
     path: "/addlisting1",
     name: "AddListing1",
     component: AddListing1,

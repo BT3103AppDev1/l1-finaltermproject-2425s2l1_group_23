@@ -13,7 +13,6 @@
           @input="searchPets"
         />
       </section> -->
-  
       <section class="pet-list">
         <Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />
       </section>

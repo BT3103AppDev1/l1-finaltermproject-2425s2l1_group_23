@@ -1,24 +1,21 @@
 <template>
-
   <div class="header">
     <img
       src="../../assets/images/PawfectHome.png"
       alt="Pawfect Home Logo"
       class="logo"
     />
-    <button class="admin-login-button" @click="goToAdminLogin">
-      Admin Login
-    </button>
+    <button class="admin-login-button" @click="goToLogin">User Login</button>
   </div>
-  <Logo />
+
   <div class="content">
     <div class="details">
-      <h1 class="heading">Rehome with Care, Adopt with Love</h1>
-      <p class="subtitle">Welcome back! Please login to your account.</p>
+      <h1 class="heading">Where Compassion Meets Action</h1>
+      <p class="subtitle">Welcome back Admin! Please login to your account.</p>
 
       <div class="form">
         <div class="input-container-email">
-          <label class="input-label" for="email">Email address</label>
+          <label class="input-label" for="email">Admin Email address</label>
           <input
             class="input-field"
             type="email"
@@ -38,24 +35,20 @@
           />
         </div>
       </div>
-      <p>
-        <button class="forgot-password" @click="forgotPassword">
-          Forgot password
-        </button>
-      </p>
+      <p><button class="forgot-password">Forgot password</button></p>
       <div class="buttons">
         <p><button class="login-button" @click="login">Login</button></p>
-        <p>
-          <button class="signup-button" @click="goToSignUp">Sign Up</button>
-        </p>
       </div>
     </div>
-    <img src="../../assets/images/login/Rabbit.png" alt="Rabbit" class="img" />
+    <img
+      src="../../assets/images/admin-login/admin-dog.png"
+      alt="Dog"
+      class="img"
+    />
   </div>
 </template>
 <script setup>
 import { app } from "../../../firebase/firebase.js";
-import Logo from "../../components/Logo.vue";
 import { ref } from "vue";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
@@ -66,26 +59,19 @@ const password = ref("");
 
 const router = useRouter();
 
-const goToSignUp = () => {
-  router.push("/signup");
-  console.log("Navigating to sign up page");
-};
-
 const goToNextPage = (isPetLister) => {
   if (isPetLister) {
-    router.push("/petlisting");
+    router.push("/admin-page");
   } else {
     router.push("/home");
   }
 };
 
-const forgotPassword = () => {
-  router.push("/forget-password");
-};
-
 const login = async () => {
   try {
     const auth = getAuth(app);
+    console.log("auth: " + auth);
+    console.log("email.value & password.value ", email.value, password.value);
     const userCredential = await signInWithEmailAndPassword(
       auth,
       email.value,
@@ -95,13 +81,14 @@ const login = async () => {
     console.log("Successfully logged in", userCredential);
 
     const db = getFirestore(app);
-    const userDocRef = doc(db, "Users", user.uid);
+    console.log("user.uid ", user.uid);
+    const userDocRef = doc(db, "Admin", user.uid);
     const userDoc = await getDoc(userDocRef);
 
     if (userDoc.exists()) {
-      const userData = userDoc.data();
-      const isPetLister = userData.isPetLister;
-      goToNextPage(isPetLister);
+      //const userData = userDoc.data();
+      //const isPetLister = userData.isPetLister; // erase
+      goToNextPage(true); // goToNextPage
     } else {
       console.error("No such document!");
     }
@@ -111,8 +98,8 @@ const login = async () => {
   }
 };
 
-const goToAdminLogin = () => {
-  router.push("/admin-login");
+const goToLogin = () => {
+  router.push("/login");
 };
 </script>
 
