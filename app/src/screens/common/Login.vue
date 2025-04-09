@@ -1,4 +1,5 @@
 <template>
+
   <div class="header">
     <img
       src="../../assets/images/PawfectHome.png"
@@ -9,7 +10,7 @@
       Admin Login
     </button>
   </div>
-
+  <Logo />
   <div class="content">
     <div class="details">
       <h1 class="heading">Rehome with Care, Adopt with Love</h1>
@@ -37,7 +38,11 @@
           />
         </div>
       </div>
-      <p><button class="forgot-password">Forgot password</button></p>
+      <p>
+        <button class="forgot-password" @click="forgotPassword">
+          Forgot password
+        </button>
+      </p>
       <div class="buttons">
         <p><button class="login-button" @click="login">Login</button></p>
         <p>
@@ -50,6 +55,7 @@
 </template>
 <script setup>
 import { app } from "../../../firebase/firebase.js";
+import Logo from "../../components/Logo.vue";
 import { ref } from "vue";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
@@ -71,6 +77,10 @@ const goToNextPage = (isPetLister) => {
   } else {
     router.push("/home");
   }
+};
+
+const forgotPassword = () => {
+  router.push("/forget-password");
 };
 
 const login = async () => {

@@ -1,6 +1,7 @@
 <template>
   <div class="signup">
-    <img src="../../assets/images/PawfectHome.png" alt="Pawfect Home Logo" />
+    <Logo />
+
     <div class="signup-main">
       <div class="image-container">
         <div class="welcome">Welcome! We’re excited to have you.</div>
@@ -109,6 +110,7 @@
 <script setup>
 import cameraIcon from "@/assets/images/signup/Camera.png";
 import { app } from "../../../firebase/firebase.js";
+import Logo from "@/components/Logo.vue";
 import { ref, computed } from "vue";
 import {
   getAuth,
@@ -297,6 +299,7 @@ const register = async () => {
   padding: 0.7em;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: -1em;
 }
 
 .upload-image img {
@@ -326,7 +329,7 @@ const register = async () => {
   margin: 1em;
   border-left: 1px solid #7f7e83;
   border-right: 1px solid #7f7e83;
-  margin-top: 2em;
+  margin-top: 1em;
 }
 
 .signup-form-input {
@@ -389,7 +392,7 @@ input {
   font-size: 1em;
   border-radius: 30px;
   padding: 0.7em;
-  margin: 1em 2em;
+  margin: 0.5em 2em;
   cursor: pointer;
   width: 8em;
   height: 1.9em;
