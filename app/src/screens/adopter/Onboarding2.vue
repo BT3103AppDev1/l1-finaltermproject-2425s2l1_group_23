@@ -1,11 +1,6 @@
 <template>
-  <img
-    src="@/assets/images/PawfectHome.png"
-    alt="Pawfect Home Logo"
-    class="logo"
-  />
   <div class="onboarding-container">
-    <div class="logo-container"></div>
+    <Logo />
 
     <div class="text-container fade-in-left">
       <h1>Find Your Perfect Pet Companion!</h1>
@@ -36,8 +31,12 @@
 </template>
 
 <script>
+import Logo from "../../components/Logo.vue";
 export default {
   name: "Onboarding2",
+  components: {
+    Logo,
+  },
   methods: {
     goToNextPage() {
       this.$router.push("/onboarding-questions");
@@ -120,17 +119,17 @@ p {
 }
 
 .background-image {
-  width: 200%;
+  width: 195%;
   position: absolute;
-  top: 1em;
+  top: 4em;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .foreground-image {
-  width: 170%;
+  width: 150%;
   position: absolute;
-  top: 9.2em;
+  top: 15.1em;
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;

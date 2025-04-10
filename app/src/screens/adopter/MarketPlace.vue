@@ -1,24 +1,29 @@
 <template>
-    <MarketPlaceHeader
+  <div class="layout">
+    <AdoptersNavBar />
+
+    <div class="marketplace-main">
+      <MarketPlaceHeader
         :userName="'MingHan'"
         @search="handleSearch"
         @filter-category="handleCategoryFilter"
     />
+    
     <div class="marketplace-container">
-      <!-- <section class="search-bar">
-        <input
-          type="text"
-          placeholder="Search for pets..."
-          v-model="searchQuery"
-          @input="searchPets"
-        />
-      </section> -->
-  
       <section class="pet-list">
-        <Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />
+        <div
+          v-for="pet in filteredPets"
+          :key="pet.petListingId"
+          class="listing-link"
+        >
+        <Listing :pet="pet" @click.native="goToPetProfile(pet.petListingId)" />
+        </div>
       </section>
     </div>
-  </template>
+
+    </div>
+  </div>
+</template>
   
   <script>
   import { ref, onMounted, computed } from 'vue';
@@ -26,12 +31,44 @@
   import { collection, getDocs } from 'firebase/firestore';
   import Listing from '../../components/Listing.vue';
   import MarketPlaceHeader from './MarketPlaceHeader.vue';
+  import { useRouter } from 'vue-router';
+  import { getAuth } from 'firebase/auth';
+
   
   export default {
     components: { Listing, MarketPlaceHeader },
     setup() {
+
+      const router = useRouter();
       const pets = ref([]);
       const searchQuery = ref("");
+      const userName = ref("Guest");
+
+      const fetchUserName = async () => {
+        const auth = getAuth();
+        if (auth.currentUser) {
+          const userId = auth.currentUser.uid; // Get the logged-in user's UID
+          try {
+            const userDocRef = doc(db, "Users", userId); // Reference to the user's document
+            const userDocSnap = await getDoc(userDocRef);
+            if (userDocSnap.exists()) {
+              const userData = userDocSnap.data();
+              userName.value = userData.firstName || "Guest"; // Set the user's first name
+            } else {
+              console.error("No such user document in Firestore");
+            }
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        } else {
+          console.error("No user is currently logged in.");
+        }
+      };
+
+      const goToPetProfile = (petListingId) => {
+        localStorage.setItem('currentPetId', petListingId); // Store petListingId in localStorage
+        router.push({ name: "PetProfile" }); // Navigate to PetProfile
+      };
   
       const fetchPets = async () => {
         try {
@@ -65,9 +102,8 @@
               owner: "Unknown",
               ownerImage: "https://placekitten.com/50/50",
             };
-  
             return {
-              id: doc.id,
+              petListingId: doc.id,
               owner: ownerData.owner,
               ownerImage: ownerData.ownerImage,
               petImage: 'https://i.pinimg.com/564x/7f/26/e7/7f26e71b2c84e6b16d4f6d3fd8a58bca.jpg',
@@ -83,7 +119,10 @@
         }
       };
   
-      onMounted(fetchPets);
+      onMounted(() => {
+        fetchUserName(); // Fetch the logged-in user's first name
+        fetchPets(); // Fetch the pets
+    });
   
       const filteredPets = computed(() => {
         return pets.value.filter(pet =>
@@ -91,7 +130,7 @@
         );
       });
   
-      return { pets, searchQuery, filteredPets };
+      return { pets, searchQuery, filteredPets, goToPetProfile };
     },
   };
   </script>
@@ -134,5 +173,14 @@
     flex-wrap: wrap;
     gap: 20px;
     justify-content: flex-start;
+  }
+
+  .listing-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .pet-list .listing {
+    cursor: pointer;
   }
   </style>
