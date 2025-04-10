@@ -1,12 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div class="pet-card">
-    <div class="owner-info">
-      <img :src="pet.ownerImage" alt="Owner Profile" class="owner-image" />
-      <div class="owner-details">
-        <h3>{{ pet.owner }}</h3>
-        <p>{{ pet.timeAgo }}</p>
-=======
     <div class="pet-card">
       <div class="owner-info">
         <img :src="pet.ownerImage" alt="Owner Profile" class="owner-image" />
@@ -31,7 +23,6 @@
         <div class="treats">
           🍖 {{ pet.numTreats }}
         </div>
->>>>>>> petlistings
       </div>
     </div>
     <div class="pet-image-container">
@@ -45,7 +36,6 @@
       <p class="price">S${{ pet.petPrice }}</p>
       <div class="treats">🍖 {{ pet.numTreats }}</div>
     </div>
-  </div>
 </template>
 
 <script>

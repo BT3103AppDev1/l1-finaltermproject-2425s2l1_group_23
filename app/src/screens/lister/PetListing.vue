@@ -1,12 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div class="pet-listing">
-    <h1>Pet Listing</h1>
-    <p>This is a dummy template for the Pet Listing page.</p>
-
-    <!-- Temporary Button to go to Add Listing -->
-    <button @click="goToAddListing" class="add-button">Add a Pet</button>
-=======
   <div class="layout">
     <div class="sidebar">
       <ListersNavBar />
@@ -32,36 +24,12 @@
         />
       </div>
     </div>
->>>>>>> petlistings
   </div>
 </template>
 
 <script>
-<<<<<<< HEAD
-import { useRouter } from 'vue-router';
-
-export default {
-  name: "PetListing",
-  setup() {
-    const router = useRouter();
-
-    const goToAddListing = () => {
-
-      localStorage.removeItem("petType");
-      localStorage.removeItem("petBasicsInfo");
-      localStorage.removeItem("petLifestyleInfo");
-      localStorage.removeItem("fullPetListingData");
-
-  
-      sessionStorage.removeItem("cameFromPreview");
-
-
-      router.push("/addlisting1");
-    };
-
-    return { goToAddListing };
-=======
 import { getDoc, doc, collection, getDocs, query, where, deleteDoc } from "firebase/firestore";
+import { useRouter } from "vue-router";
 import { auth, db } from "../../../firebase/firebase.js";
 import ListersNavBar from "@/components/ListersNavBar.vue";
 import ListersListing from "@/components/ListersListing.vue";
@@ -108,10 +76,19 @@ export default {
       await deleteDoc(doc(db, "Pet_Listings", petId));
       this.listings = this.listings.filter((pet) => pet.id !== petId);
     },
->>>>>>> petlistings
-  },
+    goToAddListing() {
+      localStorage.removeItem("petType");
+      localStorage.removeItem("petBasicsInfo");
+      localStorage.removeItem("petLifestyleInfo");
+      localStorage.removeItem("fullPetListingData");
+      sessionStorage.removeItem("cameFromPreview");
+
+      this.$router.push("/addlisting1");
+    }
+  }
 };
 </script>
+
 
 
 <style scoped>

@@ -2,7 +2,6 @@
   <div class="marketplace-container">
     <!-- Header Section (Logo + Welcome Message) -->
     <header class="header">
-<<<<<<< HEAD
       <div class="header-content">
         <img
           class="logo"
@@ -16,14 +15,13 @@
         <button class="email-button" @click="goToEmails"><img class="icon" src="@/assets/images/marketplaceHeader/emailIcon.png" alt="Email Icon" /></button>
         <span v-if="emailsUnread > 0" class="email-notification">{{ emailsUnread }}</span>
       </div>
-=======
+
       <img
         class="logo"
         src="../../assets/images/PawfectHome-Logo.png"
         alt="Logo"
       />
       <h1>Welcome, {{ userName }}!</h1>
->>>>>>> petlistings
     </header>
 
     <!-- Search Bar -->
@@ -69,13 +67,8 @@
 
 <script>
 import CategoryCard from "@/components/CategoryCard.vue";
-<<<<<<< HEAD
-import { db } from "../../../firebase/firebase.js";
-import { doc, getDoc } from "firebase/firestore";
-=======
 import { auth, db } from "../../../firebase/firebase.js";
 import { getDoc, doc } from "firebase/firestore";
->>>>>>> petlistings
 
 export default {
   components: {
@@ -114,7 +107,6 @@ export default {
     }
   },
   methods: {
-<<<<<<< HEAD
     async fetchUnreadEmails() {
       try {
         const userId = "testing"; // Replace with the actual user ID
@@ -132,11 +124,9 @@ export default {
       }
     },
 
-=======
     searchPets() {
       this.$emit("search", this.searchQuery);
     },
->>>>>>> petlistings
     filterByCategory(category) {
       this.$emit("filter-category", category);
     },
