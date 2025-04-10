@@ -15,7 +15,9 @@
         <Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />
       </section>
     </div>
-  </template>
+    </div>
+  </div>
+</template>
   
   <script>
   import { ref, onMounted, computed } from 'vue';
