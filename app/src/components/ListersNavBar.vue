@@ -1,5 +1,5 @@
 <template>
-    <div class="adopters-navbar">
+    <div class="listers-navbar">
       <!-- Home (MarketPlace.vue) -->
       <router-link to="/home" class="icon-button">
         <img src="@/assets/images/navbar/home.png" alt="Home" class="icon" />
@@ -9,6 +9,7 @@
       <router-link to="/chat" class="icon-button">
         <img src="@/assets/images/navbar/chat.png" alt="Chat" class="icon" />
       </router-link>
+  
   
       <!-- Edit Profile (EditProfile.vue) -->
       <router-link to="/editprofile" class="icon-button">
@@ -31,7 +32,7 @@
   </script>
   
   <style scoped>
-  .Listers-navbar {
+  .listers-navbar {
     width: 80px;
     height: calc(90vh - 100px);
     background-color: #c9d0e0;

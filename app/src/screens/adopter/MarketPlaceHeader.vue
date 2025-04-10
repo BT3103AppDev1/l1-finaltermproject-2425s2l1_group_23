@@ -2,6 +2,7 @@
   <div class="marketplace-container">
     <!-- Header Section (Logo + Welcome Message) -->
     <header class="header">
+<<<<<<< HEAD
       <div class="header-content">
         <img
           class="logo"
@@ -15,9 +16,17 @@
         <button class="email-button" @click="goToEmails"><img class="icon" src="@/assets/images/marketplaceHeader/emailIcon.png" alt="Email Icon" /></button>
         <span v-if="emailsUnread > 0" class="email-notification">{{ emailsUnread }}</span>
       </div>
+=======
+      <img
+        class="logo"
+        src="../../assets/images/PawfectHome-Logo.png"
+        alt="Logo"
+      />
+      <h1>Welcome, {{ userName }}!</h1>
+>>>>>>> petlistings
     </header>
 
-    <!-- Search Bar (Now Properly Centered) -->
+    <!-- Search Bar -->
     <div class="search-wrapper">
       <div class="search-container">
         <input
@@ -29,8 +38,8 @@
       </div>
     </div>
 
-    <div class="div-text"> 
-      <h1> What kind of pet are you looking for? </h1>
+    <div class="div-text">
+      <h1>What kind of pet are you looking for?</h1>
     </div>
 
     <!-- Pet Categories -->
@@ -45,9 +54,9 @@
         />
       </div>
     </section>
-    
-    <div class="div-text"> 
-      <h1> Our cutest additions... </h1>
+
+    <div class="div-text">
+      <h1>Our cutest additions...</h1>
     </div>
 
     <!-- Pet Listings -->
@@ -57,10 +66,16 @@
   </div>
 </template>
 
+
 <script>
 import CategoryCard from "@/components/CategoryCard.vue";
+<<<<<<< HEAD
 import { db } from "../../../firebase/firebase.js";
 import { doc, getDoc } from "firebase/firestore";
+=======
+import { auth, db } from "../../../firebase/firebase.js";
+import { getDoc, doc } from "firebase/firestore";
+>>>>>>> petlistings
 
 export default {
   components: {
@@ -69,6 +84,7 @@ export default {
 
   data() {
     return {
+      userName: "", // dynamically fetched from Firebase
       searchQuery: "",
       emailsUnread: 0,
       petCategories: [
@@ -81,7 +97,24 @@ export default {
       ],
     };
   },
+  async created() {
+    const user = auth.currentUser;
+    if (user) {
+      const userDocRef = doc(db, "Users", user.uid);
+      const userSnap = await getDoc(userDocRef);
+
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        this.userName = `${data.firstName} ${data.lastName}`;
+      } else {
+        console.error("User document not found.");
+      }
+    } else {
+      console.error("No user is currently logged in.");
+    }
+  },
   methods: {
+<<<<<<< HEAD
     async fetchUnreadEmails() {
       try {
         const userId = "testing"; // Replace with the actual user ID
@@ -99,6 +132,11 @@ export default {
       }
     },
 
+=======
+    searchPets() {
+      this.$emit("search", this.searchQuery);
+    },
+>>>>>>> petlistings
     filterByCategory(category) {
       this.$emit("filter-category", category);
     },
@@ -113,6 +151,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 @import url("../../assets/styles/font.css");

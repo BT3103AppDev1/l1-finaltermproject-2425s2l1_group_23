@@ -1,10 +1,37 @@
 <template>
+<<<<<<< HEAD
   <div class="pet-card">
     <div class="owner-info">
       <img :src="pet.ownerImage" alt="Owner Profile" class="owner-image" />
       <div class="owner-details">
         <h3>{{ pet.owner }}</h3>
         <p>{{ pet.timeAgo }}</p>
+=======
+    <div class="pet-card">
+      <div class="owner-info">
+        <img :src="pet.ownerImage" alt="Owner Profile" class="owner-image" />
+        <div class="owner-details">
+          <h3>{{ pet.owner }}</h3>
+          <p>{{ pet.timeAgo }}</p>
+        </div>
+      </div>
+      <div class="pet-image-container">
+        <img
+    :src="pet.petPhotoBase64 ? `data:image/jpeg;base64,${pet.petPhotoBase64}` : 'https://cpet.tc.columbia.edu/uploads/1/8/4/5/18456699/testing-values-imgur_orig.png'"
+    alt="Pet Image"
+    class="pet-image"
+  />
+      </div>
+      <div class="pet-details">
+        <div class="pet-name-age">
+          <h2 class="pet-name">{{ pet.petName }}</h2>
+          <p class="pet-age">{{ pet.petAge }}</p>
+        </div>
+        <p class="price">S${{ pet.petPrice }}</p>
+        <div class="treats">
+          🍖 {{ pet.numTreats }}
+        </div>
+>>>>>>> petlistings
       </div>
     </div>
     <div class="pet-image-container">
