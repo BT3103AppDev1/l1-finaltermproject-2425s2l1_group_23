@@ -1,18 +1,16 @@
 <template>
-    <MarketPlaceHeader
+  <div class="layout">
+    <AdoptersNavBar />
+
+    <div class="marketplace-main">
+      <MarketPlaceHeader
         :userName="'MingHan'"
         @search="handleSearch"
         @filter-category="handleCategoryFilter"
     />
     <div class="marketplace-container">
-      <!-- <section class="search-bar">
-        <input
-          type="text"
-          placeholder="Search for pets..."
-          v-model="searchQuery"
-          @input="searchPets"
-        />
-      </section> -->
+   
+  
       <section class="pet-list">
         <Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />
       </section>
