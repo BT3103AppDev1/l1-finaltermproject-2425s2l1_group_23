@@ -8,13 +8,13 @@
         @search="handleSearch"
         @filter-category="handleCategoryFilter"
     />
+    
     <div class="marketplace-container">
-   
-  
       <section class="pet-list">
         <Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />
       </section>
     </div>
+
     </div>
   </div>
 </template>
