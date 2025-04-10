@@ -104,6 +104,15 @@ export default {
             const chatData = document.data();
             const chatId = document.id;
 
+            if (chatData.expiryDate) {
+              const expiryDate = chatData.expiryDate.toDate();
+              const currentDate = new Date();
+              if (currentDate > expiryDate) {
+                console.log(`Chat ${chatId} is expired and will not be shown.`);
+                return null; // Exclude expired chats
+              }
+            }
+
             // Get other participant's ID
             const otherUserId = chatData.participants.find(
               (id) => id !== this.currentUserId
