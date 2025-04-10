@@ -11,7 +11,7 @@ import ForgetPassword from "../screens/common/ForgetPassword.vue";
 import PetProfile from "../screens/adopter/PetProfile.vue";
 import EditProfile from "../screens/adopter/EditProfile.vue";
 import ResetPassword from "../screens/adopter/ResetPassword.vue";
-import ChatPageL from "../screens/lister/ChatPageL.vue";
+import ChatPage from "../screens/common/ChatPage.vue";
 
 const routes = [
   {
@@ -76,9 +76,9 @@ const routes = [
     component: ResetPassword,
   },
   {
-    path: "/lister/chat",
-    name: "ChatPageL",
-    component: ChatPageL,
+    path: "/chat",
+    name: "ChatPage",
+    component: ChatPage,
   },
 ];
 

@@ -1,6 +1,8 @@
 <template>
+  <!-- Conditional rendering of header depending on isLister condition in the isListers -->
   <div class="chat-preview">
-    <h2 class="header">Adopters🏡</h2>
+    <h2 v-if="!loading && isPetLister" class="header">Adopters🏡</h2>
+    <h2 v-if="!loading && !isPetLister" class="header">Listers🐾</h2>
     <ul>
       <li
         v-for="chat in chats"
@@ -10,7 +12,7 @@
       >
         <div class="item">
           <img
-            :src="chat.profileImage || 'https://via.placeholder.com/50'"
+            :src="chat.profileImage"
             alt="User Avatar"
             class="avatar"
           />
@@ -39,8 +41,7 @@ import {
   orderBy,
   getDoc,
   doc, // Make sure this is imported
-  updateDoc,
-  serverTimestamp,
+  updateDoc
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { onUnmounted } from "vue";
@@ -52,8 +53,11 @@ export default {
       chats: [],
       selectedChatId: null,
       currentUserId: null,
+      isPetLister: null,
+      loading: true,
     };
   },
+
   async created() {
     const auth = getAuth();
 
@@ -82,14 +86,16 @@ export default {
         }
 
         const userData = userDoc.data();
-        const isPetLister = userData.isPetLister;
+        this.isPetLister = userData.isPetLister;
+        console.log(this.isPetLister)
+
+        this.loading = false;
 
         // by pass the documentID then query the collection usiing composite index
         const q = query(
           collection(db, "ChatRooms"),
-          where("participants", "array-contains", this.currentUserId),
-          orderBy("latestTime", "desc"),
-          orderBy("__name__", "desc")
+          where("participants", "array-contains", this.currentUserId), 
+          orderBy(this.isPetLister ? "latestTimeLister" : "latestTimeAdopter", "desc")
         );
 
         // 3. Set up real-time listener
@@ -113,22 +119,36 @@ export default {
 
             // filter based on user type --> meaning that the if user is a petLister and the other user is also a petLister it will return a null and vice versa
             if (
-              (isPetLister && otherUserData.isPetLister) ||
-              (!isPetLister && !otherUserData.isPetLister)
+              (this.isPetLister && otherUserData.isPetLister) ||
+              (!this.isPetLister && !otherUserData.isPetLister)
             ) {
               return null;
             }
 
+            const latestMessage = this.isPetLister
+              ? chatData.latestMessageLister
+              : chatData.latestMessageAdopter;
+
+            const latestTime = this.isPetLister
+              ? chatData.latestTimeLister
+              : chatData.latestTimeAdopter;
+            
+            const lastSender = this.isPetLister
+              ? chatData.lastSenderLister
+              : chatData.lastSenderAdopter;
+              
+
             return {
               id: chatId,
               name: `${otherUserData.firstName} ${otherUserData.lastName}`,
-              lastMessage: chatData.latestMessage || "No messages yet",
+              lastMessage: latestMessage || "No messages yet",
+              lastTime: latestTime ? latestTime.toDate() : null,
               profileImage:
-                otherUserData.profileImage || "https://via.placeholder.com/50",
+                otherUserData.profileImage,
               unread:
                 chatData.hasRead === false &&
-                chatData.lastSender !== this.currentUserId,
-              otherUserId: otherUserId,
+                lastSender !== this.currentUserId,
+                otherUserId: otherUserId,
             };
           });
 

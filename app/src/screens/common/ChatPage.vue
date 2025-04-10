@@ -18,7 +18,7 @@ import ChatPreview from "@/components/ChatPreview.vue";
 import ChatRoom from "@/components/ChatRoom.vue";
 
 export default {
-  name: "ChatPageL",
+  name: "ChatPage",
   components: {
     ChatPreview,
     ChatRoom,
@@ -68,6 +68,8 @@ export default {
   border-right: 1px solid #b4abab;
   border-left: 1px solid #b4abab;
   height: 100%;
+  flex-shrink: 0;
+  flex-grow: 0;
 }
 
 .chatroom-container {

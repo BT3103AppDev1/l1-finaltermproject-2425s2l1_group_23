@@ -3,9 +3,9 @@
     <!-- Person Section -->
     <div class="person">
       <img
-        :src="selectedChat.profileImage || 'https://via.placeholder.com/50'"
-        alt="User Avatar"
-        class="avatar"
+          :src="selectedChat.profileImage || defaultAvatar"
+          alt="Pet Avatar"
+          class="pet-avatar"
       />
       <h2>{{ selectedChat.name }}</h2>
     </div>
@@ -14,7 +14,15 @@
     <div class="notification">
       <div class="pet">
         <img
-          v-bind:src="petData.petPhotoBase64  || 'https://via.placeholder.com/50'"
+          v-if="isPetLister"
+          @click="goToPetProfile(petData.petListingId)" 
+          :src="petData.petPhotoBase64 || defaultAvatar"
+          alt="Pet Avatar"
+          class="pet-avatar"
+        />
+        <img
+          v-else
+          :src="petData.petPhotoBase64 || defaultAvatar" 
           alt="Pet Avatar"
           class="pet-avatar"
         />
@@ -22,27 +30,33 @@
       </div>
       <!-- Treat button for Listers -->
       <!-- 3 treat status: Accepted, Rejected, Pending -->
-      <div class="treat-l">
-        <button> 
+      <div class="treat-l" v-if="this.treatStatus === 'pending' && isPetLister">
+        <button class="accept-button" @click="acceptTreat"> 
           <p>🦴 Accept Treat</p>
         </button>
-        <button>
+        <button class="reject-button" @click="rejectTreat">
           <p>❌ Reject</p>
         </button>
       </div>
 
-      <div class="treat-status-l">
+      <div v-if="this.treatStatus === 'accepted' && isPetLister" class="treat-status-l-accept">
         <p>Treat accepted 🦴</p>
+      </div>
+
+      <div v-if="this.treatStatus === 'rejected' && isPetLister" class="treat-status-l-reject">
         <p>Treat rejected...</p>
       </div>
 
       <!-- Treat button for Adopters -->
-      <div class="treat-l">
+      <div v-if="this.treatStatus === 'pending && !isPetLister'" class="treat-a">
         <p>Your treat is still on its way to {{ petData.petName }}. Hang tight!</p>
       </div>
 
-      <div class="treat-status-l">
+      <div v-if="this.treatStatus === 'accepted' && !isPetLister" class="treat-status-a-accept">
         <p>{{ petData.petName }} has accepted your treat! 🦴</p>
+      </div>
+
+      <div v-if="this.treatStatus === 'rejected' && !isPetLister"class="treat-status-a-reject">
         <p>{{ petData.petName }} has rejected your treat...</p>
 
       </div>
@@ -53,9 +67,16 @@
       <div
         v-for="message in messages"
         :key="message.id"
-        :class="['message', { 'message-right': message.sender === 'You' }]"
+        :class="[
+          'message',
+          { 'message-right': message.sender === 'You' },
+          { 'admin-message': message.sender === 'Admin' }
+        ]"
       >
-        <p class="bubble">
+        <p v-if="message.sender === 'Admin'" class="admin-text">
+          {{ message.text }}
+        </p>
+        <p v-else class="bubble">
           <strong>{{ message.text }}</strong>
         </p>
       </div>
@@ -68,6 +89,7 @@
         v-model="newMessage"
         placeholder="Type your message..."
         @keyup.enter="sendMessage"
+        :disabled="isChatExpired"
       />
       <button @click="sendMessage">
         <v-icon name="md-send-round" class="send-icon"></v-icon>
@@ -92,6 +114,7 @@ import {
 import { getAuth } from "firebase/auth";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import { MdSendRound } from "oh-vue-icons/icons";
+import defaultAvatar from "@/assets/images/DefaultAvatar.jpg";
 
 addIcons(MdSendRound);
 
@@ -112,12 +135,30 @@ export default {
       newMessage: "",
       currentUserId: null,
       unsubscribeMessages: null,
-      petData: {}
+      petData: {},
+      defaultAvatar,
+      treatStatus: null,
+      isPetLister: false,
+      isChatExpired: false,
+      adopterId: null,
+      listerId: null,
     };
   },
   async created() {
     const auth = getAuth();
     this.currentUserId = auth.currentUser.uid;
+
+    this.adopterId = this.selectedChat.otherUserId; // Assuming this is the adopter ID
+    this.listerId = this.currentUserId;
+      const userDocRef = doc(db, "Users", this.currentUserId);
+    const userDoc = await getDoc(userDocRef);
+
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      this.isPetLister = userData.isPetLister || false; // Set isPetLister
+    } else {
+      console.error("User document not found");
+    }
     this.fetchMessages();
     this.display();
   },
@@ -160,13 +201,44 @@ export default {
               console.log("Document data:", docSnap.data());
               /* grab the pet details here */
               this.petData = docSnap.data();
-              console.log("Document data:", docSnap.data());
-  
           } else {
               console.log("No such pet in firebase")
           }
       } catch (error) {
           console.log("Error fetching pet listing", error);
+      }
+
+      const chatRoomDocRef = doc(db, "ChatRooms", this.selectedChat.id);
+      try {
+        const docSnap = await getDoc(chatRoomDocRef);
+        console.log("Fetching ChatRoom document:", this.selectedChat.id);
+
+        if (docSnap.exists()) {
+          const chatRoomData = docSnap.data();
+          console.log("ChatRoom data:", chatRoomData);
+
+          // Set treatStatus based on the ChatRoom document
+          if (chatRoomData.treatStatus === "pending") {
+            this.treatStatus = "pending";
+          } else if (chatRoomData.treatStatus === "accepted") {
+            this.treatStatus = "accepted";
+          } else if (chatRoomData.treatStatus === "rejected") {
+            this.treatStatus = "rejected";
+          } else {
+            console.log("No valid treat status found");
+            this.treatStatus = null;
+          }
+
+          if (chatRoomData.expiryDate) {
+            const expiryDate = chatRoomData.expiryDate.toDate();
+            const currentDate = new Date();
+            this.isChatExpired = currentDate > expiryDate;
+          }
+        } else {
+          console.log("No such ChatRoom in Firebase");
+        }
+      } catch (error) {
+        console.error("Error fetching ChatRoom document:", error);
       }
     },
 
@@ -182,23 +254,31 @@ export default {
         this.selectedChat.id,
         "messages"
       );
-      const q = query(messagesRef, orderBy("time", "asc"));
+      const q = query(messagesRef, orderBy("timestamp", "asc")); // Ensure "timestamp" matches Firestore field
+
       this.unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
         this.messages = [];
+        console.log(this.messages);
         querySnapshot.forEach((doc) => {
           const messageData = doc.data();
-          this.messages.push({
-            id: doc.id,
-            sender:
-              messageData.from === this.currentUserId
-                ? "You"
-                : this.selectedChat.name,
-            text: messageData.content,
-            time: messageData.time?.toDate() || new Date(),
-          });
+          console.log("from");
+          console.log(messageData.from);
+          if (messageData.to === this.currentUserId || messageData.from === this.currentUserId) {
+            this.messages.push({
+              id: doc.id,
+              sender:
+                messageData.from === "admin"
+                  ? "Admin"
+                  : messageData.from === this.currentUserId
+                  ? "You"
+                  : this.selectedChat.name,
+              text: messageData.content,
+              timestamp: messageData.timestamp?.toDate() || new Date(),
+            });
+          }
         });
 
-        // scroll to bottom after messages load
+        // Scroll to bottom after messages load
         this.$nextTick(() => {
           const messagesContainer = this.$el.querySelector(".messages");
           if (messagesContainer) {
@@ -207,6 +287,7 @@ export default {
         });
       });
     },
+
     async sendMessage() {
       if (this.newMessage.trim() === "") return;
 
@@ -222,16 +303,19 @@ export default {
           from: this.currentUserId,
           to: this.selectedChat.otherUserId,
           content: this.newMessage.trim(),
-          time: serverTimestamp(),
+          timestamp: serverTimestamp(),
         });
 
         // update the chat room with latest message info
         const chatRoomRef = doc(db, "ChatRooms", this.selectedChat.id);
         await updateDoc(chatRoomRef, {
-          latestMessage: this.newMessage.trim(),
-          latestTime: serverTimestamp(),
+          latestMessageAdopter: this.newMessage.trim(),
+          latestTimeAdopter: serverTimestamp(),
+          latestMessageLister: this.newMessage.trim(),
+          latestTimeLister: serverTimestamp(),
+          lastSenderAdopter: this.currentUserId,
+          lastSenderLister: this.currentUserId,
           hasRead: false,
-          lastSender: this.currentUserId,
         });
 
         this.newMessage = "";
@@ -239,8 +323,167 @@ export default {
         console.error("Error sending message:", error);
       }
     },
-  },
-};
+
+    async acceptTreat() {
+      try {
+        const chatRoomDocRef = doc(db, "ChatRooms", this.selectedChat.id);
+        await updateDoc(chatRoomDocRef, { treatStatus: "accepted" });
+        this.treatStatus = "accepted"; // Update UI
+        console.log("Treat accepted");
+        const messagesRef = collection(chatRoomDocRef, "messages");
+
+        // Fetch adopter and lister data
+        const adopterDocRef = doc(db, "Users", this.selectedChat.otherUserId); // Adopter ID
+        const listerDocRef = doc(db, "Users", this.currentUserId); // Lister ID
+        const adopterDoc = await getDoc(adopterDocRef);
+        const listerDoc = await getDoc(listerDocRef);
+
+        const adopterFirstName = adopterDoc.exists() ? adopterDoc.data().firstName : "Adopter";
+        const listerFirstName = listerDoc.exists() ? listerDoc.data().firstName : "Lister";
+        
+        await addDoc(messagesRef, {
+          from: "admin",
+          to: this.adopterId,
+          content: `
+          🎉 Treat accepted – ${this.petData.petName} is officially yours!
+
+          Now’s a good time to message ${listerFirstName} to:
+
+          • Arrange a meet-up or handover 🐾
+          • Ask about ${this.petData.petName}’s routine, likes, and essentials
+          • Share anything they should know about you or your home 🏡
+
+          Let’s make ${this.petData.petName}’s transition smooth and happy! ❤️
+          `,
+          timestamp: serverTimestamp(),
+        });
+
+        await addDoc(messagesRef, {
+          from: "admin",
+          to: this.listerId,
+          content: `
+          You’ve accepted the treat – that means ${this.petData.petName} is on their way to a new home!
+
+          You can now:
+
+          • Message ${adopterFirstName} to set up a meet-up or handover 📍
+
+          • Share ${this.petData.petName}’s habits, food, vet records, and favourite toys
+
+          • Let them know any final tips for settling ${this.petData.petName} in 🏡
+
+          Thank you for giving ${this.petData.petName} a loving start. You're pawesome! 🐾
+          `,
+          timestamp: serverTimestamp(),
+        });
+
+        await updateDoc(chatRoomDocRef, {
+          latestMessageAdopter: `🎉 Treat accepted – ${this.petData.petName} is officially yours!
+          Now’s a good time to message ${listerFirstName} to:
+          • Arrange a meet-up or handover 🐾
+          • Ask about ${this.petData.petName}’s routine, likes, and essentials
+          • Share anything they should know about you or your home 🏡
+
+          Let’s make ${this.petData.petName}’s transition smooth and happy! ❤️
+          `,
+          latestMessageLister: `You’ve accepted the treat – that means ${this.petData.petName} is on their way to a new home!
+
+          You can now:
+
+          • Message ${adopterFirstName} to set up a meet-up or handover 📍
+
+          • Share ${this.petData.petName}’s habits, food, vet records, and favourite toys
+
+          • Let them know any final tips for settling ${this.petData.petName} in 🏡
+
+          Thank you for giving ${this.petData.petName} a loving start. You're pawesome! 🐾`,
+          latestTimeAdopter: serverTimestamp(),
+          latestTimeLister: serverTimestamp(),
+    });
+        console.log("Initial message added to the message subcollection");
+      } catch (error) {
+          console.log("Error", error);
+      }
+    },
+
+    async rejectTreat() {
+      try {
+        const chatRoomDocRef = doc(db, "ChatRooms", this.selectedChat.id);
+        await updateDoc(chatRoomDocRef, { treatStatus: "rejected" });
+        this.treatStatus = "rejected"; // Update UI
+        console.log("Treat rejected");
+
+        const messagesRef = collection(chatRoomDocRef, "messages");
+        // Fetch adopter and lister data
+        const adopterDocRef = doc(db, "Users", this.selectedChat.otherUserId); // Adopter ID
+        const listerDocRef = doc(db, "Users", this.currentUserId); // Lister ID
+        const adopterDoc = await getDoc(adopterDocRef);
+        const listerDoc = await getDoc(listerDocRef);
+
+        const adopterFirstName = adopterDoc.exists() ? adopterDoc.data().firstName : "Adopter";
+        const listerFirstName = listerDoc.exists() ? listerDoc.data().firstName : "Lister";
+
+        await addDoc(messagesRef, {
+          from: "admin",
+          to: this.adopterId,
+          content: `
+          Hey there! ${listerFirstName} has decided not to accept the treat for ${this.petData.petName} this time 🐾
+
+          Don’t be discouraged – there are plenty of other adorable pets waiting for you to send them a treat! 🐶🐱
+
+          Thanks for being part of this journey. 💛
+
+          The chat will be closed in 24 hours, but you can always reach out to us if you have any questions or need assistance. 💬
+          `,
+          timestamp: serverTimestamp(),
+        });
+
+        await addDoc(messagesRef, {
+          from: "admin",
+          to: this.listerId,
+          content: `
+          You’ve chosen to pass on this treat for ${this.petData.petName} 🦴💭
+
+          We’ve let ${adopterFirstName} know gently. Remember, every pet is unique and finding the right match takes time. 🐾
+
+          Don't forget to keep your listing updated so future treats are from paw-sible matches! 🐾✨
+
+          The chat will be closed in 24 hours, but you can always reach out to us if you have any questions or need assistance. 💬
+          `,
+          timestamp: serverTimestamp(),
+        });
+        console.log("Initial message added to the message subcollection");
+
+        await updateDoc(chatRoomDocRef, {
+          latestMessageAdopter: `Hey there! ${listerFirstName} has decided not to accept the treat for ${this.petData.petName} this time 🐾`,
+          latestMessageLister: `You’ve chosen to pass on this treat for ${this.petData.petName} 🦴💭`,
+          latestTimeAdopter: serverTimestamp(),
+          latestTimeLister: serverTimestamp(),
+        });
+        
+
+        // Calculate expiry date (1 day from now)
+        const expiryDate = serverTimestamp();
+        expiryDate.setDate(expiryDate.getDate() + 1);
+
+        // Update the ChatRoom document with the expiry date
+        await updateDoc(chatRoomDocRef, {
+          expiryDate: expiryDate, // Save the expiry date
+        });
+
+
+      } catch (error) {
+          console.log("Error", error);
+      }
+    },
+    async goToPetProfile (petListingId) {
+        localStorage.setItem('currentPetId', petListingId); // Store petListingId in localStorage
+        router.push({ name: "PetProfile" }); // Navigate to PetProfile
+    },
+  }
+}
+
+
 </script>
 
 <style scoped>
@@ -275,7 +518,9 @@ export default {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #b4abab;
-  padding: 5px;
+  justify-content: space-between;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .pet {
@@ -339,10 +584,10 @@ export default {
 .bubble::after {
   content: "";
   position: absolute;
-  bottom: -18px;
+  bottom: -8px;
   left: -10px;
-  width: 15px;
-  height: 15px;
+  width: 12px;
+  height: 12px;
   background-color: #e7e7e7;
   border-radius: 50%;
 }
@@ -361,12 +606,13 @@ export default {
   display: flex;
   gap: 10px;
   padding: 10px;
+  
 }
 
 .message-input input {
   flex: 1;
-  padding: 10px;
-  background-color: #e2f0fd;
+  padding: 20px;
+  background-color: #e4e9fa;
   border: none;
   border-radius: 25px;
   font-family: Raleway-Light;
@@ -392,4 +638,87 @@ export default {
   height: 20px;
   color: white;
 }
+
+.admin-message {
+  background-color: #d9dff6;
+  border: 0.2em #303030;
+  border-radius: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.admin-text {
+  font-family: Raleway-SemiBold;
+  font-size: 1em;
+  padding: 0.2em;
+  text-align: center;
+}
+
+.treat-status-l-accept,
+.treat-status-l-reject {
+  font-family: Raleway-Bold;
+  font-size: 1em;
+  height: 2.625em;
+  width: 12.5em;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5em;
+}
+
+.treat-status-l-accept {
+  background-color: #CEE1B9;
+}
+.treat-status-l-reject {
+  background-color: #F4D5CF;
+}
+
+.treat-a {
+  font-family: Raleway-Bold;
+  font-size: 1em;
+  padding: 0.2em 0.5em;
+  background-color: #C4CCDC;
+  border-radius: 0.5em;
+}
+
+.treat-l {
+  display: flex;
+  gap: 1em;
+}
+
+.accept-button, .reject-button {
+  border-radius: 0.5em;
+  font-family: Raleway-Bold;
+  font-size: 1em;
+  height: 2.625em;
+  width: 8.5em;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.accept-button {
+  background-color: #CEE1B9;
+}
+
+.accept-button:hover {
+  background-color: #A8CBA0;
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+.reject-button {
+  background-color: #F4D5CF;
+}
+
+.reject-button:hover {
+  background-color: #EAB8B0;
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
 </style>

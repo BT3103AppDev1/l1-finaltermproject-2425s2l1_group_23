@@ -297,7 +297,6 @@ import {
   updateDoc,
   increment,
   arrayUnion,
-  setDoc,
   query,
   collection,
   where,
@@ -431,11 +430,12 @@ export default {
       try {
         const chatRoomDocRef = await addDoc(chatRoomsCollectionRef, {
           petListingId: petListingId,
-          adopterId: adopterId,
-          listerId: listerId,
-          latestTime: new Date(),
-          latestMessage: "",
-          treatStatus: "pending",
+          participants: [adopterId, listerId],
+          latestTimeAdopter: new Date(),
+          latestTimeLister: new Date(),
+          latestMessageLister: `Say hi to get things started! ${this.petData.petName} is waiting for your message so the lister can respond to your treat! 💬`,
+          latestMessageAdopter: `Paw-some! ${this.ad} sent a treat for ${this.petData.petName}. 🦴 Say hi to see if it’s a match! ✨`,
+          treatStatus: "pending"
         });
         console.log("Chat room successfully created!");
 
@@ -444,14 +444,14 @@ export default {
         await addDoc(messagesRef, {
           from: "admin",
           to: adopterId,
-          message: `Say hi to get things started! ${this.petData.petName} is waiting for your message so the lister can respond to your treat! 💬`,
+          content: `Say hi to get things started! ${this.petData.petName} is waiting for your message so the lister can respond to your treat! 💬`,
           timestamp: new Date(),
         });
 
         await addDoc(messagesRef, {
           from: "admin",
           to: listerId,
-          message: `Paw-some! Someone sent a treat for ${this.petData.petName} 🦴✨ Say hi to see if it’s a match! ✨`,
+          content: `Paw-some! Someone sent a treat for ${this.petData.petName} 🦴✨ Say hi to see if it’s a match! ✨`,
           timestamp: new Date(),
         });
         console.log("Initial message added to the message subcollection");
