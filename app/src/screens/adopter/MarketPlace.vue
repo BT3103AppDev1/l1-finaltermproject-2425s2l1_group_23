@@ -1,19 +1,15 @@
 <template>
-    <MarketPlaceHeader
-        :userName="userName"
+  <div class="layout">
+    <AdoptersNavBar />
+
+    <div class="marketplace-main">
+      <MarketPlaceHeader
+        :userName="'MingHan'"
         @search="handleSearch"
         @filter-category="handleCategoryFilter"
     />
+    
     <div class="marketplace-container">
-      <!-- <section class="search-bar">
-        <input
-          type="text"
-          placeholder="Search for pets..."
-          v-model="searchQuery"
-          @input="searchPets"
-        />
-      </section> -->
-  
       <section class="pet-list">
         <div
           v-for="pet in filteredPets"
@@ -24,7 +20,10 @@
         </div>
       </section>
     </div>
-  </template>
+
+    </div>
+  </div>
+</template>
   
   <script>
   import { ref, onMounted, computed } from 'vue';
