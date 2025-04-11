@@ -9,7 +9,7 @@ import OnboardingQn from "../screens/adopter/OnboardingQn.vue";
 import MarketPlace from "../screens/adopter/MarketPlace.vue";
 import ForgetPassword from "../screens/common/ForgetPassword.vue";
 import PetProfile from "../screens/adopter/PetProfile.vue";
-import EditProfile from "../screens/adopter/EditProfile.vue";
+import EditProfile from "../screens/common/EditProfile.vue";
 import ResetPassword from "../screens/adopter/ResetPassword.vue";
 import Email from '../screens/adopter/Email.vue';
 import AdminLogin from "../screens/admin/AdminLogin.vue";

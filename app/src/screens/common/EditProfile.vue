@@ -1,7 +1,10 @@
 <template>
   <div class="overall">
-    <div class="navbar">
-      <AdoptersNavBar />
+    <div class="navbar" v-if="!loading">
+      <AdoptersNavBar v-if="!isPetLister" />
+    </div>
+    <div class="navbar" v-if="!loading">
+      <ListersNavBar v-if="isPetLister" />
     </div>
     <div class="edit-profile-container">
       <!-- Logo and Heading Container -->
@@ -182,6 +185,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import { deleteObject } from "firebase/storage";
 import AdoptersNavBar from "../../components/AdoptersNavBar.vue";
+import ListersNavBar from "../../components/ListersNavBar.vue";
 import ListerDefault from "@/assets/images/ListerDefault.png";
 import AdopterDefault from "@/assets/images/AdopterDefault.png";
 
@@ -236,6 +240,8 @@ const selectedFileName = ref("");
 const selectedFileURL = ref(""); // Stores existing Firestore certificate URL
 const newCertificateURL = ref(""); // Stores new uploaded certificate URL
 const selectedFileBase64 = ref("");
+const isPetLister = ref(null); // Check if user is a pet lister
+const loading = ref(true);
 
 //Email Validation
 const isEmailValid = computed(() =>
@@ -276,6 +282,7 @@ onMounted(() => {
 
   // Unsubscribe the observer when the component is unmounted
   onUnmounted(() => {
+
     unsubscribe();
   });
 });
@@ -300,7 +307,8 @@ const fetchUserData = async () => {
     contactNumber.value = userData.contactNumber;
     profileImage.value = userData.profileImage;
 
-    isPetLister.value = userData.isPetLister || false; // Default to false if not set
+    isPetLister.value = userData.isPetLister;
+    console.log("isPetLister: " + isPetLister.value);
     
     // Fetch certificate if available
     if (userData.certificate_base64) {
@@ -308,6 +316,7 @@ const fetchUserData = async () => {
       selectedFileName.value = "PET_CERTIFICATE"; // Default file name
     }
   }
+  loading.value = false;
 };
 
 //pet ownership certificate validation

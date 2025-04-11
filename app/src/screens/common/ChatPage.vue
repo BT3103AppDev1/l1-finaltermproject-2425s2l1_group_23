@@ -1,7 +1,8 @@
 <template>
   <div class="layout">
     <div class="navbar">
-      <AdoptersNavBar />
+      <AdoptersNavBar v-if="!isPetLister" />
+      <ListersNavBar v-if="!sPetLister" />
     </div>
     <div class="chat-screen">
       <div class="chatpreview-container">
@@ -18,6 +19,7 @@
 import ChatPreview from "@/components/ChatPreview.vue";
 import ChatRoom from "@/components/ChatRoom.vue";
 import AdoptersNavBar from "../../components/AdoptersNavBar.vue";
+import ListersNavBar from "../../components/ListersNavBar.vue";
 
 export default {
   name: "ChatPage",
@@ -25,6 +27,7 @@ export default {
     ChatPreview,
     ChatRoom,
     AdoptersNavBar,
+    ListersNavBar,
   },
   data() {
     return {

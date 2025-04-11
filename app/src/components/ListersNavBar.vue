@@ -1,7 +1,9 @@
 <template>
+  <div class="overall">
+    <img src="@/assets/images/PawfectHome-Logo.png" class="logo">
     <div class="listers-navbar">
       <!-- Home (MarketPlace.vue) -->
-      <router-link to="/home" class="icon-button">
+      <router-link to="/petlisting" class="icon-button">
         <img src="@/assets/images/navbar/home.png" alt="Home" class="icon" />
       </router-link>
   
@@ -23,6 +25,7 @@
         <img src="@/assets/images/navbar/logout.png" alt="Logout" class="icon" />
       </router-link>
     </div>
+  </div>
   </template>
   
   <script>
@@ -32,6 +35,37 @@
   </script>
   
   <style scoped>
+  .overall {
+    display: flex;
+    align-items: center;
+    width: 80px;
+    flex-direction: column;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 1000; 
+    position: fixed;
+  }
+
+  .logo {
+    width: 4.5em;
+    height: 4.5em;
+    display: block;
+  }
+
+  .adopters-navbar {
+    width: 80px;
+    height: calc(95vh - 100px);
+    background-color: #c9d0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 100px;
+    left: 0;
+    border-radius: 20px;
+
+  }
   .listers-navbar {
     width: 80px;
     height: calc(90vh - 100px);
