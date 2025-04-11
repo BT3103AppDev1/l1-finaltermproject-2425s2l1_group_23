@@ -1,6 +1,6 @@
 <template>
     <div class="overall">
-      <SimpleLogo class="logo" />
+      <img src="@/assets/images/PawfectHome-Logo.png" class="logo">
       <div class="adopters-navbar">
         <!-- Home (MarketPlace.vue) -->
         <router-link to="/home" class="icon-button">
@@ -13,7 +13,7 @@
         </router-link>
     
         <!-- PetTreatSummary -->
-        <router-link to="/petlisting" class="icon-button">
+        <router-link to="/chat" class="icon-button">
           <img src="@/assets/images/navbar/bone.png" alt="Bone" class="icon" />
         </router-link>
     
@@ -33,13 +33,9 @@
   </template>
   
   <script>
-  import SimpleLogo from "@/components/SimpleLogo.vue";
 
   export default {
     name: "AdoptersNavBar",
-    components: {
-      SimpleLogo,
-    },
   };
   </script>
   
@@ -47,19 +43,31 @@
   .overall {
     display: flex;
     align-items: center;
-    justify-content: center;
     width: 80px;
+    flex-direction: column;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 1000; 
+    position: fixed;
+  }
+
+  .logo {
+    width: 4.5em;
+    height: 4.5em;
+    display: block;
   }
 
   .adopters-navbar {
     width: 80px;
-    height: calc(90vh - 100px);
+    height: calc(95vh - 100px);
     background-color: #c9d0e0;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: fixed;
     top: 100px;
+    left: 0;
     border-radius: 20px;
 
   }

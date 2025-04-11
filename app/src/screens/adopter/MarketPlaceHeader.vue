@@ -12,18 +12,6 @@
       </div>
     </header>
 
-    <!-- Search Bar -->
-    <div class="search-wrapper">
-      <div class="search-container">
-        <input
-          type="text"
-          placeholder="🔎 Search for your new furry friend..."
-          v-model="searchQuery"
-        />
-        <button @click="searchPets">Search</button>
-      </div>
-    </div>
-
     <div class="div-text">
       <h1>What kind of pet are you looking for?</h1>
     </div>

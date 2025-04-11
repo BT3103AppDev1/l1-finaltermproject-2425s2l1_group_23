@@ -1,155 +1,159 @@
 <template>
-  <div class="edit-profile-container">
-    <!-- Logo and Heading Container -->
-    <div class="header-container">
-      <router-link to="/home" class="logo-link">
-        <img
-          src="@/assets/images/PawfectHome-logo.png"
-          alt="Pawfect Home Logo"
-          class="logo"
-        />
-      </router-link>
-      <h1 class="edit-profile">Edit Profile</h1>
-      <div class="profile-image-container">
-        <img
-          :src="profileImage || defaultProfileImage"
-          class="profile-image"
-          alt="Profile Picture"
-        />
-      </div>
+  <div class="overall">
+    <div class="navbar">
+      <AdoptersNavBar />
     </div>
-
-    <!-- Form Submission Prevents Page Reload -->
-    <!-- if its a valid user, their info will appear in form fields -->
-    <form @submit.prevent="updateProfile">
-      <div class="form-row">
-        <div class="form-input-group">
-          <label>First Name</label>
-          <input
-            v-model="firstName"
-            :placeholder="originalFirstName"
-            type="text"
-            required
+    <div class="edit-profile-container">
+      <!-- Logo and Heading Container -->
+      <div class="header-container">
+        <h1 class="edit-profile">Edit Profile</h1>
+        <div class="profile-image-container">
+          <img v-if="isPetLister"
+            :src="profileImage || ListerDefault"
+            class="profile-image"
+            alt="Profile Picture"
           />
-        </div>
-
-        <div class="form-input-group">
-          <label>Last Name</label>
-          <input
-            v-model="lastName"
-            :placeholder="originalLastName"
-            type="text"
-            required
+          <img v-if="!isPetLister"
+            :src="profileImage || AdopterDefault"
+            class="profile-image"
+            alt="Profile Picture"
           />
         </div>
       </div>
 
-      <div class="form-input-group">
-        <label>Email</label>
-        <input
-          v-model="email"
-          :placeholder="originalEmail"
-          type="email"
-          required
-        />
-        <p v-if="email && !isEmailValid" class="error-message">
-          Invalid email format
-        </p>
-      </div>
+      <!-- Form Submission Prevents Page Reload -->
+      <!-- if its a valid user, their info will appear in form fields -->
+      <form @submit.prevent="updateProfile">
+        <div class="form-row">
+          <div class="form-input-group">
+            <label>First Name</label>
+            <input
+              v-model="firstName"
+              :placeholder="originalFirstName"
+              type="text"
+              required
+            />
+          </div>
 
-      <div class="form-input-group">
-        <label>Contact Number</label>
-        <input
-          v-model="contactNumber"
-          :placeholder="originalContactNumber"
-          type="text"
-          required
-        />
-        <p v-if="contactNumber && !isContactNumberValid" class="error-message">
-          Invalid contact number
-        </p>
-      </div>
+          <div class="form-input-group">
+            <label>Last Name</label>
+            <input
+              v-model="lastName"
+              :placeholder="originalLastName"
+              type="text"
+              required
+            />
+          </div>
+        </div>
 
-      <div class="form-input-group password-group">
-        <label>Password</label>
-        <input
-          type="password"
-          placeholder="*************************"
-          disabled
-        />
-      </div>
-      <button type="button" class="reset-password-btn" @click="resetPassword">
-        Reset Password
-      </button>
-
-      <div class="upload-certificate">
-        <div class="upload-info">
-          <label class="upload-label"
-            >Upload your pet ownership course certificate</label
-          >
-          <p
-            className="upload-certificate-error"
-            v-if="!selectedFileName"
-            class="upload-description"
-          >
-            You have not uploaded a pet ownership course certificate.<br />
-            To adopt a dog or cat, you must first upload your pet ownership
-            course certificate.
+        <div class="form-input-group">
+          <label>Email</label>
+          <input
+            v-model="email"
+            :placeholder="originalEmail"
+            type="email"
+            required
+          />
+          <p v-if="email && !isEmailValid" class="error-message">
+            Invalid email format
           </p>
         </div>
 
-        <div
-          class="file-upload-box"
-          @dragover.prevent
-          @dragenter.prevent
-          @drop.prevent="handleFileDrop"
-        >
-          <img
-            src="@/assets/images/editprofile/exportlogo.png"
-            alt="Export Logo"
-            class="exportlogo"
-          />
-          <p className="drop-message">Select your file or drag and drop</p>
-          <small className="drop-message"
-            >png, pdf, jpg, docx accepted <br />
-          </small>
-
+        <div class="form-input-group">
+          <label>Contact Number</label>
           <input
-            type="file"
-            ref="fileInput"
-            accept=".png, .pdf, .jpg, .jpeg, .docx"
-            style="display: none"
-            @change="handleFileSelect"
+            v-model="contactNumber"
+            :placeholder="originalContactNumber"
+            type="text"
+            required
           />
+          <p v-if="contactNumber && !isContactNumberValid" class="error-message">
+            Invalid contact number
+          </p>
+        </div>
 
-          <button type="button" class="browse-btn" @click="triggerFileInput">
-            Browse
+        <div class="form-input-group password-group">
+          <label>Password</label>
+          <input
+            type="password"
+            placeholder="*************************"
+            disabled
+          />
+          <button type="button" class="reset-password-btn" @click="resetPassword">
+            Reset Password
           </button>
-          
-          <p v-if="selectedFileName" class="uploaded-file">
-            Uploaded:
-            <a
-              :href="`data:image/jpeg;base64,${selectedFileBase64}`"
-              target="_blank"
-              >{{ selectedFileName }}</a
-            >
-            <button type="button" class="remove-btn" @click="removeFile">
-              Remove
-            </button>
-          </p>
         </div>
-      </div>
 
-      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+        <div v-if="!isPetLister" class="upload-certificate">
+          <div class="upload-info">
+            <label class="upload-label"
+              >Upload your pet ownership course certificate</label
+            >
+            <p
+              className="upload-certificate-error"
+              v-if="!selectedFileName"
+              class="upload-description"
+            >
+              You have not uploaded a pet ownership course certificate.<br />
+              To adopt a dog or cat, you must first upload your pet ownership
+              course certificate.
+            </p>
+          </div>
 
-      <div class="buttons-group">
-        <button type="button" class="cancel-btn" @click="cancelEdit">
-          Cancel
-        </button>
-        <button type="submit" class="save-btn">Save</button>
-      </div>
-    </form>
+          <div
+            class="file-upload-box"
+            @dragover.prevent
+            @dragenter.prevent
+            @drop.prevent="handleFileDrop"
+          >
+            <img
+              src="@/assets/images/editprofile/exportlogo.png"
+              alt="Export Logo"
+              class="exportlogo"
+            />
+            <p className="drop-message">Select your file or drag and drop</p>
+            <small className="drop-message"
+              >png, pdf, jpg, docx accepted <br />
+            </small>
+
+            <input
+              type="file"
+              ref="fileInput"
+              accept=".png, .pdf, .jpg, .jpeg, .docx"
+              style="display: none"
+              @change="handleFileSelect"
+            />
+
+            <button type="button" class="browse-btn" @click="triggerFileInput">
+              Browse
+            </button>
+            
+            <p v-if="selectedFileName" class="uploaded-file">
+              Uploaded:
+              <a
+                :href="`data:image/jpeg;base64,${selectedFileBase64}`"
+                target="_blank"
+                >{{ selectedFileName }}</a
+              >
+              <button type="button" class="remove-btn" @click="removeFile">
+                Remove
+              </button>
+            </p>
+          </div>
+        </div>
+
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+        <div class="buttons-group">
+          <button type="button" class="cancel-btn" @click="cancelEdit">
+            Cancel
+          </button>
+          <button type="submit" class="save-btn">Save</button>
+        </div>
+      </form>
+    </div>
   </div>
+  
 </template>
 
 
@@ -177,6 +181,9 @@ import defaultProfileImage from "@/assets/images/editprofile/Default_pfp.jpg"; /
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import { deleteObject } from "firebase/storage";
+import AdoptersNavBar from "../../components/AdoptersNavBar.vue";
+import ListerDefault from "@/assets/images/ListerDefault.png";
+import AdopterDefault from "@/assets/images/AdopterDefault.png";
 
 
 const auth = getAuth(app);
@@ -291,8 +298,9 @@ const fetchUserData = async () => {
     lastName.value = userData.lastName;
     email.value = userData.email;
     contactNumber.value = userData.contactNumber;
-    profileImage.value = userData.profileImage || defaultProfileImage;
+    profileImage.value = userData.profileImage;
 
+    isPetLister.value = userData.isPetLister || false; // Default to false if not set
     
     // Fetch certificate if available
     if (userData.certificate_base64) {
@@ -500,6 +508,9 @@ const updateProfile = async () => {
   width: 100%;
   margin-bottom: 1em;
 }
+.form-input-group input:focus {
+  outline: none;
+}
 
 .form-input-group label {
   font-family: "Raleway-SemiBold";
@@ -515,6 +526,7 @@ const updateProfile = async () => {
   border: 0.05em solid #ddd;
   font-size: 0.9em;
   background-color: #ffffff;
+  font-family: "Raleway-Regular";
 }
 
 /* password */
@@ -524,14 +536,14 @@ const updateProfile = async () => {
 
 .reset-password-btn {
   font-family: "Poppins-Medium";
-  color: #7c7c7c;
+  color: #b1b1b1;
   font-style: italic;
-  position: relative;
-  left: 71em;
   background: none;
   border: none;
   cursor: pointer;
   font-size: 0.8em;
+  right: 0;
+  transform: translateX(43%);
 }
 
 .upload-certificate {

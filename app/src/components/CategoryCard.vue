@@ -34,8 +34,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #f7f3eb; /* Match Figma background */
     transition: 0.3s;
+    cursor: pointer;
+  }
+
+  .emoji-box:hover {
+    background: #a7bde9;
+    transform: scale(1.05);
+    transition: 0.3s ease-in-out;
   }
   
   /* Top box for emoji */

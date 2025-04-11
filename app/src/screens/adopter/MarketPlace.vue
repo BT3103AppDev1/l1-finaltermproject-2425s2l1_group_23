@@ -154,7 +154,6 @@
 
   .marketplace-full {
     flex-grow: 1;
-    width: 100%;
     flex-direction: column;
     display: flex;
     overflow-y: auto; /* Enable scrolling */

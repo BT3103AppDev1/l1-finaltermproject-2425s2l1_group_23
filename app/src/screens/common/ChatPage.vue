@@ -1,14 +1,15 @@
 <template>
-  <div class="chat-screen">
-    <div class="nav-container">
-      <img src="@/assets/images/PawfectHome-Logo.png" alt="Logo" class="logo" />
-      <!-- Navbar will be here -->
+  <div class="layout">
+    <div class="navbar">
+      <AdoptersNavBar />
     </div>
-    <div class="chatpreview-container">
-      <ChatPreview @chat-selected="selectChat" />
-    </div>
-    <div class="chatroom-container">
-      <ChatRoom v-if="selectedChat" :selectedChat="selectedChat" />
+    <div class="chat-screen">
+      <div class="chatpreview-container">
+        <ChatPreview @chat-selected="selectChat" />
+      </div>
+      <div class="chatroom-container">
+        <ChatRoom v-if="selectedChat" :selectedChat="selectedChat" />
+      </div>
     </div>
   </div>
 </template>
@@ -16,12 +17,14 @@
 <script>
 import ChatPreview from "@/components/ChatPreview.vue";
 import ChatRoom from "@/components/ChatRoom.vue";
+import AdoptersNavBar from "../../components/AdoptersNavBar.vue";
 
 export default {
   name: "ChatPage",
   components: {
     ChatPreview,
     ChatRoom,
+    AdoptersNavBar,
   },
   data() {
     return {
@@ -38,17 +41,34 @@ export default {
 </script>
 
 <style scoped>
+
+.layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+}
+
 .logo {
   width: 6em;
   height: 6em;
   margin: 1em;
 }
+.navbar {
+    padding-right: 5em;
+    flex-shrink: 0;
+}
 
 .chat-screen {
   display: flex;
-  height: 100vh;
+  height: 95vh;
   flex-direction: row;
   overflow: hidden; /* Prevent horizontal scrolling */
+  flex-grow: 1;
+  justify-self: center;
+  align-self: center;
+  border-radius: 1em;
 }
 
 .nav-container {
@@ -66,15 +86,15 @@ export default {
   box-sizing: border-box;
   padding: 0;
   border-right: 1px solid #b4abab;
-  border-left: 1px solid #b4abab;
-  height: 100%;
-  flex-shrink: 0;
-  flex-grow: 0;
+  background-color: rgba(215, 213, 253, 0.5);
+  overflow: hidden;
+  flex: 0 0 300px;
 }
 
 .chatroom-container {
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
+  background-color: rgb(255, 255, 255);
 }
 </style>

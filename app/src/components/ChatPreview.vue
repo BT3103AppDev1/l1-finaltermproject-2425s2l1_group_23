@@ -236,11 +236,11 @@ ul {
 }
 
 .chat-item:hover {
-  background-color: #efe5c1;
+  background-color: #d4d4fd;
 }
 
 .chat-item.active {
-  background-color: #efe5c1;
+  background-color: #b5b5fd;
 }
 
 .item {
