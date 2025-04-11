@@ -1,8 +1,5 @@
 <template>
     <div class="content">
-      <div class="navbar">
-        <AdoptersNavBar />
-      </div>
       <div class="pet-profile-full">
         <div class="fixed-container">
           <img
@@ -550,13 +547,16 @@
     overflow-y: auto; /*for scrolling*/
     flex-grow: 1;
     margin-left: 50%;
-    width: 80%;
   }
   
   /* if width too small, then pic can become scrollable*/
   @media (max-width: 1024px) {
     .content {
+      display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
     }
   
     .fixed-container {
@@ -572,10 +572,11 @@
     }
     .scrollable-container {
       margin-top: -3em;
-      padding: 2em;
+      padding: 1em;
       overflow-y: auto; /*for scrolling*/
       flex-grow: 1;
-      margin-left: 0%;
+      width: 80%;
+      margin-left: 7%;
     }
   }
   

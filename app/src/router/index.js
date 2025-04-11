@@ -11,6 +11,7 @@ import ForgetPassword from "../screens/common/ForgetPassword.vue";
 import PetProfile from "../screens/adopter/PetProfile.vue";
 import EditProfile from "../screens/adopter/EditProfile.vue";
 import ResetPassword from "../screens/adopter/ResetPassword.vue";
+import Email from '../screens/adopter/Email.vue';
 import AdminLogin from "../screens/admin/AdminLogin.vue";
 import AdminPage from "../screens/admin/AdminPage.vue";
 import AddListing1 from "../screens/lister/AddListing1.vue";
@@ -138,6 +139,12 @@ const routes = [
     name: "Report",
     component: Report,
   },
+  
+  {
+    path: "/email",
+    name: "Email",
+    component: Email,
+  }
 ];
 
 const router = createRouter({

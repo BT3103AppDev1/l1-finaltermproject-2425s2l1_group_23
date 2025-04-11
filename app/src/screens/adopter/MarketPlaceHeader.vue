@@ -87,6 +87,7 @@ export default {
       if (userSnap.exists()) {
         const data = userSnap.data();
         this.userName = `${data.firstName} ${data.lastName}`;
+        this.emailsUnread = data.emailsUnread || 0; // Fetch unread emails count
       } else {
         console.error("User document not found.");
       }
@@ -119,8 +120,7 @@ export default {
       this.$emit("filter-category", category);
     },
     goToEmails() {
-      let userId = 'testing';
-      this.$router.push(`/email/${userId}`); // Navigate to the Emails screen
+      this.$router.push(`/email`); // Navigate to the Emails screen
     },
   },
 

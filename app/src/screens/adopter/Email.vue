@@ -1,6 +1,8 @@
 <template>
     <div class="overall-container">
-        <h1 class="header">Your emails</h1>
+        <div class="header-container">
+            <h1 class="header">Your emails</h1>
+        </div>
         <div class="email-container">
         <!-- Email List -->
         <aside class="email-list">
@@ -41,6 +43,7 @@
   
 <script>
 import { db } from "../../../firebase/firebase.js";
+import { getAuth } from "firebase/auth";
 import { collection, getDocs, query, where, increment, updateDoc, doc, getDoc } from 'firebase/firestore';
 
 export default {
@@ -48,10 +51,21 @@ export default {
         return {
             emails: [],
             selectedEmail: null,
-            userId: "testing",
+            userId: null,
             emailsUnread: 0,
         };    
     },
+    mounted() {
+        const auth = getAuth();
+        if (auth.currentUser) {
+        this.userId = auth.currentUser.uid;
+        } else {
+        console.error("No user is currently logged in.");
+        }
+        this.fetchEmails();
+        this.fetchEmailsUnread();
+    },
+
     methods: {
         async fetchEmails() {
             try {
@@ -154,10 +168,6 @@ export default {
                 .join(""); // Join all paragraphs
         }
     },
-    mounted() {
-        this.fetchEmails();
-        this.fetchEmailsUnread();
-    },
 }
 </script>
 
@@ -173,7 +183,7 @@ export default {
 }
 .email-container {
     display: flex;
-    width: 60em;
+    width: 100%;
     height: 38em;
     background-color: #ffffff;
     border-radius: 1em;
@@ -195,9 +205,7 @@ export default {
 
 .inbox-header {
     font-size: 1.5em;
-    width: 85%;
     padding: 0.8em;
-    text-align: center;
     font-family: "FredokaOne-Regular";
     border-bottom: 1px solid #ccc;
     margin: 0;
@@ -304,6 +312,15 @@ export default {
     color: #222f61;
     border-width: 0em;
     padding: 0em;
+}
+
+.header-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 </style>
   

@@ -61,7 +61,7 @@ export default {
             selectedOption: "",
             reason: "",
             petListingId: "",
-            userId: "",
+            userId: null,
             alertEnabled: false,
             timestamp: new Date().toISOString(),
         };
