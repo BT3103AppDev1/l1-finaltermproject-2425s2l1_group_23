@@ -2,11 +2,18 @@
   <div class="chat-room">
     <!-- Person Section -->
     <div class="person">
-      <img
-          :src="selectedChat.profileImage || defaultAvatar"
+      <img v-if="isPetLister"
+          :src="selectedChat.profileImage || listerAvatar"
           alt="Pet Avatar"
           class="pet-avatar"
       />
+
+      <img v-if="!isPetLister"
+          :src="selectedChat.profileImage || adopterAvatar"
+          alt="Pet Avatar"
+          class="pet-avatar"
+      />
+
       <h2>{{ selectedChat.name }}</h2>
     </div>
 
@@ -14,15 +21,7 @@
     <div class="notification">
       <div class="pet">
         <img
-          v-if="isPetLister"
-          @click="goToPetProfile(petData.petListingId)" 
-          :src="petData.petPhotoBase64 || defaultAvatar"
-          alt="Pet Avatar"
-          class="pet-avatar"
-        />
-        <img
-          v-else
-          :src="petData.petPhotoBase64 || defaultAvatar" 
+          :src="petData.petPhotoBase64 || petListingAvatar" 
           alt="Pet Avatar"
           class="pet-avatar"
         />
@@ -52,7 +51,7 @@
         <p>Your treat is still on its way to {{ petData.petName }}. Hang tight!</p>
       </div>
 
-      <div v-if="this.treatStatus === 'accepted' && !isPetLister" class="treat-status-a-accept">
+      <div v-if="this.treatStatus === 'accdefaepted' && !isPetLister" class="treat-status-a-accept">
         <p>{{ petData.petName }} has accepted your treat! 🦴</p>
       </div>
 
@@ -114,7 +113,9 @@ import {
 import { getAuth } from "firebase/auth";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import { MdSendRound } from "oh-vue-icons/icons";
-import defaultAvatar from "@/assets/images/DefaultAvatar.jpg";
+import listerAvatar from "../assets/images/ListerDefault.png";
+import adopterAvatar from "../assets/images/AdopterDefault.png";
+import petListingAvatar from "../assets/images/PetListingDefault.png";
 
 addIcons(MdSendRound);
 
@@ -136,7 +137,9 @@ export default {
       currentUserId: null,
       unsubscribeMessages: null,
       petData: {},
-      defaultAvatar,
+      listerAvatar,
+      adopterAvatar,
+      petListingAvatar,
       treatStatus: null,
       isPetLister: false,
       isChatExpired: false,

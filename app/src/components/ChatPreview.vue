@@ -11,8 +11,13 @@
         :class="['chat-item', { active: chat.id === selectedChatId }]"
       >
         <div class="item">
-          <img
-            :src="chat.profileImage"
+          <img v-if="isPetLister"
+            :src="chat.profileImage || listerAvatar"
+            alt="User Avatar"
+            class="avatar"
+          />
+          <img v-if="!isPetLister"
+            :src="chat.profileImage || adopterAvatar"
             alt="User Avatar"
             class="avatar"
           />
@@ -45,6 +50,8 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { onUnmounted } from "vue";
+import listerAvatar from "../assets/images/ListerDefault.png";
+import adopterAvatar from "../assets/images/AdopterDefault.png";
 
 export default {
   name: "ChatPreview",
@@ -55,6 +62,8 @@ export default {
       currentUserId: null,
       isPetLister: null,
       loading: true,
+      listerAvatar,
+      adopterAvatar,
     };
   },
 

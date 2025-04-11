@@ -1,5 +1,15 @@
 <template>
     <div class="content">
+      <div class="back-button">
+        <button class="back-button" @click="$router.push({ name: 'MarketPlace' })">
+          <img
+            src="@/assets/images/PetProfileMockUp/BackButton.png"
+            alt="BackButton"
+            class="back-button-img"
+          />
+        </button>
+
+      </div>
       <div class="pet-profile-full">
         <div class="fixed-container">
           <img
