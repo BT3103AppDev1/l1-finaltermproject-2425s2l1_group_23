@@ -8,24 +8,6 @@
         </div>
       </div>
       <div class="pet-image-container">
-        <img
-    :src="pet.petPhotoBase64 ? `data:image/jpeg;base64,${pet.petPhotoBase64}` : 'https://cpet.tc.columbia.edu/uploads/1/8/4/5/18456699/testing-values-imgur_orig.png'"
-    alt="Pet Image"
-    class="pet-image"
-  />
-      </div>
-      <div class="pet-details">
-        <div class="pet-name-age">
-          <h2 class="pet-name">{{ pet.petName }}</h2>
-          <p class="pet-age">{{ pet.petAge }}</p>
-        </div>
-        <p class="price">S${{ pet.petPrice }}</p>
-        <div class="treats">
-          🍖 {{ pet.numTreats }}
-        </div>
-      </div>
-    </div>
-    <div class="pet-image-container">
       <img :src="pet.petImage" alt="Pet Image" class="pet-image" />
     </div>
     <div class="pet-details">
@@ -35,6 +17,7 @@
       </div>
       <p class="price">S${{ pet.petPrice }}</p>
       <div class="treats">🍖 {{ pet.numTreats }}</div>
+    </div>
     </div>
 </template>
 
@@ -64,8 +47,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   transition: box-shadow 0.3s ease;
-  border: 1px dashed #222f61;
 }
 
 .pet-card:hover {

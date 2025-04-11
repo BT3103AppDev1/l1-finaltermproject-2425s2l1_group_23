@@ -1,28 +1,29 @@
 <template>
   <div class="layout">
-    <AdoptersNavBar />
-
-    <div class="marketplace-main">
-      <MarketPlaceHeader
-        :userName="'MingHan'"
-        @search="handleSearch"
-        @filter-category="handleCategoryFilter"
-    />
-    
-    <div class="marketplace-container">
-      <section class="pet-list">
-        <div
-          v-for="pet in filteredPets"
-          :key="pet.petListingId"
-          class="listing-link"
-        >
-        <Listing :pet="pet" @click.native="goToPetProfile(pet.petListingId)" />
-        </div>
-      </section>
+    <div class="navbar">
+      <AdoptersNavBar />
     </div>
-
+    <div class="marketplace-full">
+      <!-- COMBINE header and listings under one scrollable container -->
+      <div class="marketplace-scroll-area">
+        <MarketPlaceHeader
+          :userName="userName"
+          @search="handleSearch"
+          @filter-category="handleCategoryFilter"
+        />
+        <section class="pet-list">
+          <div
+            v-for="pet in filteredPets"
+            :key="pet.petListingId"
+            class="listing-link"
+          >
+            <Listing :pet="pet" @click="goToPetProfile(pet.petListingId)" />
+          </div>
+        </section>
+      </div>
     </div>
   </div>
+
 </template>
   
   <script>
@@ -33,10 +34,11 @@
   import MarketPlaceHeader from './MarketPlaceHeader.vue';
   import { useRouter } from 'vue-router';
   import { getAuth } from 'firebase/auth';
+  import AdoptersNavBar from '../../components/AdoptersNavBar.vue';
 
   
   export default {
-    components: { Listing, MarketPlaceHeader },
+    components: { Listing, MarketPlaceHeader, AdoptersNavBar },
     setup() {
 
       const router = useRouter();
@@ -136,14 +138,43 @@
   </script>
   
   <style scoped>
-  .marketplace-container {
+  .layout {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
+    flex-direction: row;
+    align-items: stretch;
     background-color: #f7f3eb;
+    width: 100%;
+    height: 100vh;
   }
-  
+
+  .navbar {
+    padding-right: 5em;
+    flex-shrink: 0;
+  }
+
+  .marketplace-full {
+    flex-grow: 1;
+    width: 100%;
+    flex-direction: column;
+    display: flex;
+    overflow-y: auto; /* Enable scrolling */
+    padding: 0em 2em;
+  }
+
+.marketplace-scroll-area {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.pet-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  margin-top: 20px;
+  padding: 20px;
+}
   .header {
     display: flex;
     align-items: center;
@@ -166,13 +197,6 @@
     font-size: 1em;
     border: 2px solid #222f61;
     border-radius: 5px;
-  }
-  
-  .pet-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: flex-start;
   }
 
   .listing-link {

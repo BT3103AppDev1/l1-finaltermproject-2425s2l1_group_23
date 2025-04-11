@@ -73,8 +73,19 @@ export default {
     },
 
     mounted() {
-        this.petListingId = this.$route.params.petListingId;
-        this.userId = this.$route.params.userId;
+        this.petListingId = localStorage.getItem("currentPetId");
+        this.userId = localStorage.getItem("currentUserId");
+        console.log(localStorage.getItem("currentPetId"));
+        console.log("Retrieved from localStorage in Report.vue:");
+        console.log("petListingId:", this.petListingId);
+        console.log("userId:", this.userId);
+
+        if (!this.petListingId || !this.userId) {
+            console.error("Missing petListingId or userId in localStorage");
+            this.$router.push("/home"); // Redirect to marketplace if data is missing
+            return;
+        }
+
         console.log("Pet Listing ID:", this.petListingId);
         console.log("User ID:", this.userId);
     },
@@ -206,7 +217,7 @@ export default {
 
         goToMarketplace() {
             /* Nsavigate to the marketplace page and send the userId along */
-            this.router.push(`/home/${this.userId}`); //to transport the userId to marketplace, put on hold first
+            this.router.push(`/home`); //to transport the userId to marketplace, put on hold first
         }
     }
 }

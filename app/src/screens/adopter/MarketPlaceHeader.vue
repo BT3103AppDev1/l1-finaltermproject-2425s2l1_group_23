@@ -8,20 +8,13 @@
           src="../../assets/images/PawfectHome-Logo.png"
           alt="Logo"
         />
-        <h1>Welcome, Ming Han!</h1>
+        <h1>Welcome, {{ userName }}</h1>
 
       </div>
       <div class="email">
         <button class="email-button" @click="goToEmails"><img class="icon" src="@/assets/images/marketplaceHeader/emailIcon.png" alt="Email Icon" /></button>
         <span v-if="emailsUnread > 0" class="email-notification">{{ emailsUnread }}</span>
       </div>
-
-      <img
-        class="logo"
-        src="../../assets/images/PawfectHome-Logo.png"
-        alt="Logo"
-      />
-      <h1>Welcome, {{ userName }}!</h1>
     </header>
 
     <!-- Search Bar -->
@@ -153,7 +146,7 @@ export default {
   align-items: center; /* Ensures everything is centered */
   padding: 20px;
   background-color: #f7f3eb;
-  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -221,6 +214,7 @@ export default {
   font-size: 16px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
   text-align: left;
+  border-width: 0px;
 }
 
 .search-container input:focus {

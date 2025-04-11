@@ -10,7 +10,6 @@
       Admin Login
     </button>
   </div>
-  <Logo />
   <div class="content">
     <div class="details">
       <h1 class="heading">Rehome with Care, Adopt with Love</h1>

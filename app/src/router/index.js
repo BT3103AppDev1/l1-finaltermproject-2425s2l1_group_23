@@ -8,7 +8,7 @@ import PetListing from "../screens/lister/PetListing.vue";
 import OnboardingQn from "../screens/adopter/OnboardingQn.vue";
 import MarketPlace from "../screens/adopter/MarketPlace.vue";
 import ForgetPassword from "../screens/common/ForgetPassword.vue";
-import PetProfile from "../screens/adopter/PetProfilePreview.vue";
+import PetProfile from "../screens/adopter/PetProfile.vue";
 import EditProfile from "../screens/adopter/EditProfile.vue";
 import ResetPassword from "../screens/adopter/ResetPassword.vue";
 import AdminLogin from "../screens/admin/AdminLogin.vue";
@@ -19,6 +19,7 @@ import AddListing3 from "../screens/lister/AddListing3.vue";
 import AddListing4 from "../screens/lister/AddListing4.vue";
 import PetProfilePreview from "../screens/lister/PetProfilePreview.vue";
 import ChatPage from "../screens/common/ChatPage.vue";
+import Report from "../screens/adopter/Report.vue";
 
 const routes = [
   {
@@ -57,7 +58,7 @@ const routes = [
     component: OnboardingQn,
   },
   {
-    path: "/home/:userId",
+    path: "/home",
     name: "MarketPlace",
     component: MarketPlace,
   },
@@ -130,6 +131,12 @@ const routes = [
     path: "/chat",
     name: "ChatPage",
     component: ChatPage,
+  },
+
+  {
+    path: "/report",
+    name: "Report",
+    component: Report,
   },
 ];
 
