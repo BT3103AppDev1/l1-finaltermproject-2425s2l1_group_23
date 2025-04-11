@@ -3,11 +3,6 @@
     <!-- Header Section (Logo + Welcome Message) -->
     <header class="header">
       <div class="header-content">
-        <img
-          class="logo"
-          src="../../assets/images/PawfectHome-Logo.png"
-          alt="Logo"
-        />
         <h1>Welcome, {{ userName }}</h1>
 
       </div>

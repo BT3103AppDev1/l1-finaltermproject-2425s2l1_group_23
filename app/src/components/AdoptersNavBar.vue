@@ -1,41 +1,56 @@
 <template>
-    <div class="adopters-navbar">
-      <!-- Home (MarketPlace.vue) -->
-      <router-link to="/home" class="icon-button">
-        <img src="@/assets/images/navbar/home.png" alt="Home" class="icon" />
-      </router-link>
-  
-      <!-- Chat  -->
-      <router-link to="/chat" class="icon-button">
-        <img src="@/assets/images/navbar/chat.png" alt="Chat" class="icon" />
-      </router-link>
-  
-      <!-- PetTreatSummary -->
-      <router-link to="/petlisting" class="icon-button">
-        <img src="@/assets/images/navbar/bone.png" alt="Bone" class="icon" />
-      </router-link>
-  
-      <!-- Edit Profile (EditProfile.vue) -->
-      <router-link to="/editprofile" class="icon-button">
-        <img src="@/assets/images/navbar/edit.png" alt="Edit" class="icon" />
-      </router-link>
-  
-      <div class="spacer"></div>
-  
-      <!-- Logout (redirect to Login.vue -->
-      <router-link to="/login" class="icon-button">
-        <img src="@/assets/images/navbar/logout.png" alt="Logout" class="icon" />
-      </router-link>
+    <div class="overall">
+      <SimpleLogo class="logo" />
+      <div class="adopters-navbar">
+        <!-- Home (MarketPlace.vue) -->
+        <router-link to="/home" class="icon-button">
+          <img src="@/assets/images/navbar/home.png" alt="Home" class="icon" />
+        </router-link>
+    
+        <!-- Chat  -->
+        <router-link to="/chat" class="icon-button">
+          <img src="@/assets/images/navbar/chat.png" alt="Chat" class="icon" />
+        </router-link>
+    
+        <!-- PetTreatSummary -->
+        <router-link to="/petlisting" class="icon-button">
+          <img src="@/assets/images/navbar/bone.png" alt="Bone" class="icon" />
+        </router-link>
+    
+        <!-- Edit Profile (EditProfile.vue) -->
+        <router-link to="/editprofile" class="icon-button">
+          <img src="@/assets/images/navbar/edit.png" alt="Edit" class="icon" />
+        </router-link>
+    
+        <div class="spacer"></div>
+    
+        <!-- Logout (redirect to Login.vue -->
+        <router-link to="/login" class="icon-button">
+          <img src="@/assets/images/navbar/logout.png" alt="Logout" class="icon" />
+        </router-link>
+      </div>
     </div>
   </template>
   
   <script>
+  import SimpleLogo from "@/components/SimpleLogo.vue";
+
   export default {
     name: "AdoptersNavBar",
+    components: {
+      SimpleLogo,
+    },
   };
   </script>
   
   <style scoped>
+  .overall {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+  }
+
   .adopters-navbar {
     width: 80px;
     height: calc(90vh - 100px);
@@ -75,5 +90,6 @@
   .spacer {
     flex-grow: 1;
   }
+
   </style>
   
