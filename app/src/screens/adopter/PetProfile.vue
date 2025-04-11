@@ -167,11 +167,11 @@
             class="values"
           >
             <p class="subtitle">Training level</p>
-            <p
-              class="value"
-              v-for="(item, index) in petData.petLifestyleTraining"
-              :key="index"
-            >
+            <p class="value">{{ petData.petLifestyleTraining }}</p>
+          </div>
+          <div v-if="petData.petTriggers && petData.petTriggers.length" class="values">
+            <p class="subtitle">Pet triggers</p>
+            <p class="value" v-for="(item, index) in petData.petTriggers" :key="index">
               {{ item }}
             </p>
           </div>
@@ -218,15 +218,14 @@
             />
             <p class="info-header">Dietary Prefereces & Needs</p>
           </div>
-          <div v-if="petData.petDiet && petData.petDiet.length" class="values">
+          <div
+            v-if="
+              petData.petDiet && petData.petDiet.length
+            "
+            class="values"
+          >
             <p class="subtitle">Diet type</p>
-            <p
-              class="value"
-              v-for="(item, index) in petData.petDiet"
-              :key="index"
-            >
-              {{ item }}
-            </p>
+            <p class="value">{{ petData.petDiet }}</p>
           </div>
           <div
             v-if="petData.petFavFood && petData.petFavFood.length"
