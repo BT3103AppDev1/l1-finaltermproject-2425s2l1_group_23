@@ -1,22 +1,26 @@
 <template>
-  <Logo />
-  <div class="overall">
-    <div class="welcome-container">
-      <!-- Logo -->
-      <div class="content">
-        <div class="text-section">
-          <h1>Every pet deserves love, cuddles, and a Pawfect Home.</h1>
-          <button class="cta-button" @click="goToNextPage">Get started</button>
+  <div class="layout">
+    <Logo />
+    <div class="overall">
+      <div class="welcome-container">
+        <!-- Logo -->
+        <div class="content">
+          <div class="text-section">
+            <h1>Every pet deserves love, cuddles, and a Pawfect Home.</h1>
+            <p class="subtitle">Because every goodbye deserves a new beginning — <br> and every hello, a happy heart...</p>
+            <button class="cta-button" @click="goToNextPage">Get started</button>
+          </div>
         </div>
-      </div>
 
-      <img
-        src="../../assets/images/welcome/welcome.png"
-        alt="Dog Welcome"
-        class="welcome-image"
-      />
+        <img
+          src="../../assets/images/welcome/welcome.png"
+          alt="Dog Welcome"
+          class="welcome-image"
+        />
+      </div>
     </div>
   </div>
+  
 </template>
 
 <script>
@@ -37,6 +41,12 @@ export default {
 <style scoped>
 @import url("../../assets/styles/font.css");
 
+.layout {
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
 .overall {
   display: flex;
   flex-direction: column;
@@ -50,6 +60,7 @@ export default {
   align-items: flex-start;
   justify-content: center;
   height: 100%;
+  
 }
 
 /* Content layout */
@@ -60,21 +71,20 @@ export default {
   align-self: center;
   width: 100%;
   max-width: 100vh;
+
 }
 
 /* Text Section */
 .text-section {
-  max-width: 600px;
+  max-width: 60%;
   text-align: left;
   border-radius: 10px;
 }
 
 .welcome-image {
-  width: 50%;
+  width: 55em;
   height: auto;
-  bottom: 0;
   display: flex;
-  align-self: flex-end;
 }
 
 h1 {
@@ -83,6 +93,12 @@ h1 {
   color: #222f61;
   font-family: FredokaOne-Regular;
   line-height: 1.2;
+}
+
+.subtitle {
+  font-family: Raleway-Medium;
+  font-size: 24px;
+
 }
 
 /* CTA Button */
@@ -104,5 +120,36 @@ h1 {
 
 .cta-button:hover {
   background-color: #1a1e30;
+}
+
+@media (max-width: 1524px) {
+  .welcome-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+  }
+
+  .layout {
+    overflow: scroll;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  .subtitle {
+    text-align: center;
+  }
+
+  .text-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>
