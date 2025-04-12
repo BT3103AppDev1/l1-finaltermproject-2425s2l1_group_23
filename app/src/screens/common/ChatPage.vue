@@ -20,6 +20,9 @@ import ChatPreview from "@/components/ChatPreview.vue";
 import ChatRoom from "@/components/ChatRoom.vue";
 import AdoptersNavBar from "../../components/AdoptersNavBar.vue";
 import ListersNavBar from "../../components/ListersNavBar.vue";
+import { getAuth } from "firebase/auth";
+import { db} from "../../../firebase/firebase.js";
+import { doc, getDoc } from 'firebase/firestore';
 
 export default {
   name: "ChatPage",
@@ -32,13 +35,44 @@ export default {
   data() {
     return {
       selectedChat: null, // Stores the currently selected chat
+      isPetLister: null,
     };
   },
+
+  mounted() {
+    this.getStatus();
+  },
+
   methods: {
     // Handles selecting a chat from the preview
     selectChat(chat) {
       this.selectedChat = chat;
     },
+
+    async getStatus() {
+      try {
+        const auth = getAuth();
+        const currentUser = auth.currentUser;
+
+        if (!currentUser) {
+          console.error("No user is currently logged in.");
+          return;
+        }
+
+        const userDocRef = doc(db, "Users", currentUser.uid); // Reference to the user's document
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          this.isPetLister = userData.isPetLister; // Set `isPetLister` based on the document
+          console.log("User status fetched successfully:", this.isPetLister);
+        } else {
+          console.error("No such user document in Firestore.");
+        }
+      } catch (error) {
+        console.error("Error fetching user status:", error);
+      }
+    }
   },
 };
 </script>
