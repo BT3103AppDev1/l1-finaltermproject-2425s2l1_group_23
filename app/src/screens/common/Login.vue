@@ -1,56 +1,56 @@
 <template>
+  <div class="layout">
+    <div class="header">
+      <Logo/>
+      <button class="admin-login-button" @click="goToAdminLogin">
+            Admin Login
+      </button>
+    </div>
+    <div class="login-container">
+      <div class="content">
+        <div class="details">
+          <h1 class="heading">Rehome with Care, Adopt with Love</h1>
+          <p class="subtitle">Welcome back! Please login to your account.</p>
 
-  <div class="header">
-    <img
-      src="../../assets/images/PawfectHome.png"
-      alt="Pawfect Home Logo"
-      class="logo"
-    />
-    <button class="admin-login-button" @click="goToAdminLogin">
-      Admin Login
-    </button>
-  </div>
-  <div class="content">
-    <div class="details">
-      <h1 class="heading">Rehome with Care, Adopt with Love</h1>
-      <p class="subtitle">Welcome back! Please login to your account.</p>
-
-      <div class="form">
-        <div class="input-container-email">
-          <label class="input-label" for="email">Email address</label>
-          <input
-            class="input-field"
-            type="email"
-            id="email"
-            v-model="email"
-            placeholder="pawfecthome@pawmail.com"
-          />
+          <div class="form">
+            <div class="input-container-email">
+              <label class="input-label" for="email">Email address</label>
+              <input
+                class="input-field"
+                type="email"
+                id="email"
+                v-model="email"
+                placeholder="pawfecthome@pawmail.com"
+              />
+            </div>
+            <div class="input-container-password">
+              <label class="input-label" for="password">Password</label>
+              <input
+                class="input-field"
+                type="password"
+                id="password"
+                v-model="password"
+                placeholder="Password"
+              />
+            </div>
+          </div>
+          <p>
+            <button class="forgot-password" @click="forgotPassword">
+              Forgot password
+            </button>
+          </p>
+          <div class="buttons">
+            <p><button class="login-button" @click="login">Login</button></p>
+            <p>
+              <button class="signup-button" @click="goToSignUp">Sign Up</button>
+            </p>
+          </div>
         </div>
-        <div class="input-container-password">
-          <label class="input-label" for="password">Password</label>
-          <input
-            class="input-field"
-            type="password"
-            id="password"
-            v-model="password"
-            placeholder="Password"
-          />
-        </div>
-      </div>
-      <p>
-        <button class="forgot-password" @click="forgotPassword">
-          Forgot password
-        </button>
-      </p>
-      <div class="buttons">
-        <p><button class="login-button" @click="login">Login</button></p>
-        <p>
-          <button class="signup-button" @click="goToSignUp">Sign Up</button>
-        </p>
+        <img src="../../assets/images/login/Rabbit.png" alt="Rabbit" class="img" />
       </div>
     </div>
-    <img src="../../assets/images/login/Rabbit.png" alt="Rabbit" class="img" />
   </div>
+  
 </template>
 <script setup>
 import { app } from "../../../firebase/firebase.js";
@@ -117,14 +117,31 @@ const goToAdminLogin = () => {
 
 <style scoped>
 @import url("../../assets/styles/font.css");
+html, body {
+  width: 100vw;
+  height: 100vh;
 
+}
+.layout {
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  width: 100%;
+  margin-top:-4em;
+}
 .content {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  max-width: 100wh;
-  gap: 50px;
+  max-width: 100vw;
+  gap: 6em;
 }
 .details {
   display: flex;
@@ -251,22 +268,29 @@ const goToAdminLogin = () => {
 
 .header {
   display: flex;
-  justify-content: space-around;
+  justify-content:space-between;
   align-items: center;
-  padding: 10px 20px;
+  width: 100vw;
+  height: auto;
 }
 
 .admin-login-button {
   font-family: "Raleway-Bold";
   font-size: 14px;
-  color: #222f61;
-  background-color: transparent;
+  color: #ffffff;
+  background-color: #222f61;
   border: none;
   cursor: pointer;
   transition: transform 0.2s ease;
+  justify-self: flex-end;
+  display: flex;
+  padding: 1em 2em;
+  margin-right: 2em;
+  border-radius: 2em;
 }
 
 .admin-login-button:hover {
   transform: scale(1.1);
+  background-color: #3b4a89;
 }
 </style>
