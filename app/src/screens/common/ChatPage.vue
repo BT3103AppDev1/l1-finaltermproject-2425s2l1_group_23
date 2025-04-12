@@ -2,7 +2,7 @@
   <div class="layout">
     <div class="navbar">
       <AdoptersNavBar v-if="!isPetLister" />
-      <ListersNavBar v-if="!sPetLister" />
+      <ListersNavBar v-if="isPetLister" />
     </div>
     <div class="chat-screen">
       <div class="chatpreview-container">

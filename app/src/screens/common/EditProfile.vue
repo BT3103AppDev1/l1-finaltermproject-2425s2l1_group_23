@@ -167,9 +167,6 @@ import { useRouter } from "vue-router";
 import {
   getAuth,
   updateEmail,
-  updatePassword,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
 import {
@@ -180,10 +177,8 @@ import {
   deleteField,
 } from "firebase/firestore";
 import { app } from "../../../firebase/firebase.js";
-import defaultProfileImage from "@/assets/images/editprofile/Default_pfp.jpg"; // Default profile pic
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
-import { deleteObject } from "firebase/storage";
 import AdoptersNavBar from "../../components/AdoptersNavBar.vue";
 import ListersNavBar from "../../components/ListersNavBar.vue";
 import ListerDefault from "@/assets/images/ListerDefault.png";
@@ -276,13 +271,12 @@ onMounted(() => {
       console.error("User not authenticated");
       user.value = null; // Clear the user if not authenticated
       alert("You must be logged in to view this page.");
-      window.location.href = "/login"; // Redirect to login page
+      router.push("/login");
     }
   });
 
   // Unsubscribe the observer when the component is unmounted
   onUnmounted(() => {
-
     unsubscribe();
   });
 });

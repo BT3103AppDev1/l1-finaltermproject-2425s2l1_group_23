@@ -28,6 +28,11 @@ export default {
       type: Object,
       required: true,
     },
+
+    owner: {
+      type: Object,
+      required: true,
+    }
   },
 };
 </script>

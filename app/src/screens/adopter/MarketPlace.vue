@@ -86,7 +86,7 @@
             // and the value is an object with the owner's name and image
             usersMap[userId] = {
               owner: `${userData.firstName} ${userData.lastName}`,
-              ownerImage: userData.profileImage || "https://placekitten.com/50/50",
+              ownerImage: userData.profileImage,
             };
           });
   
