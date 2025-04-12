@@ -1,37 +1,40 @@
 <template>
-  <div class="onboarding-container">
+  <div class="overall">
     <Logo />
+    <div class="onboarding-section">
+      <div class="onboarding-container">
+  
+        <div class="text-container fade-in-left">
+          <h1>Find Your Perfect Pet Companion!</h1>
 
-    <div class="text-container fade-in-left">
-      <h1>Find Your Perfect Pet Companion!</h1>
+          <p>
+            Looking for a furry (or feathery!) friend? We'll help match you with a
+            pet that fits your lifestyle!
+          </p>
+        </div>
 
-      <p>
-        Looking for a furry (or feathery!) friend? We'll help match you with a
-        pet that fits your lifestyle!
-      </p>
+        <div class="image-container">
+          <img
+            src="@/assets/images/onboarding/onboarding2-PetsImage.png"
+            alt="Pets"
+            class="image"
+          />
+        </div>
+
+        <button class="btn fade-in-left delay-2" @click="goToNextPage">
+          Continue
+        </button>
+      </div>
     </div>
+    
 
-    <div class="image-container">
-      <img
-        src="@/assets/images/onboarding/onboarding2-petsbackground.png"
-        alt="Background Shape"
-        class="background-image"
-      />
-      <img
-        src="@/assets/images/onboarding/onboarding2-pets.png"
-        alt="Pets"
-        class="foreground-image"
-      />
-    </div>
-
-    <button class="btn fade-in-left delay-2" @click="goToNextPage">
-      Continue
-    </button>
   </div>
+  
 </template>
 
 <script>
 import Logo from "../../components/Logo.vue";
+
 export default {
   name: "Onboarding2",
   components: {
@@ -57,6 +60,12 @@ export default {
   }
 }
 
+.overall {
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
 .fade-in-left {
   animation: fadeInLeft 1s ease-in-out;
   animation-fill-mode: forwards;
@@ -74,30 +83,37 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
   height: auto;
   background-color: #f7f3eb;
-  position: relative;
 }
 
-.logo-container {
-  position: absolute;
-  top: 18px;
-  left: 23px;
+.onboarding-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+  width: 100%;
 }
 
-.logo {
-  width: 169px;
-  height: 50px;
+.text-container {
+  width: 90%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
+
 
 h1 {
   font-family: FredokaOne-Regular;
   font-size: 53px;
   color: #000000;
   text-align: center;
-  white-space: nowrap;
-  width: 100%;
+  width: 85%;
   margin-bottom: 15px;
 }
 
@@ -107,32 +123,16 @@ p {
   color: #222f61;
   width: 654px;
   text-align: left;
+  width: 80%
 }
 
 .image-container {
-  position: absolute;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 600px;
+  margin-top: -20em;
+}
+
+.image {
+  width: 50em;
   height: auto;
-}
-
-.background-image {
-  width: 195%;
-  position: absolute;
-  top: 4em;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.foreground-image {
-  width: 150%;
-  position: absolute;
-  top: 15.1em;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
 }
 
 .btn {
@@ -149,14 +149,46 @@ p {
   margin-top: 20px;
   box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
-  position: absolute;
-  top: 52em;
-  right: 5em;
-}
+  margin-top: -8em;
+  margin-left: 60em;
 
+  
+}
 .btn:hover {
   background-color: #222f61;
   color: white;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 1024px) {
+  .btn {
+    margin-top: 5em;
+    margin-left: 0em;
+  }
+
+  h1 {
+    font-size: 3em;
+    display: flex;
+    flex-wrap: wrap;
+    word-wrap: break-word;
+    width: 90%
+  }
+
+  p {
+    display: flex;
+    flex-wrap: wrap;
+    word-wrap: break-word;
+    width: 90%;
+    text-align: center
+  }
+
+  .text-container {
+  width: 90%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 }
 </style>
