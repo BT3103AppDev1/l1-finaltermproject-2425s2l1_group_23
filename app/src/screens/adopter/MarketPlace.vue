@@ -4,9 +4,7 @@
     @search="handleSearch"
     @filter-category="handleCategoryFilter"
   />
-  <button class="edit-profile-button">
-    <router-link to="/editprofile">Edit Profile</router-link>
-  </button>
+
   <div class="marketplace-container">
     <!-- <section class="search-bar">
         <input
