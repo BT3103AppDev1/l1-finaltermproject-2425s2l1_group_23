@@ -2,16 +2,18 @@
   <div class="chat-room">
     <!-- Person Section -->
     <div class="person">
-      <img v-if="isPetLister"
-          :src="selectedChat.profileImage || listerAvatar"
-          alt="Pet Avatar"
-          class="pet-avatar"
+      <img
+        v-if="isPetLister"
+        :src="selectedChat.profileImage || listerAvatar"
+        alt="Pet Avatar"
+        class="pet-avatar"
       />
 
-      <img v-if="!isPetLister"
-          :src="selectedChat.profileImage || adopterAvatar"
-          alt="Pet Avatar"
-          class="pet-avatar"
+      <img
+        v-if="!isPetLister"
+        :src="selectedChat.profileImage || adopterAvatar"
+        alt="Pet Avatar"
+        class="pet-avatar"
       />
 
       <h2>{{ selectedChat.name }}</h2>
@@ -21,7 +23,11 @@
     <div class="notification">
       <div class="pet">
         <img
-          :src="petData.petPhotoBase64 || petListingAvatar" 
+          :src="
+            petData.petPhotoBase64
+              ? `data:image/png;base64,${petData.petPhotoBase64}`
+              : petListingAvatar
+          "
           alt="Pet Avatar"
           class="pet-avatar"
         />
@@ -30,7 +36,7 @@
       <!-- Treat button for Listers -->
       <!-- 3 treat status: Accepted, Rejected, Pending -->
       <div class="treat-l" v-if="this.treatStatus === 'pending' && isPetLister">
-        <button class="accept-button" @click="acceptTreat"> 
+        <button class="accept-button" @click="acceptTreat">
           <p>🦴 Accept Treat</p>
         </button>
         <button class="reject-button" @click="rejectTreat">
@@ -38,26 +44,42 @@
         </button>
       </div>
 
-      <div v-if="this.treatStatus === 'accepted' && isPetLister" class="treat-status-l-accept">
+      <div
+        v-if="this.treatStatus === 'accepted' && isPetLister"
+        class="treat-status-l-accept"
+      >
         <p>Treat accepted 🦴</p>
       </div>
 
-      <div v-if="this.treatStatus === 'rejected' && isPetLister" class="treat-status-l-reject">
+      <div
+        v-if="this.treatStatus === 'rejected' && isPetLister"
+        class="treat-status-l-reject"
+      >
         <p>Treat rejected...</p>
       </div>
 
       <!-- Treat button for Adopters -->
-      <div v-if="this.treatStatus === 'pending && !isPetLister'" class="treat-a">
-        <p>Your treat is still on its way to {{ petData.petName }}. Hang tight!</p>
+      <div
+        v-if="this.treatStatus === 'pending' && !isPetLister"
+        class="treat-a"
+      >
+        <p>
+          Your treat is still on its way to {{ petData.petName }}. Hang tight!
+        </p>
       </div>
 
-      <div v-if="this.treatStatus === 'accdefaepted' && !isPetLister" class="treat-status-a-accept">
+      <div
+        v-if="this.treatStatus === 'accepted' && !isPetLister"
+        class="treat-status-a-accept"
+      >
         <p>{{ petData.petName }} has accepted your treat! 🦴</p>
       </div>
 
-      <div v-if="this.treatStatus === 'rejected' && !isPetLister"class="treat-status-a-reject">
+      <div
+        v-if="this.treatStatus === 'rejected' && !isPetLister"
+        class="treat-status-a-reject"
+      >
         <p>{{ petData.petName }} has rejected your treat...</p>
-
       </div>
     </div>
 
@@ -69,7 +91,7 @@
         :class="[
           'message',
           { 'message-right': message.sender === 'You' },
-          { 'admin-message': message.sender === 'Admin' }
+          { 'admin-message': message.sender === 'Admin' },
         ]"
       >
         <p v-if="message.sender === 'Admin'" class="admin-text">
@@ -108,7 +130,7 @@ import {
   updateDoc,
   doc,
   serverTimestamp,
-  getDoc
+  getDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
@@ -153,7 +175,7 @@ export default {
 
     this.adopterId = this.selectedChat.otherUserId; // Assuming this is the adopter ID
     this.listerId = this.currentUserId;
-      const userDocRef = doc(db, "Users", this.currentUserId);
+    const userDocRef = doc(db, "Users", this.currentUserId);
     const userDoc = await getDoc(userDocRef);
 
     if (userDoc.exists()) {
@@ -171,7 +193,7 @@ export default {
       handler(newVal) {
         if (newVal) {
           if (this.unsubscribeMessages) {
-            this.unsubscribeMessages(); // clean up previous listener
+            this.unsubscribeMessages(); // Clean up previous listener
           }
           this.fetchMessages();
         }
@@ -180,57 +202,36 @@ export default {
   },
   beforeUnmount() {
     if (this.unsubscribeMessages) {
-      this.unsubscribeMessages(); // clean up listener when component is destroyed
+      this.unsubscribeMessages(); // Clean up listener when component is destroyed
     }
   },
 
   methods: {
     async display() {
-      /* so the logic is from marketplace page, when a user clicks on a listing,
-      it will lead to this page, hence must send the pet listing id to this page
-      */
-
-      /* get pet listing id here */
-      let petListingId = "testing"; /* this will be changed once marketplace set up a fn to send the listing id to here */
-      
+      let petListingId = this.selectedChat.petListingId; // Retrieve petListingId from the ChatRooms document
+      console.log("PetListingId:", petListingId);
       const petDocRef = doc(db, "Pet_Listings", petListingId);
 
-      /* get the doc with the pet listing id here */
       try {
-          const docSnap = await getDoc(petDocRef);
-          console.log("Fetching document:", petListingId);
-
-          if (docSnap.exists) {
-              console.log("Document data:", docSnap.data());
-              /* grab the pet details here */
-              this.petData = docSnap.data();
-          } else {
-              console.log("No such pet in firebase")
-          }
+        const docSnap = await getDoc(petDocRef);
+        if (docSnap.exists()) {
+          this.petData = docSnap.data();
+        } else {
+          console.log("No such pet in Firebase");
+        }
       } catch (error) {
-          console.log("Error fetching pet listing", error);
+        console.log("Error fetching pet listing", error);
       }
 
       const chatRoomDocRef = doc(db, "ChatRooms", this.selectedChat.id);
       try {
         const docSnap = await getDoc(chatRoomDocRef);
-        console.log("Fetching ChatRoom document:", this.selectedChat.id);
-
         if (docSnap.exists()) {
           const chatRoomData = docSnap.data();
-          console.log("ChatRoom data:", chatRoomData);
 
           // Set treatStatus based on the ChatRoom document
-          if (chatRoomData.treatStatus === "pending") {
-            this.treatStatus = "pending";
-          } else if (chatRoomData.treatStatus === "accepted") {
-            this.treatStatus = "accepted";
-          } else if (chatRoomData.treatStatus === "rejected") {
-            this.treatStatus = "rejected";
-          } else {
-            console.log("No valid treat status found");
-            this.treatStatus = null;
-          }
+          this.treatStatus = chatRoomData.treatStatus || null;
+          console.log("Treat Status:", this.treatStatus);
 
           if (chatRoomData.expiryDate) {
             const expiryDate = chatRoomData.expiryDate.toDate();
@@ -257,16 +258,16 @@ export default {
         this.selectedChat.id,
         "messages"
       );
-      const q = query(messagesRef, orderBy("timestamp", "asc")); // Ensure "timestamp" matches Firestore field
+      const q = query(messagesRef, orderBy("timestamp", "asc"));
 
       this.unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
         this.messages = [];
-        console.log(this.messages);
         querySnapshot.forEach((doc) => {
           const messageData = doc.data();
-          console.log("from");
-          console.log(messageData.from);
-          if (messageData.to === this.currentUserId || messageData.from === this.currentUserId) {
+          if (
+            messageData.to === this.currentUserId ||
+            messageData.from === this.currentUserId
+          ) {
             this.messages.push({
               id: doc.id,
               sender:
@@ -295,7 +296,7 @@ export default {
       if (this.newMessage.trim() === "") return;
 
       try {
-        // add new message to subcollection
+        // Add new message to subcollection
         const messagesRef = collection(
           db,
           "ChatRooms",
@@ -309,7 +310,7 @@ export default {
           timestamp: serverTimestamp(),
         });
 
-        // update the chat room with latest message info
+        // Update the chat room with latest message info
         const chatRoomRef = doc(db, "ChatRooms", this.selectedChat.id);
         await updateDoc(chatRoomRef, {
           latestMessageAdopter: this.newMessage.trim(),
@@ -321,7 +322,7 @@ export default {
           hasRead: false,
         });
 
-        this.newMessage = "";
+        this.newMessage = ""; // Clear the input field
       } catch (error) {
         console.error("Error sending message:", error);
       }
@@ -341,9 +342,13 @@ export default {
         const adopterDoc = await getDoc(adopterDocRef);
         const listerDoc = await getDoc(listerDocRef);
 
-        const adopterFirstName = adopterDoc.exists() ? adopterDoc.data().firstName : "Adopter";
-        const listerFirstName = listerDoc.exists() ? listerDoc.data().firstName : "Lister";
-        
+        const adopterFirstName = adopterDoc.exists()
+          ? adopterDoc.data().firstName
+          : "Adopter";
+        const listerFirstName = listerDoc.exists()
+          ? listerDoc.data().firstName
+          : "Lister";
+
         await addDoc(messagesRef, {
           from: "admin",
           to: this.adopterId,
@@ -402,10 +407,10 @@ export default {
           Thank you for giving ${this.petData.petName} a loving start. You're pawesome! 🐾`,
           latestTimeAdopter: serverTimestamp(),
           latestTimeLister: serverTimestamp(),
-    });
+        });
         console.log("Initial message added to the message subcollection");
       } catch (error) {
-          console.log("Error", error);
+        console.log("Error", error);
       }
     },
 
@@ -423,8 +428,12 @@ export default {
         const adopterDoc = await getDoc(adopterDocRef);
         const listerDoc = await getDoc(listerDocRef);
 
-        const adopterFirstName = adopterDoc.exists() ? adopterDoc.data().firstName : "Adopter";
-        const listerFirstName = listerDoc.exists() ? listerDoc.data().firstName : "Lister";
+        const adopterFirstName = adopterDoc.exists()
+          ? adopterDoc.data().firstName
+          : "Adopter";
+        const listerFirstName = listerDoc.exists()
+          ? listerDoc.data().firstName
+          : "Lister";
 
         await addDoc(messagesRef, {
           from: "admin",
@@ -463,7 +472,6 @@ export default {
           latestTimeAdopter: serverTimestamp(),
           latestTimeLister: serverTimestamp(),
         });
-        
 
         // Calculate expiry date (1 day from now)
         const expiryDate = serverTimestamp();
@@ -473,20 +481,16 @@ export default {
         await updateDoc(chatRoomDocRef, {
           expiryDate: expiryDate, // Save the expiry date
         });
-
-
       } catch (error) {
-          console.log("Error", error);
+        console.log("Error", error);
       }
     },
-    async goToPetProfile (petListingId) {
-        localStorage.setItem('currentPetId', petListingId); // Store petListingId in localStorage
-        router.push({ name: "PetProfile" }); // Navigate to PetProfile
+    async goToPetProfile(petListingId) {
+      localStorage.setItem("currentPetId", petListingId); // Store petListingId in localStorage
+      router.push({ name: "PetProfile" }); // Navigate to PetProfile
     },
-  }
-}
-
-
+  },
+};
 </script>
 
 <style scoped>
@@ -609,7 +613,6 @@ export default {
   display: flex;
   gap: 10px;
   padding: 10px;
-  
 }
 
 .message-input input {
@@ -672,18 +675,19 @@ export default {
 }
 
 .treat-status-l-accept {
-  background-color: #CEE1B9;
+  background-color: #cee1b9;
 }
 .treat-status-l-reject {
-  background-color: #F4D5CF;
+  background-color: #f4d5cf;
 }
 
 .treat-a {
   font-family: Raleway-Bold;
   font-size: 1em;
   padding: 0.2em 0.5em;
-  background-color: #C4CCDC;
+  background-color: #fdf6b7;
   border-radius: 0.5em;
+  margin: 0.5em;
 }
 
 .treat-l {
@@ -691,7 +695,8 @@ export default {
   gap: 1em;
 }
 
-.accept-button, .reject-button {
+.accept-button,
+.reject-button {
   border-radius: 0.5em;
   font-family: Raleway-Bold;
   font-size: 1em;
@@ -705,23 +710,22 @@ export default {
 }
 
 .accept-button {
-  background-color: #CEE1B9;
+  background-color: #cee1b9;
 }
 
 .accept-button:hover {
-  background-color: #A8CBA0;
+  background-color: #a8cba0;
   transform: scale(1.1);
   transition: transform 0.2s ease;
 }
 
 .reject-button {
-  background-color: #F4D5CF;
+  background-color: #f4d5cf;
 }
 
 .reject-button:hover {
-  background-color: #EAB8B0;
+  background-color: #eab8b0;
   transform: scale(1.1);
   transition: transform 0.2s ease;
 }
-
 </style>

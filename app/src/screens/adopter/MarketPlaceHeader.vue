@@ -4,11 +4,18 @@
     <header class="header">
       <div class="header-content">
         <h1>Welcome, {{ userName }}</h1>
-
       </div>
       <div class="email">
-        <button class="email-button" @click="goToEmails"><img class="icon" src="@/assets/images/marketplaceHeader/emailIcon.png" alt="Email Icon" /></button>
-        <span v-if="emailsUnread > 0" class="email-notification">{{ emailsUnread }}</span>
+        <button class="email-button" @click="goToEmails">
+          <img
+            class="icon"
+            src="@/assets/images/marketplaceHeader/emailIcon.png"
+            alt="Email Icon"
+          />
+        </button>
+        <span v-if="emailsUnread > 0" class="email-notification">{{
+          emailsUnread
+        }}</span>
       </div>
     </header>
 
@@ -39,7 +46,6 @@
     </section>
   </div>
 </template>
-
 
 <script>
 import CategoryCard from "@/components/CategoryCard.vue";
@@ -114,10 +120,9 @@ export default {
 
   mounted() {
     this.fetchUnreadEmails();
-  }
+  },
 };
 </script>
-
 
 <style scoped>
 @import url("../../assets/styles/font.css");
@@ -149,9 +154,10 @@ export default {
   gap: 20px;
   width: 100%;
 }
-.header h1 { 
+.header h1 {
   font-family: "FredokaOne-Regular";
   font-size: 24px;
+  letter-spacing: 1px;
 }
 
 .icon {
@@ -173,7 +179,7 @@ export default {
 }
 
 .email-button {
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
   border-width: 0em;
   cursor: pointer;
 }
@@ -223,7 +229,7 @@ export default {
 }
 
 /* Section Titles */
-.div-text { 
+.div-text {
   width: 100%;
   justify-content: flex-start;
   margin-top: 10px;
@@ -233,6 +239,7 @@ export default {
   font-family: "FredokaOne-Regular";
   font-size: 30px;
   margin-top: 20px;
+  letter-spacing: 1px;
 }
 
 /* Pet Categories */
@@ -281,18 +288,18 @@ export default {
 }
 
 .email-notification {
-    display: flex;
-    width: 1em;
-    height: 1em;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Raleway-Regular';
-    color: white;
-    font-size: 0.8em;
-    background-color: #e18c8c;
-    border-radius: 50%;
-    margin-top: -3em;
-    margin-left: -0.8em;
+  display: flex;
+  width: 1em;
+  height: 1em;
+  align-items: center;
+  justify-content: center;
+  font-family: "Raleway-Regular";
+  color: white;
+  font-size: 0.8em;
+  background-color: #e18c8c;
+  border-radius: 50%;
+  margin-top: -3em;
+  margin-left: -0.8em;
 }
 .email {
   display: flex;

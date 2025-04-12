@@ -1,9 +1,9 @@
 <template>
   <div class="overall">
-    <div class="navbar" v-if="!loading">
+    <div class="navbar">
       <AdoptersNavBar v-if="!isPetLister" />
     </div>
-    <div class="navbar" v-if="!loading">
+    <div class="navbar">
       <ListersNavBar v-if="isPetLister" />
     </div>
     <div class="edit-profile-container">
@@ -11,12 +11,14 @@
       <div class="header-container">
         <h1 class="edit-profile">Edit Profile</h1>
         <div class="profile-image-container">
-          <img v-if="isPetLister"
+          <img
+            v-if="isPetLister"
             :src="profileImage || ListerDefault"
             class="profile-image"
             alt="Profile Picture"
           />
-          <img v-if="!isPetLister"
+          <img
+            v-if="!isPetLister"
             :src="profileImage || AdopterDefault"
             class="profile-image"
             alt="Profile Picture"
@@ -70,7 +72,10 @@
             type="text"
             required
           />
-          <p v-if="contactNumber && !isContactNumberValid" class="error-message">
+          <p
+            v-if="contactNumber && !isContactNumberValid"
+            class="error-message"
+          >
             Invalid contact number
           </p>
         </div>
@@ -82,7 +87,11 @@
             placeholder="*************************"
             disabled
           />
-          <button type="button" class="reset-password-btn" @click="resetPassword">
+          <button
+            type="button"
+            class="reset-password-btn"
+            @click="resetPassword"
+          >
             Reset Password
           </button>
         </div>
@@ -130,7 +139,7 @@
             <button type="button" class="browse-btn" @click="triggerFileInput">
               Browse
             </button>
-            
+
             <p v-if="selectedFileName" class="uploaded-file">
               Uploaded:
               <a
@@ -156,19 +165,12 @@
       </form>
     </div>
   </div>
-  
 </template>
-
-
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
-import {
-  getAuth,
-  updateEmail,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { getAuth, updateEmail, onAuthStateChanged } from "firebase/auth";
 import {
   getFirestore,
   doc,
@@ -184,7 +186,6 @@ import ListersNavBar from "../../components/ListersNavBar.vue";
 import ListerDefault from "@/assets/images/ListerDefault.png";
 import AdopterDefault from "@/assets/images/AdopterDefault.png";
 
-
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
@@ -193,7 +194,6 @@ const router = useRouter();
 const resetPassword = () => {
   router.push("/reset-password");
 };
-
 
 /*
 // for TESTING: artificially log in
@@ -303,7 +303,7 @@ const fetchUserData = async () => {
 
     isPetLister.value = userData.isPetLister;
     console.log("isPetLister: " + isPetLister.value);
-    
+
     // Fetch certificate if available
     if (userData.certificate_base64) {
       selectedFileBase64.value = userData.certificate_base64;
@@ -432,7 +432,6 @@ const updateProfile = async () => {
       ...certificateUpdate, //Only update certificate if a new file was uploaded
     });
 
-    
     alert("Profile updated successfully!");
   } catch (error) {
     console.error("Error updating profile:", error);

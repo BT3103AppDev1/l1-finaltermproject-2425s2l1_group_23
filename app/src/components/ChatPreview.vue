@@ -11,12 +11,14 @@
         :class="['chat-item', { active: chat.id === selectedChatId }]"
       >
         <div class="item">
-          <img v-if="isPetLister"
+          <img
+            v-if="isPetLister"
             :src="chat.profileImage || listerAvatar"
             alt="User Avatar"
             class="avatar"
           />
-          <img v-if="!isPetLister"
+          <img
+            v-if="!isPetLister"
             :src="chat.profileImage || adopterAvatar"
             alt="User Avatar"
             class="avatar"
@@ -46,7 +48,7 @@ import {
   orderBy,
   getDoc,
   doc, // Make sure this is imported
-  updateDoc
+  updateDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { onUnmounted } from "vue";
@@ -96,15 +98,18 @@ export default {
 
         const userData = userDoc.data();
         this.isPetLister = userData.isPetLister;
-        console.log(this.isPetLister)
+        console.log(this.isPetLister);
 
         this.loading = false;
 
         // by pass the documentID then query the collection usiing composite index
         const q = query(
           collection(db, "ChatRooms"),
-          where("participants", "array-contains", this.currentUserId), 
-          orderBy(this.isPetLister ? "latestTimeLister" : "latestTimeAdopter", "desc")
+          where("participants", "array-contains", this.currentUserId),
+          orderBy(
+            this.isPetLister ? "latestTimeLister" : "latestTimeAdopter",
+            "desc"
+          )
         );
 
         // 3. Set up real-time listener
@@ -112,6 +117,7 @@ export default {
           const chatPromises = querySnapshot.docs.map(async (document) => {
             const chatData = document.data();
             const chatId = document.id;
+            const _petListingId = chatData.petListingId;
 
             if (chatData.expiryDate) {
               const expiryDate = chatData.expiryDate.toDate();
@@ -150,23 +156,21 @@ export default {
             const latestTime = this.isPetLister
               ? chatData.latestTimeLister
               : chatData.latestTimeAdopter;
-            
+
             const lastSender = this.isPetLister
               ? chatData.lastSenderLister
               : chatData.lastSenderAdopter;
-              
 
             return {
               id: chatId,
               name: `${otherUserData.firstName} ${otherUserData.lastName}`,
-              lastMessage: latestMessage || "No messages yet",
+              lastMessage: latestMessage || "",
               lastTime: latestTime ? latestTime.toDate() : null,
-              profileImage:
-                otherUserData.profileImage,
+              profileImage: otherUserData.profileImage,
+              petListingId: _petListingId,
               unread:
-                chatData.hasRead === false &&
-                lastSender !== this.currentUserId,
-                otherUserId: otherUserId,
+                chatData.hasRead === false && lastSender !== this.currentUserId,
+              otherUserId: otherUserId,
             };
           });
 
@@ -190,6 +194,7 @@ export default {
         name: selectedChat.name,
         profileImage: selectedChat.profileImage,
         otherUserId: selectedChat.otherUserId,
+        petListingId: selectedChat.petListingId,
       });
 
       // Mark as read when selected
