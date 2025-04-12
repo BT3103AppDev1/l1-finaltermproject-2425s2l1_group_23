@@ -1,15 +1,14 @@
 <template>
+  <div class="back-button-container">
+    <button class="back-button" @click="$router.push({ name: 'MarketPlace' })">
+      <img
+        src="@/assets/images/PetProfileMockUp/BackButton.png"
+        alt="BackButton"
+        class="back-button-img"
+      />
+    </button>
+  </div>
     <div class="content">
-      <div class="back-button">
-        <button class="back-button" @click="$router.push({ name: 'MarketPlace' })">
-          <img
-            src="@/assets/images/PetProfileMockUp/BackButton.png"
-            alt="BackButton"
-            class="back-button-img"
-          />
-        </button>
-
-      </div>
       <div class="pet-profile-full">
         <div class="fixed-container">
           <img
@@ -332,6 +331,7 @@
         adopterId: null,
         petListingId: null,
         listerId: null,
+        adopterName: null,
       };
     },
   
@@ -440,8 +440,8 @@
             participants: [adopterId, listerId],
             latestTimeAdopter: new Date(),
             latestTimeLister: new Date(),
-            latestMessageLister: `Say hi to get things started! ${this.petData.petName} is waiting for your message so the lister can respond to your treat! 💬`,
-            latestMessageAdopter: `Paw-some! ${this.ad} sent a treat for ${this.petData.petName}. 🦴 Say hi to see if it’s a match! ✨`,
+            latestMessageAdopter: `Say hi to get things started! ${this.petData.petName} is waiting for your message so the lister can respond to your treat! 💬`,
+            latestMessageLister: `Paw-some! Someone sent a treat for ${this.petData.petName}. 🦴 Say hi to see if it’s a match! ✨`,
             treatStatus: "pending"
           });
           console.log("Chat room successfully created!");
@@ -469,12 +469,20 @@
   
       async sendTreat() {
         /* get pet listing id here */
-        let petListingId =
-          "testing"; /* this will be changed once marketplace set up a fn to send the listing id to here */
-        const petDocRef = doc(db, "Pet_Listings", petListingId);
+        const petDocRef = doc(db, "Pet_Listings", this.petListingId);
         const userDocRef =doc(db, "Users", this.adopterId);
         /* get the doc with the pet listing id here */
         try {
+
+          if (!Array.isArray(this.petData.users)) {
+            this.petData.users = [];
+          }
+
+          // Check if treat has already been sent
+          if (this.petData.users.includes(this.adopterId)) {
+            console.log("Treat already sent to pet listing!");
+            return;
+          }
           if (this.treatSent) {
             /* get user id here, change when got actual user alrd*/
             console.log("Treat already sent to pet listing!");
@@ -491,7 +499,7 @@
             console.log("Treat successfully sent to pet listing!");
   
             await this.createChatRoom(
-              petListingId,
+              this.petListingId,
               this.adopterId,
               this.listerId
             );
@@ -532,7 +540,23 @@
   
   <style scoped>
   @import url("../../assets/styles/font.css");
-  
+
+  .back-button-container {
+    margin-top: 1em;
+    margin-left: 1.5em;
+    position: fixed;
+    background-color: none;
+  }
+  .back-button {
+    border-width: 0em;
+    background-color: rgba(0,0,0,0);
+    cursor: pointer;
+  }
+
+  .back-button-img {
+    width: 3em;
+    height: 3em;
+  }
   .content {
     display: flex;
     align-items: center;
