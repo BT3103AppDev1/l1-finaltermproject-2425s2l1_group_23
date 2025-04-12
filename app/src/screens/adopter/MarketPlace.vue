@@ -68,6 +68,7 @@
       };
 
       const goToPetProfile = (petListingId) => {
+        console.log(petListingId);
         localStorage.setItem('currentPetId', petListingId); // Store petListingId in localStorage
         router.push({ name: "PetProfile" }); // Navigate to PetProfile
       };
