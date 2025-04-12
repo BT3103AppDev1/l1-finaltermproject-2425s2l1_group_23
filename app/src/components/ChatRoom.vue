@@ -60,7 +60,7 @@
 
       <!-- Treat button for Adopters -->
       <div
-        v-if="this.treatStatus === 'pending && !isPetLister'"
+        v-if="this.treatStatus === 'pending' && !isPetLister"
         class="treat-a"
       >
         <p>
@@ -69,7 +69,7 @@
       </div>
 
       <div
-        v-if="this.treatStatus === 'accdefaepted' && !isPetLister"
+        v-if="this.treatStatus === 'accepted' && !isPetLister"
         class="treat-status-a-accept"
       >
         <p>{{ petData.petName }} has accepted your treat! 🦴</p>
@@ -193,7 +193,7 @@ export default {
       handler(newVal) {
         if (newVal) {
           if (this.unsubscribeMessages) {
-            this.unsubscribeMessages(); // clean up previous listener
+            this.unsubscribeMessages(); // Clean up previous listener
           }
           this.fetchMessages();
         }
@@ -202,33 +202,22 @@ export default {
   },
   beforeUnmount() {
     if (this.unsubscribeMessages) {
-      this.unsubscribeMessages(); // clean up listener when component is destroyed
+      this.unsubscribeMessages(); // Clean up listener when component is destroyed
     }
   },
 
   methods: {
     async display() {
-      /* so the logic is from marketplace page, when a user clicks on a listing,
-      it will lead to this page, hence must send the pet listing id to this page
-      */
-
-      /* get pet listing id here */
-      let petListingId =
-        "testing"; /* this will be changed once marketplace set up a fn to send the listing id to here */
-
+      let petListingId = this.selectedChat.petListingId; // Retrieve petListingId from the ChatRooms document
+      console.log("PetListingId:", petListingId);
       const petDocRef = doc(db, "Pet_Listings", petListingId);
 
-      /* get the doc with the pet listing id here */
       try {
         const docSnap = await getDoc(petDocRef);
-        console.log("Fetching document:", petListingId);
-
-        if (docSnap.exists) {
-          console.log("Document data:", docSnap.data());
-          /* grab the pet details here */
+        if (docSnap.exists()) {
           this.petData = docSnap.data();
         } else {
-          console.log("No such pet in firebase");
+          console.log("No such pet in Firebase");
         }
       } catch (error) {
         console.log("Error fetching pet listing", error);
@@ -237,23 +226,12 @@ export default {
       const chatRoomDocRef = doc(db, "ChatRooms", this.selectedChat.id);
       try {
         const docSnap = await getDoc(chatRoomDocRef);
-        console.log("Fetching ChatRoom document:", this.selectedChat.id);
-
         if (docSnap.exists()) {
           const chatRoomData = docSnap.data();
-          console.log("ChatRoom data:", chatRoomData);
 
           // Set treatStatus based on the ChatRoom document
-          if (chatRoomData.treatStatus === "pending") {
-            this.treatStatus = "pending";
-          } else if (chatRoomData.treatStatus === "accepted") {
-            this.treatStatus = "accepted";
-          } else if (chatRoomData.treatStatus === "rejected") {
-            this.treatStatus = "rejected";
-          } else {
-            console.log("No valid treat status found");
-            this.treatStatus = null;
-          }
+          this.treatStatus = chatRoomData.treatStatus || null;
+          console.log("Treat Status:", this.treatStatus);
 
           if (chatRoomData.expiryDate) {
             const expiryDate = chatRoomData.expiryDate.toDate();
@@ -280,15 +258,12 @@ export default {
         this.selectedChat.id,
         "messages"
       );
-      const q = query(messagesRef, orderBy("timestamp", "asc")); // Ensure "timestamp" matches Firestore field
+      const q = query(messagesRef, orderBy("timestamp", "asc"));
 
       this.unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
         this.messages = [];
-        console.log(this.messages);
         querySnapshot.forEach((doc) => {
           const messageData = doc.data();
-          console.log("from");
-          console.log(messageData.from);
           if (
             messageData.to === this.currentUserId ||
             messageData.from === this.currentUserId
@@ -321,7 +296,7 @@ export default {
       if (this.newMessage.trim() === "") return;
 
       try {
-        // add new message to subcollection
+        // Add new message to subcollection
         const messagesRef = collection(
           db,
           "ChatRooms",
@@ -335,7 +310,7 @@ export default {
           timestamp: serverTimestamp(),
         });
 
-        // update the chat room with latest message info
+        // Update the chat room with latest message info
         const chatRoomRef = doc(db, "ChatRooms", this.selectedChat.id);
         await updateDoc(chatRoomRef, {
           latestMessageAdopter: this.newMessage.trim(),
@@ -347,7 +322,7 @@ export default {
           hasRead: false,
         });
 
-        this.newMessage = "";
+        this.newMessage = ""; // Clear the input field
       } catch (error) {
         console.error("Error sending message:", error);
       }
@@ -710,8 +685,9 @@ export default {
   font-family: Raleway-Bold;
   font-size: 1em;
   padding: 0.2em 0.5em;
-  background-color: #c4ccdc;
+  background-color: #fdf6b7;
   border-radius: 0.5em;
+  margin: 0.5em;
 }
 
 .treat-l {
