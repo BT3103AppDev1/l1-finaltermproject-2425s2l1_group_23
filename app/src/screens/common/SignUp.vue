@@ -1,17 +1,14 @@
 <template>
   <div class="signup">
     <Logo />
-
     <div class="signup-main">
       <div class="image-container">
         <div class="welcome">Welcome! We’re excited to have you.</div>
-        <div class="cat-border">
-          <img
-            class="signup-cat"
-            src="../../assets/images/signup/SignUpCat.png"
-            alt="Signup"
-          />
-        </div>
+        <img
+          class="signup-cat"
+          src="../../assets/images/signup/SignUpCat.png"
+          alt="Signup"
+        />
       </div>
       <div class="signup-form-container">
         <input
@@ -237,12 +234,18 @@ const register = async () => {
 @import url("../../assets/styles/font.css");
 
 .signup {
-  max-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 .signup-main {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 85vh;
+  width: 100vw;
 }
 
 .image-container {
@@ -263,23 +266,10 @@ const register = async () => {
   z-index: 2;
 }
 
-.cat-border {
-  background-color: #cee1b9;
-  border-radius: 20% 80% 70% 31% / 36% 26% 66% 63%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 600px;
-  height: 450px;
+.signup-cat {
+  width: 40em;
 }
 
-.signup-cat {
-  width: 440px;
-  z-index: 1;
-  position: absolute;
-  top: 240px;
-  left: 96px;
-}
 
 .signup-form-container {
   display: flex;
@@ -291,8 +281,8 @@ const register = async () => {
 .upload-image {
   background-color: #cee1b9;
   border-radius: 50%;
-  width: 15em;
-  height: 15em;
+  width: 8em;
+  height: 8em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -325,7 +315,7 @@ const register = async () => {
   align-items: left;
   background-color: white;
   border-radius: 7px;
-  width: 55%;
+  width: 30em;
   margin: 1em;
   border-left: 1px solid #7f7e83;
   border-right: 1px solid #7f7e83;
@@ -364,11 +354,6 @@ const register = async () => {
 
 .signup-form-input:focus-within {
   border-left: 3px solid #222f61;
-  transition: border-left 0.3s ease;
-}
-
-.signup-form-input:not(:focus-within) {
-  transition: border-left 0.3s ease;
 }
 
 p {
@@ -424,78 +409,28 @@ input {
 }
 
 @media (max-width: 1024px) {
+  .signup {
+    overflow: scroll;
+    height: auto;
+    width: auto;
+  }
+
   .signup-main {
+    height: auto;
+    display: flex;
     flex-direction: column;
   }
 
-  .image-container,
-  .signup-form-container {
+
+  .welcome {
     width: 100%;
   }
-
-  .cat-border {
-    width: 560px;
-    height: 368px;
-  }
-
   .signup-form-container {
     margin-top: 1.5em;
   }
-
-  .signup-cat {
-    width: 330px;
-    top: 170px;
-    left: 330px;
-  }
-
-  .signup-form {
-    width: 60%;
-  }
-
-  .welcome {
-    font-size: 2em;
-    width: 80%;
-  }
-
-  .signup-form-button {
-    width: 20%;
-    height: auto;
-  }
-}
-
-@media (max-width: 768px) {
-  .signup-form {
-    width: 70%;
-  }
-
-  .welcome {
-    font-size: 1.5em;
-    width: 90%;
-  }
-
-  .cat-border {
-    width: 400px;
-    height: 256px;
-  }
-
-  .signup-cat {
-    width: 240px;
-    top: 128px;
-    left: 200px;
-  }
-
-  .signup-form-container {
-    margin-top: 1.5em;
-  }
-
   .upload-image {
     width: 8em;
     height: 8em;
-  }
-
-  .signup-form-button {
-    width: 50%;
-    height: auto;
   }
 }
 </style>
