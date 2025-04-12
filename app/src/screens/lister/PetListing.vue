@@ -3,14 +3,39 @@
   <div class="pet-listing">
     <h1>Pet Listing</h1>
     <p>This is a dummy template for the Pet Listing page.</p>
+
+    <!-- Temporary Button to go to Add Listing -->
+    <button @click="goToAddListing" class="add-button">Add a Pet</button>
   </div>
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+
 export default {
   name: "PetListing",
+  setup() {
+    const router = useRouter();
+
+    const goToAddListing = () => {
+
+      localStorage.removeItem("petType");
+      localStorage.removeItem("petBasicsInfo");
+      localStorage.removeItem("petLifestyleInfo");
+      localStorage.removeItem("fullPetListingData");
+
+  
+      sessionStorage.removeItem("cameFromPreview");
+
+
+      router.push("/addlisting1");
+    };
+
+    return { goToAddListing };
+  },
 };
 </script>
+
 
 <style scoped>
 .pet-listing {

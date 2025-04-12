@@ -1,5 +1,5 @@
 <template>
-  <img src="../../assets/images/PawfectHome.png" alt="Pawfect Home Logo" />
+  <Logo />
   <div class="overall">
     <div class="welcome-container">
       <!-- Logo -->
@@ -20,8 +20,12 @@
 </template>
 
 <script>
+import Logo from "../../components/Logo.vue";
 export default {
   name: "WelcomeScreen",
+  components: {
+    Logo,
+  },
   methods: {
     goToNextPage() {
       this.$router.push("/login");
