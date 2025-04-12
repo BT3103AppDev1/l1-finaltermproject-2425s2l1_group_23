@@ -1,78 +1,88 @@
 <template>
-  <div class="onboarding-container">
-    <div class="question-image-container" v-if="currentStep < questions.length">
-      <div class="question-container">
-        <img
-          src="../../assets/images/onboardingQn/onboardingRat.png"
-          alt="Pet Image"
-          class="pet-image"
-        />
-        <div class="question-text">
-          <h2>{{ currentQuestion.question }}</h2>
-          <!-- Multiple Choice -->
-          <div
-            class="multiple-reponse"
-            v-if="currentQuestion.type === 'multiple'"
-          >
-            <label
-              v-for="option in currentQuestion.options"
-              :key="option"
-              class="option-label"
+  <div class="overall">
+    <Logo />
+    <div class="onboarding-container">
+      <div class="question-image-container" v-if="currentStep < questions.length">
+        <div class="question-container">
+          <img
+            :src="currentQuestion.image"
+            alt="Pet Image"
+            class="pet-image"
+          />
+          <div class="question-text">
+            <h2 class="question">{{ currentQuestion.question }}</h2>
+            <!-- Multiple Choice -->
+            <div
+              class="multiple-response"
+              v-if="currentQuestion.type === 'multiple'"
             >
-              <input
-                type="checkbox"
-                :value="option"
-                v-model="selectedOptions"
-                @change="handleOptionChange(option)"
-              />
-              {{ option }}
-            </label>
-            <!-- Show textbox if "Other" is selected -->
-            <!-- Only activated when "showOtherInput" function is true -->
-            <!-- i.e. to say user clicked "Other" -->
-            <div class="other-box" v-if="showOtherInput">
+              <label
+                v-for="option in currentQuestion.options"
+                :key="option"
+                class="option-label"
+              >
+                <input
+                  class="checkbox-input"
+                  type="checkbox"
+                  :value="option"
+                  v-model="selectedOptions"
+                  @change="handleOptionChange(option)"
+                />
+                {{ option }}
+              </label>
+              <!-- Show textbox if "Other" is selected -->
+              <!-- Only activated when "showOtherInput" function is true -->
+              <!-- i.e. to say user clicked "Other" -->
+              <div class="other-box" v-if="showOtherInput">
+                <input
+                  type="text"
+                  v-model="otherInputValue"
+                  placeholder="Please specify"
+                  class="text-input"
+                />
+              </div>
+              <!-- ################ end of textbox ################### -->
+            </div>
+
+            <!-- Single Choice -->
+            <div v-else-if="currentQuestion.type === 'single'">
+              <label
+                v-for="option in currentQuestion.options"
+                :key="option"
+                class="option-label"
+              >
+                <input type="radio" class="radio-input" :value="option" v-model="selectedOptions" />
+                <!-- radio button: only one radio button in the group can be selected at once -->
+                {{ option }}
+                <!-- Displays the LABEL of radio button -->
+              </label>
+            </div>
+
+            <!-- Text Input -->
+            <div v-else-if="currentQuestion.type === 'text'">
               <input
                 type="text"
-                v-model="otherInputValue"
-                placeholder="Please specify"
+                v-model="textInput"
+                placeholder="Type your answer here"
                 class="text-input"
               />
             </div>
-            <!-- ################ end of textbox ################### -->
+            <button @click="nextQuestion" class="next-button">
+              {{ currentStep < questions.length - 1 ? "Next" : "Submit" }}
+            </button>
           </div>
-
-          <!-- Single Choice -->
-          <div v-else-if="currentQuestion.type === 'single'">
-            <label
-              v-for="option in currentQuestion.options"
-              :key="option"
-              class="option-label"
-            >
-              <input type="radio" :value="option" v-model="selectedOptions" />
-              <!-- radio button: only one radio button in the group can be selected at once -->
-              {{ option }}
-              <!-- Displays the LABEL of radio button -->
-            </label>
-          </div>
-
-          <!-- Text Input -->
-          <div v-else-if="currentQuestion.type === 'text'">
-            <input
-              type="text"
-              v-model="textInput"
-              placeholder="Type your answer here"
-              class="text-input"
-            />
-          </div>
-          <button @click="nextQuestion" class="next-button">
-            {{ currentStep < questions.length - 1 ? "Next" : "Submit" }}
-          </button>
         </div>
       </div>
-    </div>
 
-    <div v-else>
-      <h2>Thank you for completing the onboarding!</h2>
+      <div v-else class="final">
+        <h2>Thank you for completing the onboarding!</h2>
+        <p class="subtitle">You’re officially part of the Pawfect Home family! Your journey starts here. Let’s make some tails (and hearts) wag.</p>
+        <img
+          src="@/assets/images/onboardingQn/onboardingComplete.png"
+          alt = "Pet Image"
+          class="final-image"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -82,6 +92,7 @@ import { db } from "../../../firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { onboardingQuestions } from "./onboardingQuestions";
 import { getAuth } from "firebase/auth";
+import Logo from "../../components/Logo.vue";
 /* FYI
 ... is a spread operator. When used with arrays, 
 the spread operator expands the elements of the array into individual elements
@@ -105,6 +116,11 @@ export default {
       otherInputValue: "", // Store the value entered in the "Other" textbox
     };
   },
+
+  components: {
+    Logo
+  },
+
   computed: {
     currentQuestion() {
       return this.questions[this.currentStep]; // Sieve out the questions in JSON format from the onboardingQuestion.js
@@ -242,16 +258,17 @@ export default {
 @import "../../assets/styles/font.css";
 
 .question-image-container {
-  justify-self: auto;
   align-items: center;
   display: flex;
   justify-content: center;
 }
+
 .onboarding-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 90vh;
+  gap: 5em;
 }
 
 .question-container {
@@ -262,10 +279,9 @@ export default {
 }
 
 .pet-image {
-  width: 400px;
-  height: 300px;
-  object-fit: 90%;
-  object-position: center;
+  width: 40em;
+  height: auto;
+  margin-top: -5em;
 }
 
 .question-text {
@@ -278,20 +294,89 @@ h2 {
   font-family: FredokaOne-Regular;
 }
 
+.question {
+  text-align: left;
+}
+
+.multiple-response {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .option-label {
   font-family: Poppins-Regular;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   margin-right: 20px;
   margin-bottom: 10px;
+  gap: 10px;
+}
+
+.checkbox-input {
+  appearance: none; /* Remove default browser styles */
+  width: 20px; /* Set the size of the circle */
+  height: 20px;
+  border: 1px solid #222F61;
+  border-radius: 20%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.radio-input {
+  appearance: none;
+  width: 18px; /* Set the size of the circle */
+  height: 18px;
+  border: 1px solid #222F61;
+  border-radius: 100%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.checkbox-input:checked {
+  background-color: #222F61;
+}
+
+.radio-input:checked {
+  border-color: #222F61; 
+}
+
+.radio-input:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%; 
+  width: 12px; 
+  height: 12px;
+  background-color: #222f61;
+  border-radius: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.checkbox-input:after {
+  content: "";
+  position: absolute;
+  top: 2px; 
+  left: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid #f7f3eb;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .text-input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 300px;
+  width: 100%;
   margin-top: 10px;
-  font-family: Poppins-Regular;
+  font-family: Raleway-Regular
+}
+
+.text-input:focus {
+  outline: none;
 }
 
 .next-button {
@@ -309,5 +394,29 @@ h2 {
 
 .next-button:hover {
   background-color: #0e2233;
+}
+
+.subtitle {
+  font-family: Raleway-Medium;
+  font-size: 1.5em;
+}
+
+.final-image {
+  width: 50em;
+  height: auto;
+}
+
+.final {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .question-container {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>
