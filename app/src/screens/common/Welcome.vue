@@ -51,6 +51,7 @@ export default {
   display: flex;
   flex-direction: column;
   height: 94.5%;
+  margin-top: -2em;
 }
 
 /* Main container */
@@ -82,9 +83,10 @@ export default {
 }
 
 .welcome-image {
-  width: 55em;
+  width: 50%;
   height: auto;
   display: flex;
+
 }
 
 h1 {
@@ -122,7 +124,7 @@ h1 {
   background-color: #1a1e30;
 }
 
-@media (max-width: 1524px) {
+@media (max-width: 1024px) {
   .welcome-container{
     display: flex;
     flex-direction: column;
@@ -150,6 +152,10 @@ h1 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .welcome-image {
+    width: 80%;
   }
 }
 </style>
