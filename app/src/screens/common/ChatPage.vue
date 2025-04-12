@@ -44,7 +44,6 @@ export default {
 </script>
 
 <style scoped>
-
 .layout {
   display: flex;
   align-items: center;
@@ -59,8 +58,8 @@ export default {
   margin: 1em;
 }
 .navbar {
-    padding-right: 5em;
-    flex-shrink: 0;
+  padding-right: 5em;
+  flex-shrink: 0;
 }
 
 .chat-screen {
@@ -72,6 +71,7 @@ export default {
   justify-self: center;
   align-self: center;
   border-radius: 1em;
+  margin: 1em;
 }
 
 .nav-container {
