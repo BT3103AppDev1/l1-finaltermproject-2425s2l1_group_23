@@ -1,9 +1,6 @@
 <template>
-    <img
-      src="../../assets/images/PawfectHome.png"
-      alt="Pawfect Home Logo"
-      class="logo"
-    />
+  <div>
+    <Logo />
     <div class="content">
       <div class="details">
         <h1 class="heading">Forgot your password</h1>
@@ -26,9 +23,10 @@
           <p><button class="reset-button" @click="() => {resetPassword(); goToNextPage()}">Get reset link</button></p>
         </div>
       </div>
-      <img src="../../assets/images/forgetPassword/securityDog.png" alt="SecurityDog" class="img" />
+      <img src="../../assets/images/forgetPassword/ConfusedCat.png" alt="Confused Cat" class="img" />
     </div>
-  </template>
+  </div>
+</template>
 
   <script setup>
   import { ref } from "vue";
@@ -36,6 +34,7 @@
   import { collection, query, where, getDocs } from "firebase/firestore";
   import { getAuth, sendPasswordResetEmail } from "firebase/auth";
   import { useRouter } from "vue-router";
+  import Logo from "@/components/Logo.vue"
   
   const email = ref("");
   
@@ -76,9 +75,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    max-width: 100wh;
-    gap: 50px;
+    width: 100%;
+    gap: 8em;
+    height: 90vh;
   }
   .details {
     display: flex;
@@ -177,7 +176,16 @@
   }
 
   .img {
-    width: 30em;
+    width: 34em;
+    height: auto;
+  }
+
+  @media (max-width: 1024px) {
+    .content {
+      display: flex;
+      flex-direction: column;
+      height: auto;
+    }
   }
   </style>
   
