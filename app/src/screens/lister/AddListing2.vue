@@ -1,8 +1,8 @@
 <!-- og -->
 <template>
     <div class="listing-page">
-      <img src="@/assets/images/addlisting/greenbg.png" class="green-blob" />
-      <img src="@/assets/images/addlisting/pinkbg.png" class="pink-blob" />
+      <!-- <img src="@/assets/images/addlisting/greenbg.png" class="green-blob" />
+      <img src="@/assets/images/addlisting/pinkbg.png" class="pink-blob" /> -->
   
       <div class="profile-container">
         <div class="image-and-title">
@@ -10,8 +10,6 @@
           <div class="image-section">
             <div class="image-preview-wrapper">
                 <img :src="previewUrl" class="circular-preview" />
-
-
             </div>
             <div class="upload-buttons">
               <input
@@ -31,8 +29,8 @@
         <div class="form-box">
           <p class="required-label">*Required</p>
           <div class="form-section">
-            <label>Name*<input v-model="pet.petName"  type="text" /></label>
-            <label>Breed*<input v-model="pet.petBreed"  type="text" /></label>
+            <label>Name*<input v-model="pet.petName" placeholder="Enter name" type="text" /></label>
+            <label>Breed*<input v-model="pet.petBreed" placeholder="Enter breed" type="text" /></label>
             <label>Gender*
               <select v-model="pet.petGender">
                 <option disabled value="">Select</option>
@@ -41,8 +39,8 @@
               </select>
             </label>
             <label>Date of Birth*<input v-model="pet.dob" type="date" /></label>
-            <label>Weight(in kg)*<input v-model="pet.petWeight" type="number" /></label>
-            <label>Height(in cm)*<input v-model="pet.petHeight"  type="number" /></label>
+            <label>Weight(in kg)*<input v-model="formattedWeight" placeholder="Enter weight" type="text" /></label>
+            <label>Height(in cm)*<input v-model="formattedHeight"  placeholder="Enter height" type="text" /></label>
           </div>
   
           <div class="form-buttons">
@@ -51,14 +49,11 @@
           </div>
         </div>
       </div>
-
-      <img src="@/assets/images/addlisting/greenbg.png" class="green-blob" />
-      <img src="@/assets/images/addlisting/pinkbg.png" class="pink-blob" />
     </div>
   </template>
   
   <script setup>
-  import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
@@ -87,6 +82,27 @@ const pet = ref({
   const previewUrl = ref(defaultImage); // Default image if none selected
   const fileInput = ref(null);
   const imageBase64 = ref("");
+
+  const formattedWeight = computed({
+    get() {
+      return pet.value.petWeight ? `${pet.value.petWeight} kg` : "";
+    },
+    set(value) {
+      const numericValue = parseFloat(value.replace(/[^0-9.]/g, ""));
+      pet.value.petWeight = isNaN(numericValue) ? "" : numericValue;
+    },
+  });
+
+  // Computed property for height with "cm"
+  const formattedHeight = computed({
+    get() {
+      return pet.value.petHeight ? `${pet.value.petHeight} cm` : "";
+    },
+    set(value) {
+      const numericValue = parseFloat(value.replace(/[^0-9.]/g, ""));
+      pet.value.petHeight = isNaN(numericValue) ? "" : numericValue;
+    },
+  });
   
   onMounted(() => {
   const cameFromPreview = sessionStorage.getItem("cameFromPreview");
@@ -233,31 +249,27 @@ function removeImage() {
 @import url("../../assets/styles/font.css");
 
 .listing-page {
-  padding: 2em;
-  font-family: "Poppins", sans-serif;
   background-color: #f7f3eb;
-  min-height: 100vh;
-  position: relative;
+  height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
 }
 
-.green-blob {
-  position: absolute;
-  bottom: 13em;
-  left: 33em;
-  width: 18.75em;
-  opacity: 0.4;
-  z-index: 0;
+/* .green-blob {
+  width: 20em;
+  padding-bottom: -50%;
+  padding-left: 42%;
+
 }
 
 .pink-blob {
-  position: absolute;
-  top: -4em;
-  right: 5em;
-  width: 37.5em;
-  opacity: 0.4;
-  z-index: 0;
-}
+  width: 20em;
+  margin-bottom: -25%;
+  margin-left: 72em;
+} */
 
 .profile-container {
   display: flex;
@@ -275,6 +287,7 @@ function removeImage() {
   flex-direction: column;
   align-items: center;
   gap: 1em;
+  padding: 2em;
 }
 
 .title {
@@ -330,13 +343,28 @@ button.primary {
 button.secondary {
   background-color: white;
   color: #222f61;
-  border: 0.125em solid #222f61;
+  border: 0.1em solid #222f61;
 }
 
 button:hover {
   transform: scale(1.02);
 }
 
+.form-section label:focus-within {
+  border-left: 5px solid #222f61;
+}
+
+.form-section label input {
+  padding: 0em;
+  padding-bottom: 1em;
+  padding-top: 1em;
+}
+
+.form-section label select {
+  padding: 0em;
+  padding-bottom: 1em;
+  padding-top: 1em;
+}
 .form-box {
   padding: 2em;
   width: 31.25em;
@@ -347,6 +375,7 @@ button:hover {
   font-size: 0.85em;
   margin-bottom: 1em;
   padding-left: 0.25em;
+  font-family: Raleway-SemiBold;
 }
 
 .form-section {
