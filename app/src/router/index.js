@@ -21,6 +21,7 @@ import AddListing4 from "../screens/lister/AddListing4.vue";
 import PetProfilePreview from "../screens/lister/PetProfilePreview.vue";
 import ChatPage from "../screens/common/ChatPage.vue";
 import Report from "../screens/adopter/Report.vue";
+import SendTreatsSummary from "../screens/adopter/SendTreatsSummary.vue";
 
 const routes = [
   {
@@ -144,6 +145,11 @@ const routes = [
     path: "/email",
     name: "Email",
     component: Email,
+  }, 
+  {
+    path: "/sendtreatssummary",
+    name: "SendTreatsSummary",
+    component: SendTreatsSummary,
   }
 ];
 

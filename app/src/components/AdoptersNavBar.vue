@@ -13,7 +13,7 @@
       </router-link>
 
       <!-- PetTreatSummary -->
-      <router-link to="/chat" class="icon-button">
+      <router-link to="/sendtreatssummary" class="icon-button">
         <v-icon name="la-bone-solid" class="icon2" />
       </router-link>
 
