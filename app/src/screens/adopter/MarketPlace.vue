@@ -100,10 +100,7 @@ export default {
   const petData = doc.data();
   const userId = petData.userID;
 
-  const ownerData = usersMap[userId] || {
-    owner: "Unknown",
-    ownerImage: "https://placekitten.com/50/50",
-  };
+  const ownerData = usersMap[userId]
 
   return {
     petListingId: doc.id,
@@ -116,7 +113,8 @@ export default {
     petAge: petData.petAge || "N/A",
     petPrice: petData.petPrice || 0,
     numTreats: petData.numTreats || 0,
-    timeAgo: petData.createdAt ? formatTimeAgo(petData.createdAt) : "Some time ago", // ✅ FIXED
+    timeAgo: petData.createdAt ? formatTimeAgo(petData.createdAt) : "Some time ago",
+    petType: petData.petType,
   };
 });
 
