@@ -25,7 +25,7 @@ export default {
     },
   },
   setup(props) {
-    const userName = ref("Guest"); // Default to "Guest"
+    const userName = ref(""); // Default to "Guest"
     const isVerified = ref(false);
 
     const fetchUserData = async (userId) => {

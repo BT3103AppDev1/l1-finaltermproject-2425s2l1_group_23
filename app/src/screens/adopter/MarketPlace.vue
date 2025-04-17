@@ -44,7 +44,7 @@ export default {
     const router = useRouter();
     const pets = ref([]);
     const searchQuery = ref("");
-    const userName = ref("Guest"); // userName is initialized as a reactive reference with an initial value of "Guest".
+    const userName = ref(""); // userName is initialized as a reactive reference with an initial value of "Guest".
     const selectedCategory = ref("All");
 
     const fetchUserName = async () => {
@@ -56,7 +56,7 @@ export default {
           const userDocSnap = await getDoc(userDocRef);
           if (userDocSnap.exists()) {
             const userData = userDocSnap.data();
-            userName.value = userData.firstName || "Guest"; // Set the user's first name. When you use ref, the actual value is stored in the .value property of the reference.
+            userName.value = userData.firstName; // Set the user's first name. When you use ref, the actual value is stored in the .value property of the reference.
           } else {
             console.error("No such user document in Firestore");
           }
