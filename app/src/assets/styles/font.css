@@ -52,3 +52,7 @@
   font-family: "Poppins-Medium";
   src: url("../fonts/Poppins/Poppins-Medium.ttf") format("truetype");
 }
+
+.v-popper__inner {
+  font-family: "Fredoka One", cursive !important;
+}

@@ -39,7 +39,7 @@ import { getAuth } from "firebase/auth";
 import AdoptersNavBar from "../../components/AdoptersNavBar.vue";
 import listerDefaultImage from "@/assets/images/ListerDefault.png";
 import petDefaultImage from "@/assets/images/PetListingDefault.png";
-import { formatTimeAgo } from "../../utils/timeAgo"; 
+import { formatTimeAgo } from "../../utils/timeAgo";
 
 export default {
   components: { Listing, MarketPlaceHeader, AdoptersNavBar }, // registers the imported components for use in template
@@ -100,29 +100,31 @@ export default {
         // Fetch all pets
         const petQuerySnapshot = await getDocs(collection(db, "Pet_Listings"));
         pets.value = petQuerySnapshot.docs.map((doc) => {
-  const petData = doc.data();
-  const userId = petData.userID;
+          const petData = doc.data();
+          const userId = petData.userID;
 
-  const ownerData = usersMap[userId] || {
-    owner: "Unknown",
-    ownerImage: "https://placekitten.com/50/50",
-  };
+          const ownerData = usersMap[userId] || {
+            owner: "Unknown",
+            ownerImage: "https://placekitten.com/50/50",
+          };
 
-  return {
-    petListingId: doc.id,
-    owner: ownerData.owner,
-    ownerImage: ownerData.ownerImage,
-    petImage: petData.petPhotoBase64
-      ? `data:image/png;base64,${petData.petPhotoBase64}`
-      : petDefaultImage,
-    petName: petData.petName || "Unknown",
-    petAge: petData.petAge || "N/A",
-    petPrice: petData.petPrice || 0,
-    numTreats: petData.numTreats || 0,
-    timeAgo: petData.createdAt ? formatTimeAgo(petData.createdAt) : "Some time ago", // ✅ FIXED
-  };
-});
-
+          return {
+            petListingId: doc.id, // pet listing id
+            ownerID: userId, // owner id
+            owner: ownerData.owner,
+            ownerImage: ownerData.ownerImage,
+            petImage: petData.petPhotoBase64
+              ? `data:image/png;base64,${petData.petPhotoBase64}`
+              : petDefaultImage,
+            petName: petData.petName || "Unknown",
+            petAge: petData.petAge || "N/A",
+            petPrice: petData.petPrice || 0,
+            numTreats: petData.numTreats || 0,
+            timeAgo: petData.createdAt
+              ? formatTimeAgo(petData.createdAt)
+              : "Some time ago", // ✅ FIXED
+          };
+        });
       } catch (error) {
         console.error("Error fetching pets:", error);
       }

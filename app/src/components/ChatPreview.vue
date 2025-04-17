@@ -55,7 +55,7 @@ import { getAuth } from "firebase/auth";
 import { onUnmounted } from "vue";
 import listerAvatar from "../assets/images/ListerDefault.png";
 import adopterAvatar from "../assets/images/AdopterDefault.png";
-import NameComponent from "../components/NameComponent.vue"; // Import the NameComponent
+import NameComponent from "../components/NameComponent.vue";
 
 export default {
   name: "ChatPreview",
