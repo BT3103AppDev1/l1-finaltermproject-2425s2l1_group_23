@@ -133,13 +133,12 @@ html, body {
   align-items: center;
   height: 90vh;
   width: 100%;
-  margin-top:-4em;
+  margin-top: -4em;
 }
 .content {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   max-width: 100vw;
   gap: 6em;
 }
@@ -292,5 +291,28 @@ html, body {
 .admin-login-button:hover {
   transform: scale(1.1);
   background-color: #3b4a89;
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    overflow: scroll;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100vw;
+    height: auto;
+    gap: 6em;
+    flex-direction: column;
+  }
+
+  .details {
+    flex-direction: column;
+    margin-top: 50em;
+  }
 }
 </style>
