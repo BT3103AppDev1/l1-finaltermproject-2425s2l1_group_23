@@ -11,6 +11,7 @@
             class="icon"
             src="@/assets/images/marketplaceHeader/emailIcon.png"
             alt="Email Icon"
+            v-tooltip="`Emails`"
           />
         </button>
         <span v-if="emailsUnread > 0" class="email-notification">{{
@@ -32,6 +33,7 @@
           :name="category.name"
           :emoji="category.emoji"
           @filter-category="filterByCategory"
+          v-tooltip="category.name"
         />
       </div>
     </section>

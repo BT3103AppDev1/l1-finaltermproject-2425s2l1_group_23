@@ -26,6 +26,7 @@
           <div class="text">
             <p class="name">
               {{ chat.name }}
+              <!--chat.id to render my NameComponent here-->
             </p>
             <p class="message">
               {{ chat.lastMessage || "No messages yet" }}

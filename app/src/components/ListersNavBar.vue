@@ -4,24 +4,28 @@
     <div class="listers-navbar">
       <!-- Home (PetListing.vue) -->
       <router-link to="/petlisting" class="icon-button">
-        <v-icon name="io-home-outline" class="icon" />
+        <v-icon name="io-home-outline" class="icon" v-tooltip="`Home`" />
       </router-link>
 
       <!-- Chat -->
       <router-link to="/chat" class="icon-button">
-        <v-icon name="co-chat-bubble" class="icon2" />
+        <v-icon name="co-chat-bubble" class="icon2" v-tooltip="`Chat`" />
       </router-link>
 
       <!-- Edit Profile (EditProfile.vue) -->
       <router-link to="/editprofile" class="icon-button">
-        <v-icon name="fa-regular-edit" class="icon" />
+        <v-icon
+          name="fa-regular-edit"
+          class="icon"
+          v-tooltip="`Edit Profile`"
+        />
       </router-link>
 
       <div class="spacer"></div>
 
       <!-- Logout -->
       <button @click="logout" class="icon-button">
-        <v-icon name="hi-logout" class="icon" />
+        <v-icon name="hi-logout" class="icon" v-tooltip="`Log Out`" />
       </button>
     </div>
   </div>
