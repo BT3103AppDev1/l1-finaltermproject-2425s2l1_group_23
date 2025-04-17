@@ -109,7 +109,8 @@ export default {
             ownerImage: "https://placekitten.com/50/50",
           };
           return {
-            petListingId: doc.id,
+            petListingId: doc.id, // pet listing id
+            ownerID: userId, // owner id
             owner: ownerData.owner,
             ownerImage: ownerData.ownerImage,
             petImage: petData.petPhotoBase64
