@@ -125,6 +125,7 @@ export default {
   height: 30px;
   transition: transform 0.3s ease, filter 0.3s ease;
   filter: brightness(0.8);
+  outline: none;
 }
 
 .icon2 {
@@ -132,6 +133,7 @@ export default {
   height: 35px;
   transition: transform 0.3s ease, filter 0.3s ease;
   filter: brightness(0.8);
+  outline: none;
 }
 
 .icon-button:hover .icon {
@@ -145,5 +147,4 @@ export default {
 .spacer {
   flex-grow: 1;
 }
-
 </style>
