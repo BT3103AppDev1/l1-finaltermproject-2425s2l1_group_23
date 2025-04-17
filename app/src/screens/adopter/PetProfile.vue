@@ -11,11 +11,7 @@
   <div class="content">
     <div class="pet-profile-full">
       <div class="fixed-container">
-        <img
-          :src="petProfileImage || petDefaultImage"
-          alt="ProfileImage"
-          class="profile-img"
-        />
+        <img :src="petProfileImage" alt="ProfileImage" class="profile-img" />
         <div class="treat-button">
           <button
             v-if="treatSent === false"
@@ -405,9 +401,10 @@ export default {
           /* grab the pet details here */
           this.petData = docSnap.data();
           this.listerId = this.petData.userID;
-          this.petProfileImage = this.petData.petPhotoBase64;
-
-          console.log("Document data:", docSnap.data());
+          (this.petProfileImage = this.petData.petPhotoBase64
+            ? `data:image/png;base64,${petData.petPhotoBase64}` // Convert Base64 to image
+            : petDefaultImage), // Fallback image
+            console.log("Document data:", docSnap.data());
 
           if (this.petData.users.includes(this.adopterId)) {
             this.treatSent = true;
