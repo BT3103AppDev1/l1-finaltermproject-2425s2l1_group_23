@@ -173,6 +173,24 @@ export default {
               ? chatData.lastSenderLister
               : chatData.lastSenderAdopter;
 
+            const _treatStatus = chatData.treatStatus;
+            console.log("Treat status:", _treatStatus); // Debugging: Check treat status
+
+            // Fetch the pet photo using petListingId
+            let petPhotoBase64 = null;
+            let petName = "Unknown Pet"; // Default value
+            if (_petListingId) {
+              const petListingRef = doc(db, "Pet_Listings", _petListingId);
+              const petListingDoc = await getDoc(petListingRef);
+
+              if (petListingDoc.exists()) {
+                const petListingData = petListingDoc.data();
+                petPhotoBase64 = petListingData.petPhotoBase64 || null;
+                console.log("Pet photo base64:", petPhotoBase64); // Debugging: Check pet photo data
+                petName = petListingData.petName || "Unknown Pet";
+              }
+            }
+
             return {
               id: chatId,
               name: `${otherUserData.firstName} ${otherUserData.lastName}`,
@@ -180,6 +198,9 @@ export default {
               lastTime: latestTime ? latestTime.toDate() : null,
               profileImage: otherUserData.profileImage,
               petListingId: _petListingId,
+              petName: petName,
+              petProfileImage: petPhotoBase64,
+              treatStatus: _treatStatus,
               unread:
                 chatData.hasRead === false && lastSender !== this.currentUserId,
               otherUserId: otherUserId,
@@ -205,6 +226,9 @@ export default {
         id: chatId,
         name: selectedChat.name,
         profileImage: selectedChat.profileImage,
+        petProfileImage: selectedChat.petProfileImage,
+        petName: selectedChat.petName,
+        treatStatus: selectedChat.treatStatus,
         otherUserId: selectedChat.otherUserId,
         petListingId: selectedChat.petListingId,
       });

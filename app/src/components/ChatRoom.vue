@@ -26,18 +26,21 @@
       <div class="pet">
         <img
           :src="
-            petData.petPhotoBase64
-              ? `data:image/png;base64,${petData.petPhotoBase64}`
+            selectedChat.petProfileImage
+              ? `data:image/png;base64,${selectedChat.petProfileImage}`
               : petListingAvatar
           "
           alt="Pet Avatar"
           class="pet-avatar"
         />
-        <h3>{{ petData.petName }}</h3>
+        <h3>{{ selectedChat.petName }}</h3>
       </div>
       <!-- Treat button for Listers -->
       <!-- 3 treat status: Accepted, Rejected, Pending -->
-      <div class="treat-l" v-if="this.treatStatus === 'pending' && isPetLister">
+      <div
+        class="treat-l"
+        v-if="selectedChat.treatStatus === 'pending' && isPetLister"
+      >
         <button class="accept-button" @click="acceptTreat">
           <p>🦴 Accept Treat</p>
         </button>
@@ -47,14 +50,14 @@
       </div>
 
       <div
-        v-if="this.treatStatus === 'accepted' && isPetLister"
+        v-if="selectedChat.treatStatus === 'accepted' && isPetLister"
         class="treat-status-l-accept"
       >
         <p>Treat accepted 🦴</p>
       </div>
 
       <div
-        v-if="this.treatStatus === 'rejected' && isPetLister"
+        v-if="selectedChat.treatStatus === 'rejected' && isPetLister"
         class="treat-status-l-reject"
       >
         <p>Treat rejected...</p>
@@ -62,7 +65,7 @@
 
       <!-- Treat button for Adopters -->
       <div
-        v-if="this.treatStatus === 'pending' && !isPetLister"
+        v-if="selectedChat.treatStatus === 'pending' && !isPetLister"
         class="treat-a"
       >
         <p>
@@ -71,14 +74,14 @@
       </div>
 
       <div
-        v-if="this.treatStatus === 'accepted' && !isPetLister"
+        v-if="selectedChat.treatStatus === 'accepted' && !isPetLister"
         class="treat-status-a-accept"
       >
         <p>{{ petData.petName }} has accepted your treat! 🦴</p>
       </div>
 
       <div
-        v-if="this.treatStatus === 'rejected' && !isPetLister"
+        v-if="selectedChat.treatStatus === 'rejected' && !isPetLister"
         class="treat-status-a-reject"
       >
         <p>{{ petData.petName }} has rejected your treat...</p>
@@ -172,7 +175,6 @@ export default {
       listerAvatar,
       adopterAvatar,
       petListingAvatar,
-      treatStatus: null,
       isPetLister: false,
       isChatExpired: false,
       adopterId: null,
@@ -221,6 +223,7 @@ export default {
       let petListingId = this.selectedChat.petListingId; // Retrieve petListingId from the ChatRooms document
       console.log("PetListingId:", petListingId);
       const petDocRef = doc(db, "Pet_Listings", petListingId);
+      console.log("Pet Image:", this.selectedChat.petProfileImage);
 
       try {
         const docSnap = await getDoc(petDocRef);
@@ -238,10 +241,6 @@ export default {
         const docSnap = await getDoc(chatRoomDocRef);
         if (docSnap.exists()) {
           const chatRoomData = docSnap.data();
-
-          // Set treatStatus based on the ChatRoom document
-          this.treatStatus = chatRoomData.treatStatus || null;
-          console.log("Treat Status:", this.treatStatus);
 
           if (chatRoomData.expiryDate) {
             const expiryDate = chatRoomData.expiryDate.toDate();
