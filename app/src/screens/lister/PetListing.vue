@@ -32,10 +32,11 @@
 
 <script>
 import { getDoc, doc, collection, getDocs, query, where, deleteDoc } from "firebase/firestore";
-import { useRouter } from "vue-router";
 import { auth, db } from "../../../firebase/firebase.js";
 import ListersNavBar from "@/components/ListersNavBar.vue";
 import ListersListing from "@/components/ListersListing.vue";
+import { formatTimeAgo } from "../../utils/timeAgo"; 
+import listerDefaultImage from "@/assets/images/ListerDefault.png";
 
 export default {
   name: "PetListing",
@@ -59,19 +60,33 @@ export default {
       const userDocRef = doc(db, "Users", uid);
       const userSnap = await getDoc(userDocRef);
 
+      let profileImage = listerDefaultImage;
+      let fullName = "Unknown User";
+
       if (userSnap.exists()) {
         const userData = userSnap.data();
-        this.userName = `${userData.firstName} ${userData.lastName}`;
+        fullName = `${userData.firstName} ${userData.lastName}`;
+        profileImage = userData.profileImage && userData.profileImage !== "null"
+          ? userData.profileImage
+          : profileImage;
+
+        this.userName = fullName;
       }
 
       const listingsRef = collection(db, "Pet_Listings");
       const userListingsQuery = query(listingsRef, where("userID", "==", uid));
       const querySnapshot = await getDocs(userListingsQuery);
 
-      this.listings = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      this.listings = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          owner: fullName,
+          ownerImage: profileImage,
+          timeAgo: data.createdAt ? formatTimeAgo(data.createdAt) : "Some time ago"
+        };
+      });
     }
   },
   methods: {
@@ -85,7 +100,6 @@ export default {
       localStorage.removeItem("petLifestyleInfo");
       localStorage.removeItem("fullPetListingData");
       sessionStorage.removeItem("cameFromPreview");
-
       this.$router.push("/addlisting1");
     }
   }

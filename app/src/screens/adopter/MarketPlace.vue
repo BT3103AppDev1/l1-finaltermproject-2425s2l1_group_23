@@ -39,6 +39,7 @@ import { getAuth } from "firebase/auth";
 import AdoptersNavBar from "../../components/AdoptersNavBar.vue";
 import listerDefaultImage from "@/assets/images/ListerDefault.png";
 import petDefaultImage from "@/assets/images/PetListingDefault.png";
+import { formatTimeAgo } from "../../utils/timeAgo"; 
 
 export default {
   components: { Listing, MarketPlaceHeader, AdoptersNavBar }, // registers the imported components for use in template
@@ -119,7 +120,7 @@ export default {
             petAge: petData.petAge || "N/A",
             petPrice: petData.petPrice || 0,
             numTreats: petData.numTreats || 0,
-            timeAgo: "30 mins ago", // Placeholder for now
+            timeAgo: data.createdAt ? formatTimeAgo(data.createdAt) : "Some time ago"
           };
         });
       } catch (error) {
