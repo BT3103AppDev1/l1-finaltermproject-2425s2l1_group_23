@@ -17,14 +17,24 @@
         <h1>Your Pets, Your Listings</h1>
         <p>Find the Perfect Home for Your Pet</p>
       </div>
-
       <div class="listings-wrapper">
-        <ListersListing
-          v-for="pet in listings"
-          :key="pet.id"
-          :pet="pet"
-          @delete-listing="handleDelete"
-        />
+        <template v-if="listings.length > 0">
+          <ListersListing
+            v-for="pet in listings"
+            :key="pet.id"
+            :pet="pet"
+            @delete-listing="handleDelete"
+          />
+        </template>
+
+        <div v-else class="no-listing-message">
+          <h3 class="no-listing-message-header">Oh no, it's so empty here! 🐾</h3>
+          <p class="no-listing-message-subtitle">You haven't listed any furry friends yet...</p>
+          <p class="no-listing-message-subtitle">Let's find some pawsome pets their forever homes!</p>
+          <button class="create-listing-button" @click="$router.push({ name: 'AddListing1' })">
+            <span class="paw-icon">Add Your First Pet</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -172,5 +182,42 @@ h2 {
 
 .plus-icon {
   height: 1em;
+}
+
+.no-listing-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  justify-self: center;
+  width: 100%;
+}
+
+.no-listing-message-header {
+  font-family: FredokaOne-Regular;
+  font-size: 2em;
+  color: rgb(56, 55, 55);
+  text-align: center;
+}
+
+.no-listing-message-subtitle {
+  margin-top: -1em;
+  font-family: Raleway-Medium;
+}
+
+.create-listing-button {
+  font-family: "Raleway-Bold";
+  font-size: 16px;
+  width: 164px;
+  height: 50px;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.create-listing-button:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
 }
 </style>
