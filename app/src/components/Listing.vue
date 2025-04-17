@@ -3,7 +3,7 @@
     <div class="owner-info">
       <img :src="pet.ownerImage" alt="Owner Profile" class="owner-image" />
       <div class="owner-details">
-        <h3><NameComponent :userId="pet.owner" /></h3>
+        <h3><NameComponent :userId="pet.userId" /></h3>
         <p>{{ pet.timeAgo }}</p>
       </div>
     </div>

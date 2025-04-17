@@ -100,7 +100,7 @@ export default {
           const petData = doc.data();
           const userId = petData.userID;
 
-  const ownerData = usersMap[userId]
+          const ownerData = usersMap[userId];
 
           return {
             petListingId: doc.id,
@@ -117,6 +117,7 @@ export default {
               ? formatTimeAgo(petData.createdAt)
               : "Some time ago",
             petType: petData.petType,
+            userId: userId,
           };
         });
       } catch (error) {
