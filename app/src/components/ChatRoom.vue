@@ -16,7 +16,9 @@
         class="pet-avatar"
       />
 
-      <h2>{{ selectedChat.name }}</h2>
+      <h2>
+        <NameComponent :userId="selectedChat.otherUserId" />
+      </h2>
     </div>
 
     <!-- Pet Section // stilll need to work on this logic -->
@@ -138,6 +140,7 @@ import { MdSendRound } from "oh-vue-icons/icons";
 import listerAvatar from "../assets/images/ListerDefault.png";
 import adopterAvatar from "../assets/images/AdopterDefault.png";
 import petListingAvatar from "../assets/images/PetListingDefault.png";
+import NameComponent from "../components/NameComponent.vue";
 
 addIcons(MdSendRound);
 
@@ -145,13 +148,20 @@ export default {
   name: "ChatRoom",
   components: {
     "v-icon": OhVueIcon,
+    NameComponent,
   },
   props: {
     selectedChat: {
       type: Object,
       required: true,
     },
+
+    userId: {
+      type: String,
+      required: true,
+    },
   },
+
   data() {
     return {
       messages: [],

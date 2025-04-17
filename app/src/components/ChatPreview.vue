@@ -77,6 +77,7 @@ export default {
       loading: true,
       listerAvatar,
       adopterAvatar,
+      otherUserId: null,
     };
   },
 
