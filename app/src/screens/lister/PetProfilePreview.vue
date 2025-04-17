@@ -206,7 +206,7 @@ async function submitToDatabase() {
     localStorage.removeItem("petBasicsInfo");
     localStorage.removeItem("petLifestyleInfo");
     localStorage.removeItem("fullPetListingData");
-    router.push("/pet-listing");
+    router.push("/petlisting");
   } catch (err) {
     console.error("Error submitting pet profile:", err);
     alert("Failed to save pet details.");

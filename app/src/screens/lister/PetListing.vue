@@ -7,7 +7,10 @@
     <div class="content">
       <div class="header">
         <h2>Welcome, {{ userName }}!</h2>
-        <button class="add-btn">Add a new listing ➕</button>
+        <button class="add-btn" @click="$router.push({ name: 'AddListing1' })">
+          Add a new listing
+          <img src="@/assets/images/addlisting/PlusIcon.png" class="plus-icon"/>
+        </button>
       </div>
 
       <div class="subheader">
@@ -134,6 +137,16 @@ h2 {
   border-radius: 20px;
   padding: 0.5rem 1rem;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
+.add-btn:hover {
+  background-color: #c7b6de;
+  transform: scale(1.1);
+  transition: 0.2s ease-in-out;
 }
 
 .subheader h1 {
@@ -155,5 +168,9 @@ h2 {
   flex-wrap: wrap;
   gap: 20px;
   margin-top: 2rem;
+}
+
+.plus-icon {
+  height: 1em;
 }
 </style>

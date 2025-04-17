@@ -14,6 +14,7 @@
           v-model="pet.vaccinations"
           :options="vaccinationOptions"
           mode="tags"
+          :can-deselect="true"
           
           close-on-select
         />
@@ -25,6 +26,7 @@
         <Multiselect
           v-model="pet.activity"
           :options="activityOptions"
+          :can-deselect="true"
      
         />
       </div>
@@ -36,6 +38,7 @@
           v-model="pet.allergies"
           :options="allergyOptions"
           mode="tags"
+          :can-deselect="true"
 
           close-on-select
         />
@@ -48,6 +51,7 @@
           v-model="pet.temperament"
           :options="temperamentOptions"
           mode="tags"
+          :can-deselect="true"
 
           close-on-select
         />
@@ -59,6 +63,7 @@
         <Multiselect
           v-model="pet.diet"
           :options="dietOptions"
+          :can-deselect="true"
      
         />
       </div>
@@ -70,6 +75,7 @@
           v-model="pet.socialisation"
           :options="socialisationOptions"
           mode="tags"
+          :can-deselect="true"
   
           close-on-select
         />
@@ -82,6 +88,7 @@
           v-model="pet.favFood"
           :options="favFoodOptions"
           mode="tags"
+          :can-deselect="true"
 
           close-on-select
         />
@@ -93,6 +100,7 @@
         <Multiselect
           v-model="pet.triggers"
           :options="triggerOptions"
+          :can-deselect="true"
           mode="tags"
 
           close-on-select
@@ -105,7 +113,7 @@
         <Multiselect
           v-model="pet.training"
           :options="trainingOptions"
-
+          :can-deselect="true"
         />
       </div>
 
@@ -133,20 +141,99 @@
   import { getAuth } from "firebase/auth";
   import { app } from "../../../firebase/firebase";
   import Multiselect from '@vueform/multiselect';
-import '@vueform/multiselect/themes/default.css';
-import { onMounted } from 'vue'
+  import '@vueform/multiselect/themes/default.css';
+  import { onMounted } from 'vue'
   
   const db = getFirestore(app);
   const auth = getAuth(app);
   const router = useRouter();
   
-  const vaccinationOptions = ["💉 Distemper", "💉 Parvovirus", "💉 Rabies"];
-  const allergyOptions = ["🥛 Dairy", "🥜 Peanut Butter", "🌾 Grains", "🦐 Seafood"];
-  const dietOptions = ["🍲 Home Cooked", "🍖 Dry Kibble", "🥩 Raw Food", "🍱 Mixed Diet"];
-  const favFoodOptions = ["🍗 Chicken", "🫐 Blueberries", "🧈 Peanut Butter", "🧀 Cheese"];
-  const trainingOptions = ["🚫 No Training", "✅ Basic Obedience", "📘 Intermediate", "🎓 Advanced"];
-  const activityOptions = ["🛏️ Low", "🚶 Medium", "🏃 High", "🏃‍♂️💨 Very High"];
-  const temperamentOptions = ["😊 Friendly", "😄 Playful", "😌 Calm", "😰 Anxious"];
+  const vaccinationOptions = [
+  "💉 Distemper",
+  "💉 Parvovirus",
+  "💉 Rabies",
+  "💉 Bordetella",
+  "💉 Leptospirosis",
+  "💉 Lyme Disease",
+  "💉 Canine Influenza",
+  "💉 Hepatitis"
+];
+
+const allergyOptions = [
+  "🥛 Dairy",
+  "🥜 Peanut Butter",
+  "🌾 Grains",
+  "🦐 Seafood",
+  "🥩 Beef",
+  "🐔 Chicken",
+  "🐟 Fish",
+  "🌽 Corn",
+  "🥚 Eggs",
+  "🍠 Sweet Potato"
+];
+
+const dietOptions = [
+  "🍲 Home Cooked",
+  "🍖 Dry Kibble",
+  "🥩 Raw Food",
+  "🍱 Mixed Diet",
+  "🥬 Vegetarian",
+  "🐟 Fish-Based",
+  "🧊 Freeze-Dried",
+  "🍖 Grain-Free Kibble",
+  "🧪 Prescription Diet"
+];
+
+const favFoodOptions = [
+  "🍗 Chicken",
+  "🫐 Blueberries",
+  "🧈 Peanut Butter",
+  "🧀 Cheese",
+  "🐟 Salmon",
+  "🥕 Carrots",
+  "🍌 Bananas",
+  "🍎 Apples",
+  "🦴 Bones/Chews",
+  "🥓 Bacon"
+];
+
+const trainingOptions = [
+  "🚫 No Training",
+  "✅ Basic Obedience",
+  "📘 Intermediate",
+  "🎓 Advanced",
+  "🐾 Crate Trained",
+  "🛁 Potty Trained",
+  "🦮 Leash Trained",
+  "🧠 Trick Training",
+  "🚨 Service Dog Trained"
+];
+
+const activityOptions = [
+  "🛏️ Low",
+  "🚶 Medium",
+  "🏃 High",
+  "🏃‍♂️💨 Very High",
+  "🧘 Sedentary",
+  "🐕‍🦺 Needs Daily Walks",
+  "🎾 Loves Fetch",
+  "🧗‍♂️ Hiker/Explorer",
+  "🐿️ High Prey Drive"
+];
+
+const temperamentOptions = [
+  "😊 Friendly",
+  "😄 Playful",
+  "😌 Calm",
+  "😰 Anxious",
+  "🧸 Gentle",
+  "🐶 Affectionate",
+  "😈 Mischievous",
+  "😎 Independent",
+  "🐕 Protective",
+  "🐾 Curious"
+];
+
   const socialisationOptions = [
     "👶 Gets along with kids",
     "🐶 Gets along with other dogs",
@@ -241,8 +328,8 @@ import { onMounted } from 'vue'
   </script>
   
   <style scoped>
-@import "@vueform/multiselect/themes/default.css";
-@import url("../../assets/styles/font.css");
+  @import "@vueform/multiselect/themes/default.css";
+  @import url("../../assets/styles/font.css");
 
 .listing-page {
   padding: 2em;
@@ -321,9 +408,10 @@ import { onMounted } from 'vue'
 .field-box input {
   font-family: inherit;
   font-size: 1em;
-  padding: 0.6em 0.9em;
+  padding: 0.6em 0.2em;
   border-radius: 0.5em;
-  border: 1px solid #ccc;
+  border-width: 0px;
+  font-family: Raleway-SemiBold;
 }
 
 .form-buttons {
@@ -360,7 +448,7 @@ button.secondary {
   background-color: #8C9DE1 !important;  
   color: #ffffff !important;
   border-radius: 1.5em !important;     
-  font-family: 'Raleway-SemiBold', sans-serif;
+  font-family: 'Raleway-SemiBold';
   font-size: 1em;
   padding: 0.3em 0.5em;
   display: inline-flex;
@@ -399,5 +487,12 @@ button.secondary {
   line-height: 1 !important;
 }
 
+.field-box input:focus {
+  outline: none;
+}
+
+.field-box:hover {
+  box-shadow:0 0 10px rgba(0, 0, 0, 0.1);
+}
 
 </style>

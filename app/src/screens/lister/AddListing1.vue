@@ -1,9 +1,5 @@
 <template>
     <div class="listing-page-container">
-      <div class="logo-container">
-        <img src="@/assets/images/PawfectHome.png" alt="Pawfect Home Logo" class="logo" />
-      </div>
-  
       <div class="main-content">
         <div class="image-and-text">
           <div class="pet-image-container">
@@ -23,18 +19,31 @@
             <h1 class="title">What type of pet<br> would you like to put up<br> for adoption?</h1>
   
             <div class="pet-options">
-                <div class = "row">
-                    <label class="pet-option"><input type="radio" value="Dog" v-model="petType" /> Dog</label>
-                    <label class="pet-option"><input type="radio" value="Bird" v-model="petType" /> Bird</label>
-                    <label class="pet-option"><input type="radio" value="Hamster" v-model="petType" /> Hamster</label>
-
-                </div>
-                <div class="row">
-                    <label class="pet-option"><input type="radio" value="Cat" v-model="petType" /> Cat</label>
-                    <label class="pet-option"><input type="radio" value="Rabbit" v-model="petType" /> Rabbit</label>
-                    <label class="pet-option"><input type="radio" value="Other" v-model="petType" /> Other (Please specify)</label>
-                </div>
-              
+              <label
+                v-for="option in petOptions"
+                :key="option"
+                class="option-label"
+              >
+                <input
+                  class="radio-input"
+                  type="radio"
+                  :value="option"
+                  v-model="petType"
+                />
+                {{ option }}
+              </label>
+              <!-- Show textbox if "Other" is selected -->
+              <!-- Only activated when "showOtherInput" function is true -->
+              <!-- i.e. to say user clicked "Other" -->
+              <div class="other-box" v-if="petType === 'Other'">
+                <input
+                  type="text"
+                  v-model="otherInputValue"
+                  placeholder="Please specify"
+                  class="text-input"
+                />
+              </div>
+              <!-- ################ end of textbox ################### -->
             </div>
   
             <div class="button-wrapper">
@@ -53,7 +62,7 @@
   import { doc, getFirestore, collection, addDoc } from "firebase/firestore";
   import { app } from "../../../firebase/firebase.js";
 
-  
+  const petOptions= ["Dog", "Bird", "Hamster", "Cat", "Rabbit", "Other"];
   const router = useRouter();
   const petType = ref("Dog");
   
@@ -93,10 +102,12 @@
 @import url("../../assets/styles/font.css");
 
 .listing-page-container {
-  background-color: #f7f3eb;
-  min-height: 100vh;
-  padding: 2em;
-  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
 }
 
 .logo-container {
@@ -147,7 +158,7 @@
   font-size: 2.875em; /* 46px */
   color: #333333;
   margin-bottom: 1em;
-  width: 23em;
+  width: 90%;
   text-align: left;
 }
 
@@ -160,11 +171,9 @@
 }
 
 .pet-options {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5em;
-  margin-bottom: 2em;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 70%;
 }
 
 .pet-option {
@@ -201,5 +210,61 @@
 
 .next-button:hover {
   transform: scale(1.05);
+}
+
+.radio-input {
+  appearance: none;
+  width: 18px; /* Set the size of the circle */
+  height: 18px;
+  border: 1px solid #222F61;
+  border-radius: 100%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.radio-input:checked {
+  border-color: #222F61; 
+}
+
+.radio-input:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%; 
+  width: 12px; 
+  height: 12px;
+  background-color: #222f61;
+  border-radius: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.option-label {
+  font-family: Poppins-Regular;
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.text-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  margin-top: 10px;
+  font-family: Raleway-Regular
+}
+
+.text-input:focus {
+  outline: none;
+}
+
+@media (max-width: 1024px) {
+  .image-and-text {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>
