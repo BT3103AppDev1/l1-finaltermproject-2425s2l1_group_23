@@ -21,8 +21,8 @@ import ChatRoom from "@/components/ChatRoom.vue";
 import AdoptersNavBar from "../../components/AdoptersNavBar.vue";
 import ListersNavBar from "../../components/ListersNavBar.vue";
 import { getAuth } from "firebase/auth";
-import { db} from "../../../firebase/firebase.js";
-import { doc, getDoc } from 'firebase/firestore';
+import { db } from "../../../firebase/firebase.js";
+import { doc, getDoc } from "firebase/firestore";
 
 export default {
   name: "ChatPage",
@@ -72,7 +72,7 @@ export default {
       } catch (error) {
         console.error("Error fetching user status:", error);
       }
-    }
+    },
   },
 };
 </script>
@@ -92,7 +92,7 @@ export default {
   margin: 1em;
 }
 .navbar {
-  padding-right: 5em;
+  padding-right: 6em;
   flex-shrink: 0;
 }
 
