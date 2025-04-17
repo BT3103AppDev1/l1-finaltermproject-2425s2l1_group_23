@@ -697,7 +697,6 @@ treat-img {
   flex-direction: column;
   display: flex;
   overflow-y: auto; /* Enable scrolling */
-  padding: 0em 2em;
 }
 
 .circle-button:hover,

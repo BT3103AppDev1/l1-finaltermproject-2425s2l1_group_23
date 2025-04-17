@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import { db } from "../../firebase/firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import {
@@ -61,32 +63,35 @@ export default {
   components: {
     "v-icon": OhVueIcon,
   },
+  mounted() {
+    this.fetchUnreadChats();
+  },
   data() {
     return {
       chatsUnread: 0,
-    }
+    };
   },
   methods: {
     async fetchUnreadChats() {
       const auth = getAuth();
       const user = auth.currentUser;
       if (user) {
-        const userUid = user.uid;  // Get the current user's UID
-        
+        const userUid = user.uid; // Get the current user's UID
+
         try {
           // Query chats where current user is in the participants array
           const chatsQuery = query(
-            collection(db, "chats"),
+            collection(db, "ChatRooms"),
             where("participants", "array-contains", userUid),
             where("hasRead", "==", false) // Filter for unread chats
           );
-          
+
           // Fetch the query results
           const querySnapshot = await getDocs(chatsQuery);
-          
+
           const unreadCount = querySnapshot.docs.filter((doc) => {
             const data = doc.data();
-            return data.lastSender !== userUid;
+            return data.lastSenderAdopter !== userUid;
           }).length;
 
           this.chatsUnread = unreadCount;
@@ -187,5 +192,4 @@ export default {
 .spacer {
   flex-grow: 1;
 }
-
 </style>
