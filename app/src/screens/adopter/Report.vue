@@ -61,7 +61,7 @@ export default {
             selectedOption: "",
             reason: "",
             petListingId: "",
-            userId: null,
+            userId: "",
             alertEnabled: false,
             timestamp: new Date().toISOString(),
         };
@@ -73,25 +73,22 @@ export default {
     },
 
     mounted() {
-        this.petListingId = localStorage.getItem("currentPetId");
-        this.userId = localStorage.getItem("currentUserId");
-        console.log(localStorage.getItem("currentPetId"));
-        console.log("Retrieved from localStorage in Report.vue:");
-        console.log("petListingId:", this.petListingId);
-        console.log("userId:", this.userId);
+        const storedPetListingId = localStorage.getItem("currentPetId");
+        const storedUserId = localStorage.getItem("currentUserId");
 
-        if (!this.petListingId || !this.userId) {
-            console.error("Missing petListingId or userId in localStorage");
-            this.$router.push("/home"); // Redirect to marketplace if data is missing
-            return;
+        if (storedPetListingId && storedUserId) {
+            this.petListingId = storedPetListingId;
+            this.userId = storedUserId;
+        } else {
+            console.warn("No petListingId or userId found in localStorage.");
         }
-
         console.log("Pet Listing ID:", this.petListingId);
         console.log("User ID:", this.userId);
     },
 
     methods: {
         async sendReport() {
+            console.log("successfully got pet listing id: ", this.petListingId);
             const petListingId = this.petListingId;
             const userId = this.userId;
             const petDocRef = doc(db, "Reports", petListingId);
@@ -126,18 +123,11 @@ export default {
             try {
                 /* Check if the pet listing exists */
                 const petListingDoc = await getDoc(petListingsRef);
-                console.log("Pet Listing Document:", petListingDoc.data());
                 
                 const petListingData = petListingDoc.data();
                 if (!petListingDoc.exists()) {
                     console.log("Pet listing does not exist.");
                     alert("This pet listing does not exist.");
-                    return;
-                }
-
-                /* Check if the user has already reported this pet listing */
-                if (petListingData.userReports.includes(userId)) {
-                    alert("You have already reported this pet listing.");
                     return;
                 }
 
@@ -148,9 +138,16 @@ export default {
                     timestamp: this.timestamp,
                 };
 
+                const reportDoc = await getDoc(petDocRef);
+
+                if (!reportDoc.exists()) {
+                    await setDoc(petDocRef, {
+                        petListingId: petListingId,
+                        reports: []
+                    });
+                }
                 /* Add in the report data in the Reports collection */
-                await setDoc(petDocRef, {
-                    petListingId: petListingId,
+                await updateDoc(petDocRef, {
                     reports: arrayUnion(reportData),
                 });
 
@@ -183,6 +180,7 @@ export default {
                     Dear ${userData.firstName},
 
                     Thank you for helping us keep Pawfect Home safe! 💙
+                    
                     Your report was submitted on ${new Date(this.timestamp).toLocaleDateString()}.
 
                     Here are the details of your report:
