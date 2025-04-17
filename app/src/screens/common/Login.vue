@@ -1,9 +1,9 @@
 <template>
   <div class="layout">
     <div class="header">
-      <Logo/>
+      <Logo />
       <button class="admin-login-button" @click="goToAdminLogin">
-            Admin Login
+        Admin Login
       </button>
     </div>
     <div class="login-container">
@@ -46,11 +46,14 @@
             </p>
           </div>
         </div>
-        <img src="../../assets/images/login/Rabbit.png" alt="Rabbit" class="img" />
+        <img
+          src="../../assets/images/login/Rabbit.png"
+          alt="Rabbit"
+          class="img"
+        />
       </div>
     </div>
   </div>
-  
 </template>
 <script setup>
 import { app } from "../../../firebase/firebase.js";
@@ -117,10 +120,10 @@ const goToAdminLogin = () => {
 
 <style scoped>
 @import url("../../assets/styles/font.css");
-html, body {
+html,
+body {
   width: 100vw;
   height: 100vh;
-
 }
 .layout {
   overflow: hidden;
@@ -267,7 +270,7 @@ html, body {
 
 .header {
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
   align-items: center;
   width: 100vw;
   height: auto;
