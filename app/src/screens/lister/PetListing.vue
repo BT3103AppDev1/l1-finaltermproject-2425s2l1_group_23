@@ -6,10 +6,13 @@
 
     <div class="content">
       <div class="header">
-        <h2>Welcome, {{ userName }}!</h2>
+        <h2>Welcome, <NameComponent :userId="userId" /></h2>
         <button class="add-btn" @click="$router.push({ name: 'AddListing1' })">
           Add a new listing
-          <img src="@/assets/images/addlisting/PlusIcon.png" class="plus-icon"/>
+          <img
+            src="@/assets/images/addlisting/PlusIcon.png"
+            class="plus-icon"
+          />
         </button>
       </div>
 
@@ -28,10 +31,19 @@
         </template>
 
         <div v-else class="no-listing-message">
-          <h3 class="no-listing-message-header">Oh no, it's so empty here! 🐾</h3>
-          <p class="no-listing-message-subtitle">You haven't listed any furry friends yet...</p>
-          <p class="no-listing-message-subtitle">Let's find some pawsome pets their forever homes!</p>
-          <button class="create-listing-button" @click="$router.push({ name: 'AddListing1' })">
+          <h3 class="no-listing-message-header">
+            Oh no, it's so empty here! 🐾
+          </h3>
+          <p class="no-listing-message-subtitle">
+            You haven't listed any furry friends yet...
+          </p>
+          <p class="no-listing-message-subtitle">
+            Let's find some pawsome pets their forever homes!
+          </p>
+          <button
+            class="create-listing-button"
+            @click="$router.push({ name: 'AddListing1' })"
+          >
             <span class="paw-icon">Add Your First Pet</span>
           </button>
         </div>
@@ -41,19 +53,37 @@
 </template>
 
 <script>
-import { getDoc, doc, collection, getDocs, query, where, deleteDoc } from "firebase/firestore";
+import {
+  getDoc,
+  doc,
+  collection,
+  getDocs,
+  query,
+  where,
+  deleteDoc,
+} from "firebase/firestore";
 import { auth, db } from "../../../firebase/firebase.js";
 import ListersNavBar from "@/components/ListersNavBar.vue";
 import ListersListing from "@/components/ListersListing.vue";
-import { formatTimeAgo } from "../../utils/timeAgo"; 
+import { formatTimeAgo } from "../../utils/timeAgo";
 import listerDefaultImage from "@/assets/images/ListerDefault.png";
+import NameComponent from "../../components/NameComponent.vue";
 
 export default {
   name: "PetListing",
   components: {
     ListersNavBar,
     ListersListing,
+    NameComponent,
   },
+
+  props: {
+    userId: {
+      type: String,
+      required: true,
+    },
+  },
+
   data() {
     return {
       userName: "",
@@ -76,9 +106,10 @@ export default {
       if (userSnap.exists()) {
         const userData = userSnap.data();
         fullName = `${userData.firstName} ${userData.lastName}`;
-        profileImage = userData.profileImage && userData.profileImage !== "null"
-          ? userData.profileImage
-          : profileImage;
+        profileImage =
+          userData.profileImage && userData.profileImage !== "null"
+            ? userData.profileImage
+            : profileImage;
 
         this.userName = fullName;
       }
@@ -87,14 +118,17 @@ export default {
       const userListingsQuery = query(listingsRef, where("userID", "==", uid));
       const querySnapshot = await getDocs(userListingsQuery);
 
-      this.listings = querySnapshot.docs.map(doc => {
+      this.listings = querySnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
           id: doc.id,
           ...data,
+          userId: uid, // owner's id
           owner: fullName,
           ownerImage: profileImage,
-          timeAgo: data.createdAt ? formatTimeAgo(data.createdAt) : "Some time ago"
+          timeAgo: data.createdAt
+            ? formatTimeAgo(data.createdAt)
+            : "Some time ago",
         };
       });
     }
@@ -111,12 +145,10 @@ export default {
       localStorage.removeItem("fullPetListingData");
       sessionStorage.removeItem("cameFromPreview");
       this.$router.push("/addlisting1");
-    }
-  }
+    },
+  },
 };
 </script>
-
-
 
 <style scoped>
 @import url("../../assets/styles/font.css");
@@ -151,7 +183,7 @@ h2 {
 }
 
 .add-btn {
-  background-color: #BAA6D4;
+  background-color: #baa6d4;
   width: 256px;
   height: 41px;
   color: white;

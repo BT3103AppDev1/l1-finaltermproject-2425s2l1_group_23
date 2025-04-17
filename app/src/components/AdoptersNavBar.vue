@@ -74,6 +74,8 @@ export default {
 </script>
 
 <style scoped>
+@import url("../assets/styles/font.css");
+
 .overall {
   display: flex;
   align-items: center;

@@ -1,13 +1,13 @@
 <template>
-    <div class="pet-card">
-      <div class="owner-info">
-        <img :src="pet.ownerImage" alt="Owner Profile" class="owner-image" />
-        <div class="owner-details">
-          <h3>{{ pet.owner }}</h3>
-          <p>{{ pet.timeAgo }}</p>
-        </div>
+  <div class="pet-card">
+    <div class="owner-info">
+      <img :src="pet.ownerImage" alt="Owner Profile" class="owner-image" />
+      <div class="owner-details">
+        <h3><NameComponent :userId="pet.ownerID" /></h3>
+        <p>{{ pet.timeAgo }}</p>
       </div>
-      <div class="pet-image-container">
+    </div>
+    <div class="pet-image-container">
       <img :src="pet.petImage" alt="Pet Image" class="pet-image" />
     </div>
     <div class="pet-details">
@@ -18,11 +18,15 @@
       <p class="price">S${{ pet.petPrice }}</p>
       <div class="treats">🍖 {{ pet.numTreats }}</div>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
+import NameComponent from "../components/NameComponent.vue";
 export default {
+  components: {
+    NameComponent,
+  },
   props: {
     pet: {
       type: Object,
@@ -32,7 +36,12 @@ export default {
     owner: {
       type: Object,
       required: true,
-    }
+    },
+
+    userId: {
+      type: String,
+      required: true,
+    },
   },
 };
 </script>
