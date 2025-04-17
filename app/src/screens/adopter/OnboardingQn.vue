@@ -402,7 +402,7 @@ h2 {
 }
 
 .final-image {
-  width: 50em;
+  width: 30em;
   height: auto;
 }
 
