@@ -99,8 +99,8 @@ h1 {
 
 .subtitle {
   font-family: Raleway-Medium;
-  font-size: 24px;
-
+  font-size: 1.2em;
+  width: 25em;
 }
 
 /* CTA Button */
@@ -145,6 +145,7 @@ h1 {
 
   .subtitle {
     text-align: center;
+    width: 18em;
   }
 
   .text-section {
