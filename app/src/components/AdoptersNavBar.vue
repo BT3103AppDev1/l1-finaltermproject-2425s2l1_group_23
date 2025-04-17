@@ -165,6 +165,7 @@ export default {
   height: 30px;
   transition: transform 0.3s ease, filter 0.3s ease;
   filter: brightness(0.8);
+  outline: none;
 }
 
 .icon2 {
@@ -172,6 +173,7 @@ export default {
   height: 35px;
   transition: transform 0.3s ease, filter 0.3s ease;
   filter: brightness(0.8);
+  outline: none;
 }
 
 .icon-button:hover .icon {
@@ -184,21 +186,6 @@ export default {
 
 .spacer {
   flex-grow: 1;
-}
-
-.chat-notification {
-  display: flex;
-  width: 1em;
-  height: 1em;
-  align-items: center;
-  justify-content: center;
-  font-family: "Raleway-Regular";
-  color: white;
-  font-size: 0.8em;
-  background-color: #e18c8c;
-  border-radius: 50%;
-  margin-top: -3em;
-  margin-left: -0.8em;
 }
 
 </style>
