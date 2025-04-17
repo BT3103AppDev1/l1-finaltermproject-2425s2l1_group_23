@@ -737,4 +737,25 @@ export default {
   transform: scale(1.1);
   transition: transform 0.2s ease;
 }
+
+.treat-status-a-accept,
+.treat-status-a-reject {
+  font-family: Raleway-SemiBold;
+  font-size: 1em;
+  height: 2.625em;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5em;
+  padding: 0.2em 2em;
+  text-align: center;
+}
+
+.treat-status-a-accept {
+  background-color: #cee1b9;
+}
+.treat-status-a-reject {
+  background-color: #f4d5cf;
+}
 </style>
