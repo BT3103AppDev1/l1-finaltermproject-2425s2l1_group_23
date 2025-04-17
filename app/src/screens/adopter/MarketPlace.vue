@@ -11,6 +11,9 @@
           @search="handleSearch"
           @filter-category="handleCategoryFilter"
         />
+        <!-- :userName="userName" : Passes the userName (a reactive property) as a prop to the MarketPlaceHeader component.
+          @search="handleSearch" : Listens for a custom event (search) emitted by MarketPlaceHeader and calls the handleSearch method.
+          @filter-category="handleCategoryFilter" : Listens for a custom event (filter-category) emitted by MarketPlaceHeader and calls the handleCategoryFilter method. -->
         <section class="pet-list">
           <div
             v-for="pet in filteredPets"
@@ -38,12 +41,13 @@ import listerDefaultImage from "@/assets/images/ListerDefault.png";
 import petDefaultImage from "@/assets/images/PetListingDefault.png";
 
 export default {
-  components: { Listing, MarketPlaceHeader, AdoptersNavBar },
+  components: { Listing, MarketPlaceHeader, AdoptersNavBar }, // registers the imported components for use in template
   setup() {
+    // initializes component's logic
     const router = useRouter();
     const pets = ref([]);
     const searchQuery = ref("");
-    const userName = ref("Guest");
+    const userName = ref("Guest"); // userName is initialized as a reactive reference with an initial value of "Guest".
 
     const fetchUserName = async () => {
       const auth = getAuth();
@@ -54,7 +58,7 @@ export default {
           const userDocSnap = await getDoc(userDocRef);
           if (userDocSnap.exists()) {
             const userData = userDocSnap.data();
-            userName.value = userData.firstName || "Guest"; // Set the user's first name
+            userName.value = userData.firstName || "Guest"; // Set the user's first name. When you use ref, the actual value is stored in the .value property of the reference.
           } else {
             console.error("No such user document in Firestore");
           }

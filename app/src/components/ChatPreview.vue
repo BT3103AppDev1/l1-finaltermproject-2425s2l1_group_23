@@ -25,7 +25,8 @@
           />
           <div class="text">
             <p class="name">
-              {{ chat.name }}
+              <!--chat.id to render my NameComponent here-->
+              <NameComponent :userId="chat.otherUserId" />
             </p>
             <p class="message">
               {{ chat.lastMessage || "No messages yet" }}
@@ -54,9 +55,19 @@ import { getAuth } from "firebase/auth";
 import { onUnmounted } from "vue";
 import listerAvatar from "../assets/images/ListerDefault.png";
 import adopterAvatar from "../assets/images/AdopterDefault.png";
+import NameComponent from "../components/NameComponent.vue"; // Import the NameComponent
 
 export default {
   name: "ChatPreview",
+  components: {
+    NameComponent,
+  },
+  props: {
+    userId: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       chats: [],

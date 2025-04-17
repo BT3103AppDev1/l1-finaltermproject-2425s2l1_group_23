@@ -3,7 +3,7 @@
     <!-- Header Section (Logo + Welcome Message) -->
     <header class="header">
       <div class="header-content">
-        <h1>Welcome, {{ userName }}</h1>
+        <h1>Welcome, <NameComponent :userId="userId" /></h1>
       </div>
       <div class="email">
         <button class="email-button" @click="goToEmails">
@@ -11,6 +11,7 @@
             class="icon"
             src="@/assets/images/marketplaceHeader/emailIcon.png"
             alt="Email Icon"
+            v-tooltip="`Emails`"
           />
         </button>
         <span v-if="emailsUnread > 0" class="email-notification">{{
@@ -32,6 +33,7 @@
           :name="category.name"
           :emoji="category.emoji"
           @filter-category="filterByCategory"
+          v-tooltip="category.name"
         />
       </div>
     </section>
@@ -42,7 +44,7 @@
 
     <!-- Pet Listings -->
     <section class="pet-list">
-      <Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />
+      <!--<Listing v-for="pet in filteredPets" :key="pet.id" :pet="pet" />-->
     </section>
   </div>
 </template>
@@ -51,14 +53,28 @@
 import CategoryCard from "@/components/CategoryCard.vue";
 import { auth, db } from "../../../firebase/firebase.js";
 import { getDoc, doc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import NameComponent from "../../components/NameComponent.vue";
 
 export default {
   components: {
     CategoryCard,
+    NameComponent,
+  },
+  props: {
+    userId: {
+      type: String,
+      required: true,
+    },
+    emailsUnread: {
+      type: Number,
+      required: true,
+    },
   },
 
   data() {
     return {
+      userId: "",
       userName: "", // dynamically fetched from Firebase
       searchQuery: "",
       emailsUnread: 0,
@@ -73,22 +89,27 @@ export default {
     };
   },
   async created() {
-    const user = auth.currentUser;
-    if (user) {
-      const userDocRef = doc(db, "Users", user.uid);
-      const userSnap = await getDoc(userDocRef);
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        this.userId = user.uid; // Set the userId from authenticated user
+        const userDocRef = doc(db, "Users", user.uid); // Use user.uid
+        const userSnap = await getDoc(userDocRef);
 
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        this.userName = `${data.firstName} ${data.lastName}`;
-        this.emailsUnread = data.emailsUnread || 0; // Fetch unread emails count
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          this.userName = `${data.firstName} ${data.lastName}`;
+          this.emailsUnread = data.emailsUnread || 0;
+        } else {
+          console.error("User document not found.");
+        }
       } else {
-        console.error("User document not found.");
+        console.error("No user is currently logged in.");
+        // Redirect to login if needed
+        this.$router.push("/login");
       }
-    } else {
-      console.error("No user is currently logged in.");
-    }
+    });
   },
+
   methods: {
     async fetchUnreadEmails() {
       try {

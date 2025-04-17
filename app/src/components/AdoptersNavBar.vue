@@ -4,29 +4,37 @@
     <div class="adopters-navbar">
       <!-- Home (MarketPlace.vue) -->
       <router-link to="/home" class="icon-button">
-        <v-icon name="io-home-outline" class="icon" />
+        <v-icon name="io-home-outline" class="icon" v-tooltip="`Home`" />
       </router-link>
 
       <!-- Chat -->
       <router-link to="/chat" class="icon-button">
-        <v-icon name="co-chat-bubble" class="icon2" />
+        <v-icon name="co-chat-bubble" class="icon2" v-tooltip="`Chats`" />
       </router-link>
 
       <!-- PetTreatSummary -->
       <router-link to="/sendtreatssummary" class="icon-button">
-        <v-icon name="la-bone-solid" class="icon2" />
+        <v-icon
+          name="la-bone-solid"
+          class="icon2"
+          v-tooltip="`Treats Summary`"
+        />
       </router-link>
 
       <!-- Edit Profile (EditProfile.vue) -->
       <router-link to="/editprofile" class="icon-button">
-        <v-icon name="fa-regular-edit" class="icon" />
+        <v-icon
+          name="fa-regular-edit"
+          class="icon"
+          v-tooltip="`Edit Profile`"
+        />
       </router-link>
 
       <div class="spacer"></div>
 
       <!-- Logout -->
       <button @click="logout" class="icon-button">
-        <v-icon name="hi-logout" class="icon" />
+        <v-icon name="hi-logout" class="icon" v-tooltip="`Log Out`" />
       </button>
     </div>
   </div>
