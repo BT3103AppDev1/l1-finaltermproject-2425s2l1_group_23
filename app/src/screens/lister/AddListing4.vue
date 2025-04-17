@@ -77,10 +77,22 @@ const selectedFileName = ref("");
 const selectedFileBase64 = ref("");
 
 onMounted(() => {
-const saved = JSON.parse(localStorage.getItem("fullPetListingData") || "{}");
-selectedFileName.value = saved.petLicenseFileName || "";
-selectedFileBase64.value = saved.petLicenseBase64 || "";
+  const cameFromPreview = sessionStorage.getItem("cameFromPreview");
+
+  if (!cameFromPreview) {
+    // New listing: clear
+    selectedFileName.value = "";
+    selectedFileBase64.value = "";
+  } else {
+    // Navigated back from preview: restore
+    const saved = JSON.parse(localStorage.getItem("fullPetListingData") || "{}");
+    selectedFileName.value = saved.petLicenseFileName || "";
+    selectedFileBase64.value = saved.petLicenseBase64 || "";
+
+    sessionStorage.removeItem("cameFromPreview");
+  }
 });
+
 
 function triggerFileInput() {
   fileInput.value.click();
@@ -155,7 +167,7 @@ function goToPreview() {
 }
 
 .form-box {
-  max-width: 56.25em; /* 900px */
+  max-width: 56.25em; 
   margin: 0 auto;
   font-family: "Poppins", sans-serif;
 }
@@ -212,7 +224,7 @@ function goToPreview() {
   font-family: "Poppins-Bold";
   color: #f7f3eb;
   background-color: #858585;
-  font-size: 0.75em; /* 12px */
+  font-size: 0.75em; 
   width: 12.8em;
   height: 3.3em;
   border-radius: 0.5em;

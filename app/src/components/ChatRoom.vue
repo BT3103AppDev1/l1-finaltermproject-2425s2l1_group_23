@@ -69,7 +69,7 @@
         class="treat-a"
       >
         <p>
-          Your treat is still on its way to {{ petData.petName }}. Hang tight!
+          Your treat is still on its way to {{ selectedChat.petName }}. Hang tight!
         </p>
       </div>
 

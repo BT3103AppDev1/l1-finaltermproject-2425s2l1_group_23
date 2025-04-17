@@ -85,14 +85,22 @@ export default {
   },
 
   mounted() {
-    this.petListingId = this.$route.params.petListingId;
-    this.userId = this.$route.params.userId;
+    const storedPetListingId = localStorage.getItem("currentPetId");
+    const storedUserId = localStorage.getItem("currentUserId");
+
+    if (storedPetListingId && storedUserId) {
+      this.petListingId = storedPetListingId;
+      this.userId = storedUserId;
+    } else {
+      console.warn("No petListingId or userId found in localStorage.");
+    }
     console.log("Pet Listing ID:", this.petListingId);
     console.log("User ID:", this.userId);
   },
 
   methods: {
     async sendReport() {
+      console.log("successfully got pet listing id: ", this.petListingId);
       const petListingId = this.petListingId;
       const userId = this.userId;
       const petDocRef = doc(db, "Reports", petListingId);
@@ -100,45 +108,37 @@ export default {
       const userDocRef = doc(db, "Users", userId);
       const emailsRef = collection(db, "Emails");
 
-      /* If no option was selected, user will be alerted to select a reason */
-      if (!this.selectedOption) {
-        alert("Please select a reason for reporting.");
-        return;
-      }
+      /* Add in the report data in the Reports collection */
+      await setDoc(petDocRef, {
+        petListingId: petListingId,
+        reports: arrayUnion(reportData),
+      });
 
-      /* If no elaboration was given, user will be alerted to give an elaboration */
-      if (!this.reason) {
-        alert("Please provide an explanation.");
-        return;
-      }
+      /* Add in the userId to the array of users, userReports, that have reported the pet in the Pet_Listings collection */
+      await updateDoc(petListingsRef, {
+        userReports: arrayUnion(userId),
+      });
 
-      /* If not enough elaboration was given, user will be alerted to give more elaboration, reason behind it is for administrator to have a more effective review of the report*/
-      if (this.selectedOption === "Others" && this.reason.length < 10) {
-        alert("Please provide a more detailed explanation.");
-        return;
-      }
+      /* Add in the petListingId to the array of pets, reportedPets, in the Users collection such that we will not render the reported pet listing in the user's marketplace */
+      await updateDoc(userDocRef, {
+        reportedPets: arrayUnion(petListingId),
+        emailsUnread: increment(1),
+      });
 
-      /* If too much elaboration was given, user will be alerted to shorten their elaboration for administrator to efficiently review a report */
-      if (this.reason.length > 500) {
-        alert("Please provide a shorter explanation.");
+      const userDocSnapshot = await getDoc(userDocRef);
+      if (!userDocSnapshot.exists()) {
+        alert("User does not exist.");
         return;
       }
 
       try {
         /* Check if the pet listing exists */
         const petListingDoc = await getDoc(petListingsRef);
-        console.log("Pet Listing Document:", petListingDoc.data());
 
         const petListingData = petListingDoc.data();
         if (!petListingDoc.exists()) {
           console.log("Pet listing does not exist.");
           alert("This pet listing does not exist.");
-          return;
-        }
-
-        /* Check if the user has already reported this pet listing */
-        if (petListingData.userReports.includes(userId)) {
-          alert("You have already reported this pet listing.");
           return;
         }
 
@@ -149,9 +149,16 @@ export default {
           timestamp: this.timestamp,
         };
 
+        const reportDoc = await getDoc(petDocRef);
+
+        if (!reportDoc.exists()) {
+          await setDoc(petDocRef, {
+            petListingId: petListingId,
+            reports: [],
+          });
+        }
         /* Add in the report data in the Reports collection */
-        await setDoc(petDocRef, {
-          petListingId: petListingId,
+        await updateDoc(petDocRef, {
           reports: arrayUnion(reportData),
         });
 
@@ -183,6 +190,7 @@ export default {
                     Dear ${userData.firstName},
 
                     Thank you for helping us keep Pawfect Home safe! 💙
+                    
                     Your report was submitted on ${new Date(
                       this.timestamp
                     ).toLocaleDateString()}.
