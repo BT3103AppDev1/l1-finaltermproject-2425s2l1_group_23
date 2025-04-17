@@ -63,7 +63,7 @@
           <p class="value">{{ pet.petLifestyleActivity }}</p>
         </div>
         <div v-if="pet.petLifestyleTraining?.length" class="values">
-          <p class="label">Training level:</p>
+          <p class="subtitle">Training level</p>
         <span class="value">{{ pet.petLifestyleTraining }}</span> 
 
         </div>
