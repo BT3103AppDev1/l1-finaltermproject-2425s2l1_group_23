@@ -459,6 +459,7 @@ export default {
           latestMessageAdopter: `Say hi to get things started! ${this.petData.petName} is waiting for your message so the lister can respond to your treat! 💬`,
           latestMessageLister: `Paw-some! Someone sent a treat for ${this.petData.petName}. 🦴 Say hi to see if it’s a match! ✨`,
           treatStatus: "pending",
+          hasRead: false,
         });
         console.log("Chat room successfully created!");
 

@@ -10,6 +10,9 @@
       <!-- Chat -->
       <router-link to="/chat" class="icon-button">
         <v-icon name="co-chat-bubble" class="icon2" v-tooltip="`Chats`" />
+        <span v-if="chatsUnread > 0" class="chat-notification">{{
+          chatsUnread
+        }}</span>
       </router-link>
 
       <!-- PetTreatSummary -->
@@ -58,7 +61,44 @@ export default {
   components: {
     "v-icon": OhVueIcon,
   },
+  data() {
+    return {
+      chatsUnread: 0,
+    }
+  },
   methods: {
+    async fetchUnreadChats() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const userUid = user.uid;  // Get the current user's UID
+        
+        try {
+          // Query chats where current user is in the participants array
+          const chatsQuery = query(
+            collection(db, "chats"),
+            where("participants", "array-contains", userUid),
+            where("hasRead", "==", false) // Filter for unread chats
+          );
+          
+          // Fetch the query results
+          const querySnapshot = await getDocs(chatsQuery);
+          
+          const unreadCount = querySnapshot.docs.filter((doc) => {
+            const data = doc.data();
+            return data.lastSender !== userUid;
+          }).length;
+
+          this.chatsUnread = unreadCount;
+          console.log(`Unread chats: ${this.chatsUnread}`);
+        } catch (error) {
+          console.error("Error fetching unread chats:", error);
+        }
+      } else {
+        console.error("User not authenticated");
+      }
+    },
+
     async logout() {
       const auth = getAuth();
       try {
@@ -144,6 +184,21 @@ export default {
 
 .spacer {
   flex-grow: 1;
+}
+
+.chat-notification {
+  display: flex;
+  width: 1em;
+  height: 1em;
+  align-items: center;
+  justify-content: center;
+  font-family: "Raleway-Regular";
+  color: white;
+  font-size: 0.8em;
+  background-color: #e18c8c;
+  border-radius: 50%;
+  margin-top: -3em;
+  margin-left: -0.8em;
 }
 
 </style>
