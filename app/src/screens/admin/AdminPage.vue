@@ -7,7 +7,9 @@
         class="logo"
       />
       <h1 class="admin-title">Admin Dashboard</h1>
-      <button class="logout-button" @click="goBack">logout</button>
+      <butvton class="logout-button" @click="goBack"
+        ><v-icon name="hi-logout" class="icon" v-tooltip="`Log Out`"
+      /></butvton>
     </div>
 
     <div class="table-container">
@@ -82,8 +84,15 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { useRouter } from "vue-router";
+import { OhVueIcon, addIcons } from "oh-vue-icons";
+import { HiLogout } from "oh-vue-icons/icons";
+
+addIcons(HiLogout);
 
 export default {
+  components: {
+    "v-icon": OhVueIcon,
+  },
   setup() {
     const db = getFirestore();
     const users = ref([]);
@@ -239,6 +248,12 @@ export default {
 .verification-checkbox {
   transform: scale(1.2);
   cursor: pointer;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  color: #222f61;
 }
 
 /* Responsive Design */
