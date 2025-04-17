@@ -1,84 +1,88 @@
 <template>
-    <div class="listing-page-container">
-      <div class="main-content">
-        <div class="image-and-text">
-          <div class="pet-image-container">
-            <img
-              src="@/assets/images/addlisting/addlisting1bg.png"
-              alt="Background"
-              class="petbg"
-            />
-            <img
-              src="@/assets/images/addlisting/addlisting1.png"
-              alt="Hamster"
-              class="pet"
-            />
+  <div class="listing-page-container">
+    <div class="main-content">
+      <div class="image-and-text">
+        <div class="pet-image-container">
+          <img
+            src="@/assets/images/addlisting/addlisting1bg.png"
+            alt="Background"
+            class="petbg"
+          />
+          <img
+            src="@/assets/images/addlisting/addlisting1.png"
+            alt="Hamster"
+            class="pet"
+          />
+        </div>
+
+        <div class="form-section">
+          <h1 class="title">
+            What type of pet<br />
+            would you like to put up<br />
+            for adoption?
+          </h1>
+
+          <div class="pet-options">
+            <label
+              v-for="option in petOptions"
+              :key="option"
+              class="option-label"
+            >
+              <input
+                class="radio-input"
+                type="radio"
+                :value="option"
+                v-model="petType"
+              />
+              {{ option }}
+            </label>
+            <!-- Show textbox if "Other" is selected -->
+            <!-- Only activated when "showOtherInput" function is true -->
+            <!-- i.e. to say user clicked "Other" -->
+            <div class="other-box" v-if="petType === 'Other'">
+              <input
+                type="text"
+                v-model="otherInputValue"
+                placeholder="Please specify"
+                class="text-input"
+              />
+            </div>
+            <!-- ################ end of textbox ################### -->
           </div>
-  
-          <div class="form-section">
-            <h1 class="title">What type of pet<br> would you like to put up<br> for adoption?</h1>
-  
-            <div class="pet-options">
-              <label
-                v-for="option in petOptions"
-                :key="option"
-                class="option-label"
-              >
-                <input
-                  class="radio-input"
-                  type="radio"
-                  :value="option"
-                  v-model="petType"
-                />
-                {{ option }}
-              </label>
-              <!-- Show textbox if "Other" is selected -->
-              <!-- Only activated when "showOtherInput" function is true -->
-              <!-- i.e. to say user clicked "Other" -->
-              <div class="other-box" v-if="petType === 'Other'">
-                <input
-                  type="text"
-                  v-model="otherInputValue"
-                  placeholder="Please specify"
-                  class="text-input"
-                />
-              </div>
-              <!-- ################ end of textbox ################### -->
-            </div>
-  
-            <div class="button-wrapper">
-                <button class="next-button" @click="goNext">Next</button>
-            </div>
+
+          <div class="button-wrapper">
+            <button class="next-button" @click="goNext">Next</button>
           </div>
         </div>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref,onMounted } from "vue";
-  import { useRouter } from "vue-router";
-  import { getAuth, onAuthStateChanged } from "firebase/auth";
-  import { doc, getFirestore, collection, addDoc } from "firebase/firestore";
-  import { app } from "../../../firebase/firebase.js";
+  </div>
+</template>
 
-  const petOptions= ["Dog", "Bird", "Hamster", "Cat", "Rabbit", "Other"];
-  const router = useRouter();
-  const petType = ref("Dog");
-  
-  // Firebase setup
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  
-  
-  onMounted(() => {
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { doc, getFirestore, collection, addDoc } from "firebase/firestore";
+import { app } from "../../../firebase/firebase.js";
+
+const petOptions = ["Dog", "Bird", "Hamster", "Cat", "Rabbit", "Other"];
+const router = useRouter();
+const petType = ref("Dog");
+
+// Firebase setup
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+onMounted(() => {
   const saved = localStorage.getItem("petType");
   try {
     if (saved) {
       // Handle both old string version and object version
-      petType.value = typeof saved === "string" && saved.includes("{")
-        ? JSON.parse(saved).petType
-        : saved;
+      petType.value =
+        typeof saved === "string" && saved.includes("{")
+          ? JSON.parse(saved).petType
+          : saved;
     }
   } catch (e) {
     console.error("Error parsing petType from localStorage", e);
@@ -86,23 +90,19 @@
   }
 });
 
-  const goNext = () => {
+const goNext = () => {
   // Save pet type to localStorage
   const petTypeObj = { petType: petType.value };
   localStorage.setItem("petType", petType.value);
 
-
   router.push("/addlisting2");
 };
+</script>
 
-  </script>
-  
-
-  <style scoped>
+<style scoped>
 @import url("../../assets/styles/font.css");
 
 .listing-page-container {
-  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -216,7 +216,7 @@
   appearance: none;
   width: 18px; /* Set the size of the circle */
   height: 18px;
-  border: 1px solid #222F61;
+  border: 1px solid #222f61;
   border-radius: 100%;
   outline: none;
   cursor: pointer;
@@ -224,18 +224,18 @@
 }
 
 .radio-input:checked {
-  border-color: #222F61; 
+  border-color: #222f61;
 }
 
 .radio-input:checked::after {
   content: "";
   position: absolute;
   top: 50%;
-  left: 50%; 
-  width: 12px; 
+  left: 50%;
+  width: 12px;
   height: 12px;
   background-color: #222f61;
-  border-radius: 50%; 
+  border-radius: 50%;
   transform: translate(-50%, -50%);
 }
 
@@ -254,7 +254,7 @@
   border-radius: 4px;
   width: 100%;
   margin-top: 10px;
-  font-family: Raleway-Regular
+  font-family: Raleway-Regular;
 }
 
 .text-input:focus {
@@ -265,6 +265,20 @@
   .image-and-text {
     display: flex;
     flex-direction: column;
+    padding-left: 0;
+  }
+
+  .form-section {
+    align-items: center;
+  }
+
+  .title {
+    text-align: center;
+  }
+
+  .button-wrapper {
+    margin: 0;
+    margin-top: 2em;
   }
 }
 </style>
