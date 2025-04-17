@@ -34,6 +34,7 @@
           :emoji="category.emoji"
           @filter-category="filterByCategory"
           v-tooltip="category.name"
+          :isActive="selectedCategory === category.name"
         />
       </div>
     </section>
@@ -79,13 +80,15 @@ export default {
       searchQuery: "",
       emailsUnread: 0,
       petCategories: [
-        { name: "Dogs", emoji: "🐶" },
-        { name: "Cats", emoji: "🐱" },
-        { name: "Hamsters", emoji: "🐹" },
-        { name: "Rabbits", emoji: "🐰" },
-        { name: "Birds", emoji: "🦜" },
+        { name: "All", emoji: "🏠" },
+        { name: "Dog", emoji: "🐶" },
+        { name: "Cat", emoji: "🐱" },
+        { name: "Hamster", emoji: "🐹" },
+        { name: "Rabbit", emoji: "🐰" },
+        { name: "Bird", emoji: "🦜" },
         { name: "Other", emoji: "🐠" },
       ],
+      selectedCategory: "All",
     };
   },
   async created() {
@@ -131,9 +134,15 @@ export default {
     searchPets() {
       this.$emit("search", this.searchQuery);
     },
-    filterByCategory(category) {
-      this.$emit("filter-category", category);
+    filterByCategory(categoryName) {
+    // This receives the emitted category name
+      this.selectedCategory = categoryName;
+      console.log("Selected category:", categoryName);
+      this.$emit('filter-category', categoryName);
+      console.log("Category", categoryName);
+      // Your filtering logic here
     },
+
     goToEmails() {
       this.$router.push(`/email`); // Navigate to the Emails screen
     },

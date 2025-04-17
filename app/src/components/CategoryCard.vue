@@ -1,7 +1,7 @@
 <template>
     <div class="category-container" @click="selectCategory">
       <!-- Emoji Box -->
-      <div class="emoji-box">
+      <div class="emoji-box" :class="{ active: isActive }">
         <span class="emoji">{{ emoji }}</span>
       </div>
   
@@ -16,10 +16,12 @@
   export default {
     props: {
       name: String,
-      emoji: String
+      emoji: String,
+      isActive: Boolean
     },
     methods: {
       selectCategory() {
+        console.log("category:" + this.name);
         this.$emit("filter-category", this.name);
       }
     }
@@ -75,5 +77,9 @@
     font-size: 20px;
     color: #222F61;
   }
+
+  .emoji-box.active {
+    background: #667aad; /* Darker or branded shade */
+  } 
   </style>
   

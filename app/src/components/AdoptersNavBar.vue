@@ -143,4 +143,5 @@ export default {
 .spacer {
   flex-grow: 1;
 }
+
 </style>
