@@ -3,17 +3,21 @@
     <div class="owner-info">
       <img :src="pet.ownerImage" alt="Owner Profile" class="owner-image" />
       <div class="owner-details">
-        <h3>{{ pet.owner }}</h3>
+        <h3><NameComponent :userId="pet.userId" /></h3>
         <p>{{ pet.timeAgo }}</p>
       </div>
     </div>
 
     <div class="pet-image-container">
-        <img
-    :src="pet.petPhotoBase64 ? `data:image/jpeg;base64,${pet.petPhotoBase64}` : 'https://placekitten.com/300/300'"
-    alt="Pet Image"
-    class="pet-image"
-  />
+      <img
+        :src="
+          pet.petPhotoBase64
+            ? `data:image/jpeg;base64,${pet.petPhotoBase64}`
+            : 'https://placekitten.com/300/300'
+        "
+        alt="Pet Image"
+        class="pet-image"
+      />
     </div>
 
     <div class="pet-details">
@@ -46,10 +50,19 @@
 </template>
 
 <script>
+import NameComponent from "../components/NameComponent.vue";
+
 export default {
+  components: {
+    NameComponent,
+  },
   props: {
     pet: {
       type: Object,
+      required: true,
+    },
+    userId: {
+      type: String,
       required: true,
     },
   },
@@ -102,14 +115,14 @@ export default {
 .owner-details h3 {
   margin: 0;
   font-size: 16px;
-  font-family: 'Poppins-SemiBold';
+  font-family: "Poppins-SemiBold";
 }
 
 .owner-details p {
   margin: 0;
   font-size: 12px;
   color: #7c7c7c;
-  font-family: 'Poppins-SemiBold';
+  font-family: "Poppins-SemiBold";
 }
 
 .pet-image-container {
@@ -142,7 +155,7 @@ export default {
 
 .pet-name {
   font-size: 24px;
-  font-family: 'Poppins-Bold';
+  font-family: "Poppins-Bold";
   color: #222f61;
   margin: 0 0 0 10px;
 }
@@ -150,13 +163,13 @@ export default {
 .pet-age {
   font-size: 13px;
   color: black;
-  font-family: 'Poppins-SemiBold';
+  font-family: "Poppins-SemiBold";
   margin: 0 0 0 10px;
 }
 
 .price {
   font-weight: bold;
-  font-family: 'Poppins-Medium';
+  font-family: "Poppins-Medium";
   font-size: 20px;
   color: #7c7c7c;
   margin: 2px 0 0 10px;
@@ -165,7 +178,7 @@ export default {
 .treats {
   margin: 2px 0 0 10px;
   font-size: 15px;
-  font-family: 'Poppins-SemiBold';
+  font-family: "Poppins-SemiBold";
   color: #e47a7a;
   display: flex;
   align-items: center;
@@ -204,12 +217,12 @@ export default {
 }
 
 .modal-content h2 {
-  font-family: 'FredokaOne-Regular';
+  font-family: "FredokaOne-Regular";
   margin-bottom: 10px;
 }
 
 .modal-content p {
-  font-family: 'Poppins-Regular';
+  font-family: "Poppins-Regular";
   color: #333;
 }
 
