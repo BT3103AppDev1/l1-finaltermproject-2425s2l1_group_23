@@ -402,8 +402,8 @@ export default {
           this.petData = docSnap.data();
           this.listerId = this.petData.userID;
           (this.petProfileImage = this.petData.petPhotoBase64
-            ? `data:image/png;base64,${petData.petPhotoBase64}` // Convert Base64 to image
-            : petDefaultImage), // Fallback image
+            ? `data:image/png;base64,${this.petData.petPhotoBase64}` // Convert Base64 to image
+            : this.petDefaultImage), // Fallback image
             console.log("Document data:", docSnap.data());
 
           if (this.petData.users.includes(this.adopterId)) {
