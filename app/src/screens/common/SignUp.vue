@@ -3,7 +3,7 @@
     <Logo />
     <div class="signup-main">
       <div class="image-container">
-        <div class="welcome">Welcome! We’re excited to have you.</div>
+        <p class="welcome">Welcome! We’re excited to have you.</p>
         <img
           class="signup-cat"
           src="../../assets/images/signup/SignUpCat.png"
@@ -236,7 +236,7 @@ const register = async () => {
 .signup {
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .signup-main {
@@ -258,7 +258,7 @@ const register = async () => {
 .welcome {
   font-family: FredokaOne-Regular;
   color: #222f61;
-  font-size: 2.5em;
+  font-size: 2em;
   text-align: center;
   align-items: center;
   padding: 1em;
@@ -281,8 +281,8 @@ const register = async () => {
 .upload-image {
   background-color: #cee1b9;
   border-radius: 50%;
-  width: 8em;
-  height: 8em;
+  width: 6em;
+  height: 6em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -319,7 +319,6 @@ const register = async () => {
   margin: 1em;
   border-left: 1px solid #7f7e83;
   border-right: 1px solid #7f7e83;
-  margin-top: 1em;
 }
 
 .signup-form-input {
@@ -408,7 +407,7 @@ input {
   font-size: 0.9em;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1074px) {
   .signup {
     overflow: scroll;
     height: auto;
@@ -421,10 +420,6 @@ input {
     flex-direction: column;
   }
 
-
-  .welcome {
-    width: 100%;
-  }
   .signup-form-container {
     margin-top: 1.5em;
   }
