@@ -97,27 +97,28 @@ export default {
         // Fetch all pets
         const petQuerySnapshot = await getDocs(collection(db, "Pet_Listings"));
         pets.value = petQuerySnapshot.docs.map((doc) => {
-  const petData = doc.data();
-  const userId = petData.userID;
+          const petData = doc.data();
+          const userId = petData.userID;
 
   const ownerData = usersMap[userId]
 
-  return {
-    petListingId: doc.id,
-    owner: ownerData.owner,
-    ownerImage: ownerData.ownerImage,
-    petImage: petData.petPhotoBase64
-      ? `data:image/png;base64,${petData.petPhotoBase64}`
-      : petDefaultImage,
-    petName: petData.petName || "Unknown",
-    petAge: petData.petAge || "N/A",
-    petPrice: petData.petPrice || 0,
-    numTreats: petData.numTreats || 0,
-    timeAgo: petData.createdAt ? formatTimeAgo(petData.createdAt) : "Some time ago",
-    petType: petData.petType,
-  };
-});
-
+          return {
+            petListingId: doc.id,
+            owner: ownerData.owner,
+            ownerImage: ownerData.ownerImage,
+            petImage: petData.petPhotoBase64
+              ? `data:image/png;base64,${petData.petPhotoBase64}`
+              : petDefaultImage,
+            petName: petData.petName || "Unknown",
+            petAge: petData.petAge || "N/A",
+            petPrice: petData.petPrice || 0,
+            numTreats: petData.numTreats || 0,
+            timeAgo: petData.createdAt
+              ? formatTimeAgo(petData.createdAt)
+              : "Some time ago",
+            petType: petData.petType,
+          };
+        });
       } catch (error) {
         console.error("Error fetching pets:", error);
       }
@@ -132,7 +133,6 @@ export default {
       selectedCategory.value = category;
       console.log("Category received in parent:", category);
     };
-
 
     const filteredPets = computed(() => {
       return pets.value.filter((pet) => {
@@ -149,7 +149,13 @@ export default {
       });
     });
 
-    return { pets, searchQuery, filteredPets, goToPetProfile, handleCategoryFilter};
+    return {
+      pets,
+      searchQuery,
+      filteredPets,
+      goToPetProfile,
+      handleCategoryFilter,
+    };
   },
 };
 </script>
