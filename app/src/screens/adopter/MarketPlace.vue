@@ -100,29 +100,29 @@ export default {
         // Fetch all pets
         const petQuerySnapshot = await getDocs(collection(db, "Pet_Listings"));
         pets.value = petQuerySnapshot.docs.map((doc) => {
-          const petData = doc.data();
-          const userId = petData.userID; // Use userID from pet listings
+  const petData = doc.data();
+  const userId = petData.userID;
 
-          console.log("Pet Data:", petData); // Debugging: Check pet data
+  const ownerData = usersMap[userId] || {
+    owner: "Unknown",
+    ownerImage: "https://placekitten.com/50/50",
+  };
 
-          const ownerData = usersMap[userId] || {
-            owner: "Unknown",
-            ownerImage: "https://placekitten.com/50/50",
-          };
-          return {
-            petListingId: doc.id,
-            owner: ownerData.owner,
-            ownerImage: ownerData.ownerImage,
-            petImage: petData.petPhotoBase64
-              ? `data:image/png;base64,${petData.petPhotoBase64}` // Convert Base64 to image
-              : petDefaultImage, // Fallback image
-            petName: petData.petName || "Unknown",
-            petAge: petData.petAge || "N/A",
-            petPrice: petData.petPrice || 0,
-            numTreats: petData.numTreats || 0,
-            timeAgo: data.createdAt ? formatTimeAgo(data.createdAt) : "Some time ago"
-          };
-        });
+  return {
+    petListingId: doc.id,
+    owner: ownerData.owner,
+    ownerImage: ownerData.ownerImage,
+    petImage: petData.petPhotoBase64
+      ? `data:image/png;base64,${petData.petPhotoBase64}`
+      : petDefaultImage,
+    petName: petData.petName || "Unknown",
+    petAge: petData.petAge || "N/A",
+    petPrice: petData.petPrice || 0,
+    numTreats: petData.numTreats || 0,
+    timeAgo: petData.createdAt ? formatTimeAgo(petData.createdAt) : "Some time ago", // ✅ FIXED
+  };
+});
+
       } catch (error) {
         console.error("Error fetching pets:", error);
       }
