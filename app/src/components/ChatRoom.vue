@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-room">
+  <div class="chat-room" :key="renderKey">
     <!-- Person Section -->
     <div class="person">
       <img
@@ -158,11 +158,6 @@ export default {
       type: Object,
       required: true,
     },
-
-    userId: {
-      type: String,
-      required: true,
-    },
   },
 
   data() {
@@ -179,6 +174,7 @@ export default {
       isChatExpired: false,
       adopterId: null,
       listerId: null,
+      renderKey: 0,
     };
   },
   async created() {
@@ -193,6 +189,7 @@ export default {
     if (userDoc.exists()) {
       const userData = userDoc.data();
       this.isPetLister = userData.isPetLister || false; // Set isPetLister
+      console.log(this.isPetLister);
     } else {
       console.error("User document not found");
     }
@@ -362,15 +359,15 @@ export default {
           from: "admin",
           to: this.adopterId,
           content: `
-          🎉 Treat accepted – ${selectedChat.petName} is officially yours!
+          🎉 Treat accepted – ${this.selectedChat.petName} is officially yours!
 
           Now’s a good time to message ${listerFirstName} to:
 
           • Arrange a meet-up or handover 🐾
-          • Ask about ${selectedChat.petName}’s routine, likes, and essentials
+          • Ask about ${this.selectedChat.petName}’s routine, likes, and essentials
           • Share anything they should know about you or your home 🏡
 
-          Let’s make ${selectedChat.petName}’s transition smooth and happy! ❤️
+          Let’s make ${this.selectedChat.petName}’s transition smooth and happy! ❤️
           `,
           timestamp: serverTimestamp(),
         });
@@ -379,49 +376,52 @@ export default {
           from: "admin",
           to: this.listerId,
           content: `
-          You’ve accepted the treat – that means ${selectedChat.petName} is on their way to a new home!
+          You’ve accepted the treat – that means ${this.selectedChat.petName} is on their way to a new home!
 
           You can now:
 
           • Message ${adopterFirstName} to set up a meet-up or handover 📍
 
-          • Share ${selectedChat.petName}’s habits, food, vet records, and favourite toys
+          • Share ${this.selectedChat.petName}’s habits, food, vet records, and favourite toys
 
-          • Let them know any final tips for settling ${selectedChat.petName} in 🏡
+          • Let them know any final tips for settling ${this.selectedChat.petName} in 🏡
 
-          Thank you for giving ${selectedChat.petName} a loving start. You're pawesome! 🐾
+          Thank you for giving ${this.selectedChat.petName} a loving start. You're pawesome! 🐾
           `,
           timestamp: serverTimestamp(),
         });
 
         await updateDoc(chatRoomDocRef, {
-          latestMessageAdopter: `🎉 Treat accepted – ${selectedChat.petName} is officially yours!
+          latestMessageAdopter: `🎉 Treat accepted – ${this.selectedChat.petName} is officially yours!
           
           Now’s a good time to message ${listerFirstName} to:
-          
+
           • Arrange a meet-up or handover 🐾
 
-          • Ask about ${selectedChat.petName}’s routine, likes, and essentials
+          • Ask about ${this.selectedChat.petName}’s routine, likes, and essentials
 
           • Share anything they should know about you or your home 🏡
 
-          Let’s make ${selectedChat.petName}’s transition smooth and happy! ❤️
+          Let’s make ${this.selectedChat.petName}’s transition smooth and happy! ❤️
           `,
-          latestMessageLister: `You’ve accepted the treat – that means ${selectedChat.petName} is on their way to a new home!
+          latestMessageLister: `You’ve accepted the treat – that means ${this.selectedChat.petName} is on their way to a new home!
 
           You can now:
 
           • Message ${adopterFirstName} to set up a meet-up or handover 📍
 
-          • Share ${selectedChat.petName}’s habits, food, vet records, and favourite toys
+          • Share ${this.selectedChat.petName}’s habits, food, vet records, and favourite toys
 
-          • Let them know any final tips for settling ${selectedChat.petName} in 🏡
+          • Let them know any final tips for settling ${this.selectedChat.petName} in 🏡
 
-          Thank you for giving ${selectedChat.petName} a loving start. You're pawesome! 🐾`,
+          Thank you for giving ${this.selectedChat.petName} a loving start. You're pawesome! 🐾`,
           latestTimeAdopter: serverTimestamp(),
           latestTimeLister: serverTimestamp(),
+          lastSenderAdopter: 'admin',
+          lastSenderLister: 'admin',
         });
         console.log("Initial message added to the message subcollection");
+        this.renderKey += 1;
       } catch (error) {
         console.log("Error", error);
       }
@@ -452,7 +452,7 @@ export default {
           from: "admin",
           to: this.adopterId,
           content: `
-          Hey there! ${listerFirstName} has decided not to accept the treat for ${selectedChat.petName} this time 🐾
+          Hey there! ${listerFirstName} has decided not to accept the treat for ${this.selectedChat.petName} this time 🐾
 
           Don’t be discouraged – there are plenty of other adorable pets waiting for you to send them a treat! 🐶🐱
 
@@ -467,7 +467,7 @@ export default {
           from: "admin",
           to: this.listerId,
           content: `
-          You’ve chosen to pass on this treat for ${selectedChat.petName} 🦴💭
+          You’ve chosen to pass on this treat for ${this.selectedChat.petName} 🦴💭
 
           We’ve let ${adopterFirstName} know gently. Remember, every pet is unique and finding the right match takes time. 🐾
 
@@ -481,9 +481,11 @@ export default {
 
         await updateDoc(chatRoomDocRef, {
           latestMessageAdopter: `Hey there! ${listerFirstName} has decided not to accept the treat for ${selectedChat.petName} this time 🐾`,
-          latestMessageLister: `You’ve chosen to pass on this treat for ${selectedChat.petName} 🦴💭`,
+          latestMessageLister: `You’ve chosen to pass on this treat for ${this.selectedChat.petName} 🦴💭`,
           latestTimeAdopter: serverTimestamp(),
           latestTimeLister: serverTimestamp(),
+          lastSenderAdopter: 'admin',
+          lastSenderLister: 'admin',
         });
 
         // Calculate expiry date (1 day from now)
@@ -494,6 +496,8 @@ export default {
         await updateDoc(chatRoomDocRef, {
           expiryDate: expiryDate, // Save the expiry date
         });
+
+        this.renderKey += 1;
       } catch (error) {
         console.log("Error", error);
       }
@@ -676,7 +680,7 @@ export default {
 
 .treat-status-l-accept,
 .treat-status-l-reject {
-  font-family: Raleway-Bold;
+  font-family: Raleway-SemiBold;
   font-size: 1em;
   height: 2.625em;
   width: 12.5em;
@@ -695,12 +699,16 @@ export default {
 }
 
 .treat-a {
-  font-family: Raleway-Bold;
+  font-family: Raleway-SemiBold;
   font-size: 1em;
   padding: 0.2em 0.5em;
+  margin: 0.5em;
   background-color: #fdf6b7;
   border-radius: 0.5em;
-  margin: 0.5em;
+  height: 2.625em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .treat-l {
@@ -711,7 +719,7 @@ export default {
 .accept-button,
 .reject-button {
   border-radius: 0.5em;
-  font-family: Raleway-Bold;
+  font-family: Raleway-SemiBold;
   font-size: 1em;
   height: 2.625em;
   width: 8.5em;
@@ -752,8 +760,9 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 0.5em;
-  padding: 0.2em 2em;
   text-align: center;
+  padding: 0.2em 0.5em;
+  margin: 0.5em;
 }
 
 .treat-status-a-accept {

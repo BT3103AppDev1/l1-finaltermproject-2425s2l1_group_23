@@ -4,9 +4,6 @@
       <AdoptersNavBar />
     </div>
     <div class="content-container">
-      <div class="header-container">
-        <h1 class="header">Your emails</h1>
-      </div>
       <div class="email-container">
         <!-- Email List -->
         <aside class="email-list">
@@ -206,21 +203,25 @@ export default {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  margin-left: 100px;
+  padding: 2em;
 }
 
 .overall-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2em;
-  background-color: #f7f3eb;
-  flex-direction: row-reverse;
+  height: 95vh;
+  flex-direction: row;
+  overflow: hidden; /* Prevent horizontal scrolling */
+  flex-grow: 1;
+  justify-self: center;
+  align-self: center;
+  border-radius: 1em;
+  margin: 1em;
 }
+
 .email-container {
   display: flex;
-  width: 100%;
-  height: 38em;
+  height: 90vh;
+  width: 80vw;
   background-color: #ffffff;
   border-radius: 1em;
 }
@@ -298,6 +299,7 @@ export default {
 
 .email-list li.active {
   background: #d3e3fd; /* Highlight the active email */
+  border-radius: 0.3em;
 }
 
 .email-detail {
@@ -309,6 +311,7 @@ export default {
 .navbar {
   padding-right: 5em;
   flex-shrink: 0;
+  
 }
 
 .selected-email-subject {
@@ -361,5 +364,15 @@ export default {
   width: 100%;
   padding-top: 1em;
   padding-bottom: 1em;
+}
+
+@media (max-width: 1024px) {
+  .email-container {
+  display: flex;
+  width: 80vw;
+  height: 90vh;
+  background-color: #ffffff;
+  border-radius: 1em;
+}
 }
 </style>
