@@ -193,9 +193,8 @@ export default {
 .pet-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  justify-content: flex-start;
-  margin-top: 20px;
+  justify-content: space-around;
+  width: 100%;
   padding: 20px;
 }
 .header {

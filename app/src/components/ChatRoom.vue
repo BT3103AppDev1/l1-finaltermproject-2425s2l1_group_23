@@ -77,14 +77,14 @@
         v-if="selectedChat.treatStatus === 'accepted' && !isPetLister"
         class="treat-status-a-accept"
       >
-        <p>{{ petData.petName }} has accepted your treat! 🦴</p>
+        <p>{{ selectedChat.petName }} has accepted your treat! 🦴</p>
       </div>
 
       <div
         v-if="selectedChat.treatStatus === 'rejected' && !isPetLister"
         class="treat-status-a-reject"
       >
-        <p>{{ petData.petName }} has rejected your treat...</p>
+        <p>{{ selectedChat.petName }} has rejected your treat...</p>
       </div>
     </div>
 
@@ -362,15 +362,15 @@ export default {
           from: "admin",
           to: this.adopterId,
           content: `
-          🎉 Treat accepted – ${this.petData.petName} is officially yours!
+          🎉 Treat accepted – ${selectedChat.petName} is officially yours!
 
           Now’s a good time to message ${listerFirstName} to:
 
           • Arrange a meet-up or handover 🐾
-          • Ask about ${this.petData.petName}’s routine, likes, and essentials
+          • Ask about ${selectedChat.petName}’s routine, likes, and essentials
           • Share anything they should know about you or your home 🏡
 
-          Let’s make ${this.petData.petName}’s transition smooth and happy! ❤️
+          Let’s make ${selectedChat.petName}’s transition smooth and happy! ❤️
           `,
           timestamp: serverTimestamp(),
         });
@@ -379,41 +379,45 @@ export default {
           from: "admin",
           to: this.listerId,
           content: `
-          You’ve accepted the treat – that means ${this.petData.petName} is on their way to a new home!
+          You’ve accepted the treat – that means ${selectedChat.petName} is on their way to a new home!
 
           You can now:
 
           • Message ${adopterFirstName} to set up a meet-up or handover 📍
 
-          • Share ${this.petData.petName}’s habits, food, vet records, and favourite toys
+          • Share ${selectedChat.petName}’s habits, food, vet records, and favourite toys
 
-          • Let them know any final tips for settling ${this.petData.petName} in 🏡
+          • Let them know any final tips for settling ${selectedChat.petName} in 🏡
 
-          Thank you for giving ${this.petData.petName} a loving start. You're pawesome! 🐾
+          Thank you for giving ${selectedChat.petName} a loving start. You're pawesome! 🐾
           `,
           timestamp: serverTimestamp(),
         });
 
         await updateDoc(chatRoomDocRef, {
-          latestMessageAdopter: `🎉 Treat accepted – ${this.petData.petName} is officially yours!
+          latestMessageAdopter: `🎉 Treat accepted – ${selectedChat.petName} is officially yours!
+          
           Now’s a good time to message ${listerFirstName} to:
+          
           • Arrange a meet-up or handover 🐾
-          • Ask about ${this.petData.petName}’s routine, likes, and essentials
+
+          • Ask about ${selectedChat.petName}’s routine, likes, and essentials
+
           • Share anything they should know about you or your home 🏡
 
-          Let’s make ${this.petData.petName}’s transition smooth and happy! ❤️
+          Let’s make ${selectedChat.petName}’s transition smooth and happy! ❤️
           `,
-          latestMessageLister: `You’ve accepted the treat – that means ${this.petData.petName} is on their way to a new home!
+          latestMessageLister: `You’ve accepted the treat – that means ${selectedChat.petName} is on their way to a new home!
 
           You can now:
 
           • Message ${adopterFirstName} to set up a meet-up or handover 📍
 
-          • Share ${this.petData.petName}’s habits, food, vet records, and favourite toys
+          • Share ${selectedChat.petName}’s habits, food, vet records, and favourite toys
 
-          • Let them know any final tips for settling ${this.petData.petName} in 🏡
+          • Let them know any final tips for settling ${selectedChat.petName} in 🏡
 
-          Thank you for giving ${this.petData.petName} a loving start. You're pawesome! 🐾`,
+          Thank you for giving ${selectedChat.petName} a loving start. You're pawesome! 🐾`,
           latestTimeAdopter: serverTimestamp(),
           latestTimeLister: serverTimestamp(),
         });
@@ -448,7 +452,7 @@ export default {
           from: "admin",
           to: this.adopterId,
           content: `
-          Hey there! ${listerFirstName} has decided not to accept the treat for ${this.petData.petName} this time 🐾
+          Hey there! ${listerFirstName} has decided not to accept the treat for ${selectedChat.petName} this time 🐾
 
           Don’t be discouraged – there are plenty of other adorable pets waiting for you to send them a treat! 🐶🐱
 
@@ -463,7 +467,7 @@ export default {
           from: "admin",
           to: this.listerId,
           content: `
-          You’ve chosen to pass on this treat for ${this.petData.petName} 🦴💭
+          You’ve chosen to pass on this treat for ${selectedChat.petName} 🦴💭
 
           We’ve let ${adopterFirstName} know gently. Remember, every pet is unique and finding the right match takes time. 🐾
 
@@ -476,8 +480,8 @@ export default {
         console.log("Initial message added to the message subcollection");
 
         await updateDoc(chatRoomDocRef, {
-          latestMessageAdopter: `Hey there! ${listerFirstName} has decided not to accept the treat for ${this.petData.petName} this time 🐾`,
-          latestMessageLister: `You’ve chosen to pass on this treat for ${this.petData.petName} 🦴💭`,
+          latestMessageAdopter: `Hey there! ${listerFirstName} has decided not to accept the treat for ${selectedChat.petName} this time 🐾`,
+          latestMessageLister: `You’ve chosen to pass on this treat for ${selectedChat.petName} 🦴💭`,
           latestTimeAdopter: serverTimestamp(),
           latestTimeLister: serverTimestamp(),
         });

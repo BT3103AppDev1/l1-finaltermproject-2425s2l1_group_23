@@ -188,6 +188,8 @@ export default {
   font-family: "FredokaOne-Regular";
   font-size: 24px;
   letter-spacing: 1px;
+  display: flex;
+  gap: 8px;
 }
 
 .icon {
