@@ -78,6 +78,7 @@ export default {
       listerAvatar,
       adopterAvatar,
       otherUserId: null,
+      lastMessage: null,
     };
   },
 
@@ -161,9 +162,15 @@ export default {
               return null;
             }
 
-            const latestMessage = this.isPetLister
+            let latestMessage = this.isPetLister
               ? chatData.latestMessageLister
               : chatData.latestMessageAdopter;
+
+            // Truncate the message if it exceeds a certain length
+            const maxLength = 50; // Set your desired maximum length
+            if (latestMessage && latestMessage.length > maxLength) {
+              latestMessage = latestMessage.substring(0, maxLength) + "...";
+            }
 
             const latestTime = this.isPetLister
               ? chatData.latestTimeLister
@@ -296,17 +303,23 @@ ul {
   border-radius: 50%;
   margin: 0 10px;
   min-width: 50px;
-  height: 50px;
+  min-height: 50px;
+  max-width: 50px;
+  max-height: 50px;
   object-fit: cover;
 }
 
 .name {
   font-family: Raleway-SemiBold;
+  margin: 8px 0;
 }
 
 .message {
   font-family: Raleway-Light;
   font-size: 1em;
+  padding-right: 5px;
+  margin: 0;
+  margin-bottom: 8px;
 }
 
 .unread-indicator {
