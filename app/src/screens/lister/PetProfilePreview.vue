@@ -80,7 +80,7 @@
         </div>
         <div class="values">
           <p class="subtitle">Height</p>
-          <p class="value">{{ pet.petHeight }} kg</p>
+          <p class="value">{{ pet.petHeight }} cm</p>
         </div>
         <div v-if="pet.petVax?.length" class="values">
           <p class="subtitle">Vaccination status</p>
