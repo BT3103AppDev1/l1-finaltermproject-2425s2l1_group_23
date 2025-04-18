@@ -167,7 +167,7 @@ export default {
               : chatData.latestMessageAdopter;
 
             // Truncate the message if it exceeds a certain length
-            const maxLength = 50; // Set your desired maximum length
+            const maxLength = 30; // Set your desired maximum length
             if (latestMessage && latestMessage.length > maxLength) {
               latestMessage = latestMessage.substring(0, maxLength) + "...";
             }
@@ -311,7 +311,7 @@ ul {
 
 .name {
   font-family: Raleway-SemiBold;
-  margin: 8px 0;
+  margin: 10px 0;
 }
 
 .message {
