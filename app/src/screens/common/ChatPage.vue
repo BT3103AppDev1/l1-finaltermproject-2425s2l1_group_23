@@ -118,7 +118,7 @@ export default {
 }
 
 .chatpreview-container {
-  width: 400px;
+  width: 420px;
   height: 100%;
   box-sizing: border-box;
   padding: 0;

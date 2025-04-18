@@ -267,13 +267,16 @@ ul {
 
 .chat-item {
   border-top: 1px solid #b4abab;
-  border-bottom: 1px solid #b4abab;
   cursor: pointer;
   transition: background-color 0.3s ease;
   list-style-type: none;
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.chat-item:last-child {
+  border-bottom: 1px solid #b4abab;
 }
 
 .chat-item:hover {
@@ -307,8 +310,8 @@ ul {
 }
 
 .unread-indicator {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   background-color: #8c9de1;
   border-radius: 50%;
   display: inline-block;

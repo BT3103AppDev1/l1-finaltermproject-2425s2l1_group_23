@@ -192,4 +192,19 @@ export default {
 .spacer {
   flex-grow: 1;
 }
+
+.chat-notification {
+  display: flex;
+  width: 1.2em;
+  height: 1.2em;
+  align-items: center;
+  justify-content: center;
+  font-family: "Raleway-Regular";
+  color: white;
+  font-size: 0.8em;
+  background-color: #e18c8c;
+  border-radius: 50%;
+  margin-top: -2.5em;
+  margin-left: -0.9em;
+}
 </style>

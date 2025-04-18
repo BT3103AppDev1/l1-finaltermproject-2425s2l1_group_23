@@ -191,12 +191,13 @@ export default {
 }
 
 .pet-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
   width: 100%;
   padding: 20px;
 }
+
 .header {
   display: flex;
   align-items: center;
