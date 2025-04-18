@@ -26,7 +26,7 @@
         <p class="pet-age">{{ pet.petAge }}</p>
       </div>
       <p class="price">S${{ pet.petPrice }}</p>
-      <div class="treats">🍖 {{ pet.numTreats }}</div>
+      <div class="treats">🍖 {{ pet.numTreats || 0}} </div>
     </div>
 
     <!-- Delete Button -->

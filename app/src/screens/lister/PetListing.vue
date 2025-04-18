@@ -180,6 +180,8 @@ h2 {
   font-family: FredokaOne-Regular;
   font-size: 1.5rem;
   color: #000;
+  display: flex;
+  gap: 8px;
 }
 
 .add-btn {

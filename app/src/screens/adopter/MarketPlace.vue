@@ -192,10 +192,12 @@ export default {
 
 .pet-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
   width: 100%;
   padding: 20px;
+  box-sizing: border-box;
+
 }
 
 .header {

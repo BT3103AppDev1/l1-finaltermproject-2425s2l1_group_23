@@ -1,11 +1,7 @@
 <template>
   <div class="header">
-    <img
-      src="../../assets/images/PawfectHome.png"
-      alt="Pawfect Home Logo"
-      class="logo"
-    />
-    <button class="admin-login-button" @click="goToLogin">User Login</button>
+    <Logo />
+    <button class="user-login-button" @click="goToLogin">User Login</button>
   </div>
 
   <div class="content">
@@ -53,6 +49,7 @@ import { ref } from "vue";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { useRouter } from "vue-router";
+import Logo from "../../components/Logo.vue";
 
 const email = ref("");
 const password = ref("");
@@ -239,9 +236,10 @@ const goToLogin = () => {
 
 .header {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  width: 100vw;
+  height: auto;
 }
 
 .admin-login-button {
@@ -254,7 +252,27 @@ const goToLogin = () => {
   transition: transform 0.2s ease;
 }
 
+.user-login-button:hover {
+  transform: scale(1.1);
+}
+
+.user-login-button {
+  font-family: "Raleway-Bold";
+  font-size: 14px;
+  color: #ffffff;
+  background-color: #222f61;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  justify-self: flex-end;
+  display: flex;
+  padding: 1em 2em;
+  margin-right: 2em;
+  border-radius: 2em;
+}
+
 .admin-login-button:hover {
   transform: scale(1.1);
+  background-color: #3b4a89;
 }
 </style>
