@@ -292,8 +292,9 @@ ul {
 .item img {
   border-radius: 50%;
   margin: 0 10px;
-  width: 50px;
+  min-width: 50px;
   height: 50px;
+  object-fit: cover;
 }
 
 .name {
