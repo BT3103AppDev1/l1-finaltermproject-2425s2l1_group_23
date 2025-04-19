@@ -96,7 +96,6 @@ npm run dev
    Adopters can view detailed profiles of pets, including their age, breed, personality, and more.  
    <img width="1920" alt="Screenshot 2025-04-19 at 2 51 05 PM" src="https://github.com/user-attachments/assets/d02ff44f-4af2-456c-8136-c6929ff4d306" />
 
-
 5. **Chat Page**  
    Adopters and listers can chat in real-time to discuss adoption details.  
    <img width="1920" alt="Screenshot 2025-04-19 at 2 51 47 PM" src="https://github.com/user-attachments/assets/793f988a-ca16-40b1-aa3b-5dcebead6b21" />
@@ -105,13 +104,12 @@ npm run dev
    Users can update their personal information, including their name, email, and profile picture.  
    <img width="1920" alt="Screenshot 2025-04-19 at 2 52 05 PM" src="https://github.com/user-attachments/assets/73561d1f-9c27-4a88-9250-8d9e2f7f9c1d" />
 
-
 7. **Add Listing (Lister)**  
    Listers can create detailed profiles for pets they want to put up for adoption.  
    <img width="1920" alt="Screenshot 2025-04-19 at 2 53 21 PM" src="https://github.com/user-attachments/assets/d68214c5-a8d9-4768-ae45-c3b174c3bceb" />
 
 8. **Reporting Page (Lister)**  
-   Listers can report inappropriate pet listings to the Admin.   
+   Listers can report inappropriate pet listings to the Admin.  
    <img width="1920" alt="Screenshot 2025-04-19 at 2 58 10 PM" src="https://github.com/user-attachments/assets/823b0aaf-337d-441e-b351-805bc4c3399e" />
 
 9. **Treats Summary**  
@@ -119,13 +117,12 @@ npm run dev
    <img width="1920" alt="Screenshot 2025-04-19 at 2 54 03 PM" src="https://github.com/user-attachments/assets/97d569bc-65d5-4f67-ab98-e80ecf1976d9" />
 
 10. **Admin Page**  
-   Admins can log in to monitor and verify Listers on the platform.  
-   <img width="1920" alt="Screenshot 2025-04-19 at 3 19 25 PM" src="https://github.com/user-attachments/assets/ec082bff-aa97-43ea-95c9-ccfad110db3a" />
-
+    Admins can log in to monitor and verify Listers on the platform.  
+    <img width="1920" alt="Screenshot 2025-04-19 at 3 19 25 PM" src="https://github.com/user-attachments/assets/ec082bff-aa97-43ea-95c9-ccfad110db3a" />
 
 ## 🌐 Live Website
-View our live website [here](...)!
 
+View our live website [here](https://pawfecthome-a7b3d.web.app)!
 
 ## 👩‍💻 Developer GitHub Links
 
