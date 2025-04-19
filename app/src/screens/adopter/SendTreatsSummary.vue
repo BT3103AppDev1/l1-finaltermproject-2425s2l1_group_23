@@ -13,6 +13,7 @@
             v-for="pet in petList"
             :key="pet.petListingId"
             class="listing-link"
+            @click="goToPetProfile(pet.petListingId)"
           >
             <Listing :pet="pet" />
           </div>
@@ -126,6 +127,14 @@ export default {
     return {
       petList,
     };
+  },
+  methods: {
+    goToPetProfile(petListingId) {
+      console.log("Navigating to Pet Profile:", petListingId);
+      localStorage.setItem("previousPage", "SendTreatsSummary");
+      localStorage.setItem("currentPetId", petListingId); // Store petListingId in localStorage
+      this.$router.push({ name: "PetProfile" }); // Navigate to PetProfile
+    },
   },
 };
 </script>
