@@ -13,7 +13,7 @@ PawfectHome is a full-stack web application designed to connect pet adopters and
 
 ## ✨ Features
 
-### 🐶 Adopter Features:
+### 🏡 Adopter Features:
 
 - Browse pets available for adoption in the Marketplace.
 - Send treats to express interest in adopting a pet.
