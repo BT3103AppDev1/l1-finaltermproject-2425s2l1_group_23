@@ -2,15 +2,15 @@
   <div class="overall">
     <Logo />
     <div class="onboarding-container">
-      <div class="question-image-container" v-if="currentStep < questions.length">
+      <div
+        class="question-image-container"
+        v-if="currentStep < questions.length"
+      >
         <div class="question-container">
-          <img
-            :src="currentQuestion.image"
-            alt="Pet Image"
-            class="pet-image"
-          />
+          <img :src="currentQuestion.image" alt="Pet Image" class="pet-image" />
           <div class="question-text">
             <h2 class="question">{{ currentQuestion.question }}</h2>
+
             <!-- Multiple Choice -->
             <div
               class="multiple-response"
@@ -30,9 +30,6 @@
                 />
                 {{ option }}
               </label>
-              <!-- Show textbox if "Other" is selected -->
-              <!-- Only activated when "showOtherInput" function is true -->
-              <!-- i.e. to say user clicked "Other" -->
               <div class="other-box" v-if="showOtherInput">
                 <input
                   type="text"
@@ -41,7 +38,6 @@
                   class="text-input"
                 />
               </div>
-              <!-- ################ end of textbox ################### -->
             </div>
 
             <!-- Single Choice -->
@@ -51,10 +47,13 @@
                 :key="option"
                 class="option-label"
               >
-                <input type="radio" class="radio-input" :value="option" v-model="selectedOptions" />
-                <!-- radio button: only one radio button in the group can be selected at once -->
+                <input
+                  type="radio"
+                  class="radio-input"
+                  :value="option"
+                  v-model="selectedOptions"
+                />
                 {{ option }}
-                <!-- Displays the LABEL of radio button -->
               </label>
             </div>
 
@@ -67,19 +66,86 @@
                 class="text-input"
               />
             </div>
+
+            <!-- File Upload -->
+            <div
+              class="overall-question-container"
+              v-else-if="currentQuestion.type === 'file-upload'"
+            >
+              <div class="upload-info">
+                <label class="upload-label"
+                  >Upload your pet ownership course certificate</label
+                >
+                <div
+                  className="upload-certificate-error"
+                  v-if="!selectedFileName"
+                  class="upload-description"
+                >
+                  <br />
+                  To adopt a dog or cat, you must first upload your pet
+                  ownership course certificate.
+                </div>
+              </div>
+              <div
+                class="file-upload-box"
+                @dragover.prevent
+                @dragenter.prevent
+                @drop.prevent="handleFileDrop"
+              >
+                <img
+                  src="@/assets/images/editprofile/exportlogo.png"
+                  alt="Export Logo"
+                  class="exportlogo"
+                />
+                <p className="drop-message">
+                  Select your file or drag and drop
+                </p>
+                <small className="drop-message"
+                  >png, pdf, jpg, docx accepted <br />
+                </small>
+                <input
+                  type="file"
+                  ref="fileInput"
+                  accept=".png, .pdf, .jpg, .jpeg, .docx"
+                  style="display: none"
+                  @change="handleFileSelect"
+                />
+                <button
+                  type="button"
+                  class="browse-btn"
+                  @click="triggerFileInput"
+                >
+                  Browse
+                </button>
+                <p v-if="selectedFileName" class="uploaded-file">
+                  Uploaded:
+                  <a
+                    :href="`data:image/jpeg;base64,${selectedFileBase64}`"
+                    target="_blank"
+                    >{{ selectedFileName }}</a
+                  >
+                  <button type="button" class="remove-btn" @click="removeFile">
+                    Remove
+                  </button>
+                </p>
+              </div>
+            </div>
+
             <button @click="nextQuestion" class="next-button">
               {{ currentStep < questions.length - 1 ? "Next" : "Submit" }}
             </button>
           </div>
         </div>
       </div>
-
       <div v-else class="final">
         <h2>Thank you for completing the onboarding!</h2>
-        <p class="subtitle">You’re officially part of the Pawfect Home family! Your journey starts here. Let’s make some tails (and hearts) wag.</p>
+        <p class="subtitle">
+          You’re officially part of the Pawfect Home family! Your journey starts
+          here. Let’s make some tails (and hearts) wag.
+        </p>
         <img
           src="@/assets/images/onboardingQn/onboardingComplete.png"
-          alt = "Pet Image"
+          alt="Pet Image"
           class="final-image"
         />
       </div>
@@ -89,12 +155,12 @@
 
 <script>
 import { db } from "../../../firebase/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { doc, collection, addDoc, updateDoc } from "firebase/firestore";
 import { onboardingQuestions } from "./onboardingQuestions";
 import { getAuth } from "firebase/auth";
 import Logo from "../../components/Logo.vue";
 /* FYI
-... is a spread operator. When used with arrays, 
+... is a spread operator. When used with arrays,
 the spread operator expands the elements of the array into individual elements
 
 eg.
@@ -108,25 +174,29 @@ export default {
     return {
       // Initialize everything
       currentStep: 0,
-      selectedOptions: [], // v-model will two-way binding and update this for everytime the user clicks on their options
+      selectedOptions: [], // v-model will two-way bind and update this for every user interaction
       questions: onboardingQuestions,
       userId: null,
       responses: {}, // Initialize the responses object
       showOtherInput: false, // Track whether "Other" is selected
       otherInputValue: "", // Store the value entered in the "Other" textbox
+      textInput: "", // For text input questions
+      selectedFile: null, // For file upload
+      selectedFileName: "", // Name of the selected file
+      selectedFileBase64: "", // Base64 string of the selected file
     };
   },
 
   components: {
-    Logo
+    Logo,
   },
 
   computed: {
     currentQuestion() {
-      return this.questions[this.currentStep]; // Sieve out the questions in JSON format from the onboardingQuestion.js
-      // onboardingQuestions[qn_num] to get current qn
+      return this.questions[this.currentStep]; // Retrieve the current question from the onboardingQuestions array
     },
   },
+
   methods: {
     handleOptionChange(option) {
       // Check if "Other" is selected
@@ -140,11 +210,13 @@ export default {
         }
       }
     },
+
     goToNextPage() {
       this.$router.push("/home");
     },
+
     async nextQuestion() {
-      const currentKey = this.currentQuestion.key; // this question key matches the firestore's
+      const currentKey = this.currentQuestion.key; // This question key matches Firestore's structure
 
       // Validation for multiple-choice questions
       if (this.currentQuestion.type === "multiple") {
@@ -184,25 +256,24 @@ export default {
         this.responses[currentKey] = this.textInput;
         this.textInput = ""; // Clear the text input after saving
       }
+      this.responses[currentKey] = this.selectedFileBase64; // Save Base64 string
 
       // Reset states for the next question
       this.selectedOptions = [];
       this.showOtherInput = false;
       this.otherInputValue = "";
 
-      this.selectedOptions = [];
-
       if (this.currentStep < this.questions.length - 1) {
         this.currentStep++;
       } else {
-        await this.submitResponses();
+        await this.submitResponses(); // Submit responses after the last question
       }
     },
+
     async submitResponses() {
       try {
-        // Create document structure matching your Firestore
+        // Create document structure matching Firestore
         const auth = getAuth();
-
         const user = auth.currentUser;
 
         if (user) {
@@ -211,44 +282,108 @@ export default {
           console.log("No user is signed in.");
           return;
         }
+
         const docData = {
           ...this.responses,
-          /* eg.
-          {
-            preferred_species: "Dog",
-            previous_experience: "Some experience",
-            age_preference: "Adult",
-            restrictions: "No allergies"
-          }
-          */
+          certificate_base64: this.selectedFileBase64,
           timestamp: new Date(),
-          user_id: user ? user.uid : null, // Check if user exists. if it does, assign user.uid (document id) to user_id. null if not authenticated
+          user_id: user ? user.uid : null, // Assign user ID if authenticated, otherwise null
         };
 
-        // ###### SAVE MY LAST ANSWER BEFORE SUBMITTING #######
+        // Save the last answer before submitting
         const currentKey = this.currentQuestion.key;
 
-        // For single-select questions, store as single value
+        // For single-select questions, store as a single value
         if (this.currentQuestion.type === "single") {
           this.responses[currentKey] = this.selectedOptions[0];
         } else if (this.currentQuestion.type === "multiple") {
           this.responses[currentKey] = [...this.selectedOptions];
-        } else {
+        } else if (this.currentQuestion.type === "text") {
           // For text input questions, save the text input value
           this.responses[currentKey] = this.textInput;
           this.textInput = ""; // Clear the text input after saving
+        } else if (this.currentQuestion.type === "file-upload") {
+          // For file upload, save the Base64 string
+          this.responses[currentKey] = this.selectedFileBase64;
         }
+
         this.selectedOptions = [];
 
-        await addDoc(collection(db, "Adopter_Onboarding"), docData);
+        // Save the document to Firestore
+        const userDocRef = doc(db, "Users", user.uid);
+        await updateDoc(userDocRef, docData);
+        console.log("Reponses array:" + JSON.stringify(this.responses));
         console.log("Responses saved successfully!");
-        this.currentStep++; // Move to completion screen
+
+        // Move to the completion screen
+        this.currentStep++;
         setTimeout(() => {
           this.goToNextPage();
         }, 3000);
       } catch (error) {
         console.error("Error saving responses:", error);
       }
+    },
+
+    triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
+    handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+
+      // Convert file to Base64
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.selectedFileBase64 = reader.result.split(",")[1]; // Extract only the Base64 part
+        console.log("File converted to Base64 successfully.");
+      };
+      reader.onerror = (error) => {
+        console.error("Error converting file to Base64:", error);
+        alert("Failed to process the file. Please try again.");
+      };
+      reader.readAsDataURL(file);
+    },
+    handleFileDrop(event) {
+      const file = event.dataTransfer.files[0];
+      if (!file) return;
+
+      // Validate file type
+      const allowedTypes = [
+        "image/png",
+        "image/jpeg",
+        "application/pdf",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        alert(
+          "Invalid file type. Please upload a PNG, JPG, PDF, or DOCX file."
+        );
+        return;
+      }
+
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+
+      // Convert file to Base64
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.selectedFileBase64 = reader.result.split(",")[1]; // Extract only the Base64 part
+        console.log("File converted to Base64 successfully.");
+      };
+      reader.onerror = (error) => {
+        console.error("Error converting file to Base64:", error);
+        alert("Failed to process the file. Please try again.");
+      };
+      reader.readAsDataURL(file);
+    },
+    removeFile() {
+      this.selectedFile = null;
+      this.selectedFileName = "";
+      this.selectedFileBase64 = "";
     },
   },
 };
@@ -295,7 +430,7 @@ h2 {
 }
 
 .question {
-  text-align: left;
+  text-align: center;
 }
 
 .multiple-response {
@@ -316,7 +451,7 @@ h2 {
   appearance: none; /* Remove default browser styles */
   width: 20px; /* Set the size of the circle */
   height: 20px;
-  border: 1px solid #222F61;
+  border: 1px solid #222f61;
   border-radius: 20%;
   outline: none;
   cursor: pointer;
@@ -327,7 +462,7 @@ h2 {
   appearance: none;
   width: 18px; /* Set the size of the circle */
   height: 18px;
-  border: 1px solid #222F61;
+  border: 1px solid #222f61;
   border-radius: 100%;
   outline: none;
   cursor: pointer;
@@ -335,29 +470,29 @@ h2 {
 }
 
 .checkbox-input:checked {
-  background-color: #222F61;
+  background-color: #222f61;
 }
 
 .radio-input:checked {
-  border-color: #222F61; 
+  border-color: #222f61;
 }
 
 .radio-input:checked::after {
   content: "";
   position: absolute;
   top: 50%;
-  left: 50%; 
-  width: 12px; 
+  left: 50%;
+  width: 12px;
   height: 12px;
   background-color: #222f61;
-  border-radius: 50%; 
+  border-radius: 50%;
   transform: translate(-50%, -50%);
 }
 
 .checkbox-input:after {
   content: "";
   position: absolute;
-  top: 2px; 
+  top: 2px;
   left: 5px;
   width: 5px;
   height: 10px;
@@ -372,7 +507,7 @@ h2 {
   border-radius: 4px;
   width: 100%;
   margin-top: 10px;
-  font-family: Raleway-Regular
+  font-family: Raleway-Regular;
 }
 
 .text-input:focus {
@@ -417,6 +552,129 @@ h2 {
   .question-container {
     display: flex;
     flex-direction: column;
+  }
+}
+
+.overall {
+  font-family: Poppins-Medium;
+  padding: 2em;
+  width: 100%;
+  margin: auto;
+}
+
+.upload-certificate {
+  background-color: #f5f5f5;
+  padding: 1.5em;
+  border-radius: 0.75em;
+  text-align: center;
+  margin-bottom: 1.5em;
+}
+
+.upload-info {
+  text-align: left;
+  margin-left: -1.5em;
+}
+
+.upload-label {
+  font-family: "Raleway-SemiBold";
+  font-size: 1.1em;
+  color: #1c1c1c;
+  display: flex;
+  margin-bottom: 0.5em;
+  align-items: center;
+  justify-content: space-evenly;
+  text-align: center;
+}
+
+.upload-description {
+  font-family: "Raleway-Light";
+  color: #1c1c1c;
+  font-size: 0.95em;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.file-upload-box {
+  border: 0.15em dashed #ccc;
+  padding: 1.5em;
+  border-radius: 0.75em;
+  cursor: pointer;
+  width: 100%;
+  margin-left: -1.5em;
+  text-align: center;
+}
+
+.file-upload-box p {
+  font-family: "Raleway-SemiBold";
+  color: #000000;
+  margin-bottom: 1em;
+  font-size: 1em;
+}
+
+.file-upload-box small {
+  font-family: "Poppins-Regular";
+  color: #000000;
+  opacity: 0.7;
+}
+
+.browse-btn {
+  font-family: "Poppins-Bold";
+  color: #f7f3eb;
+  background-color: #858585;
+  font-size: 12px;
+  width: 12.8em;
+  height: 3.3em;
+  border-radius: 0.5em;
+  padding: 0.5em 1em;
+  border: none;
+  cursor: pointer;
+  margin-top: 3em;
+}
+
+.browse-btn:hover {
+  background-color: grey;
+}
+
+.uploaded-file {
+  margin-top: 1em;
+  font-family: "Raleway-Regular";
+  font-size: 0.9em;
+}
+
+.uploaded-file a {
+  color: #222f61;
+  text-decoration: underline;
+}
+
+.remove-btn {
+  font-family: "Poppins-Regular";
+  color: #ff0000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8em;
+  margin-left: 1em;
+}
+
+.overall-question-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .overall-question-container {
+    gap: 1em; /* Reduce spacing on smaller screens */
+  }
+
+  .browse-btn {
+    width: 100%; /* Make the button full-width on smaller screens */
   }
 }
 </style>

@@ -33,4 +33,10 @@ export const onboardingQuestions = [
     key: "restrictions",
     image: onboardingFish,
   },
+  {
+    question: "Upload your pet ownership course certificate",
+    type: "file-upload",
+    key: "certificate",
+    image: onboardingFish, // Use the same image or a new one
+  },
 ];

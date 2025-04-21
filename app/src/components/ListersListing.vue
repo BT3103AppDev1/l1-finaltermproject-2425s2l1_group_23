@@ -26,7 +26,7 @@
         <p class="pet-age">{{ pet.petAge }}</p>
       </div>
       <p class="price">S${{ pet.petPrice }}</p>
-      <div class="treats">🍖 {{ pet.numTreats || 0}} </div>
+      <div class="treats">🍖 {{ pet.numTreats || 0 }}</div>
     </div>
 
     <!-- Delete Button -->
@@ -206,7 +206,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  z-index: 1000;
 }
 
 .modal-content {
