@@ -1,11 +1,7 @@
 <template>
   <div class="admin-page">
     <div class="header">
-      <img
-        src="../../assets/images/PawfectHome.png"
-        alt="Pawfect Home Logo"
-        class="logo"
-      />
+      <Logo />
       <h1 class="admin-title">Admin Dashboard</h1>
       <butvton class="logout-button" @click="goBack"
         ><v-icon name="hi-logout" class="icon" v-tooltip="`Log Out`"
@@ -86,12 +82,14 @@ import {
 import { useRouter } from "vue-router";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import { HiLogout } from "oh-vue-icons/icons";
+import Logo from "../../components/Logo.vue";
 
 addIcons(HiLogout);
 
 export default {
   components: {
     "v-icon": OhVueIcon,
+    Logo,
   },
   setup() {
     const db = getFirestore();
@@ -335,8 +333,9 @@ export default {
 
 .header {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   padding: 10px 20px;
+  flex-wrap: nowrap;
 }
 </style>
