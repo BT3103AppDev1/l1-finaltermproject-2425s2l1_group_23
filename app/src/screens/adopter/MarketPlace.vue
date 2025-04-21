@@ -27,7 +27,7 @@
 <script>
 import { ref, onMounted, computed } from "vue";
 import { db } from "../../../firebase/firebase.js";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc } from "firebase/firestore";
 import Listing from "../../components/Listing.vue";
 import MarketPlaceHeader from "./MarketPlaceHeader.vue";
 import { useRouter } from "vue-router";
@@ -44,29 +44,7 @@ export default {
     const router = useRouter();
     const pets = ref([]);
     const searchQuery = ref("");
-    const userName = ref(""); // userName is initialized as a reactive reference with an initial value of "Guest".
     const selectedCategory = ref("All");
-
-    const fetchUserName = async () => {
-      const auth = getAuth();
-      if (auth.currentUser) {
-        const userId = auth.currentUser.uid; // Get the logged-in user's UID
-        try {
-          const userDocRef = doc(db, "Users", userId); // Reference to the user's document
-          const userDocSnap = await getDoc(userDocRef);
-          if (userDocSnap.exists()) {
-            const userData = userDocSnap.data();
-            userName.value = userData.firstName; // Set the user's first name. When you use ref, the actual value is stored in the .value property of the reference.
-          } else {
-            console.error("No such user document in Firestore");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      } else {
-        console.error("No user is currently logged in.");
-      }
-    };
 
     const goToPetProfile = (petListingId) => {
       console.log(petListingId);
@@ -127,7 +105,6 @@ export default {
     };
 
     onMounted(() => {
-      fetchUserName(); // Fetch the logged-in user's first name
       fetchPets(); // Fetch the pets
     });
 

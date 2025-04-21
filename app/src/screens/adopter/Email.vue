@@ -78,7 +78,6 @@ export default {
       emails: [],
       selectedEmail: null,
       userId: null,
-      emailsUnread: 0,
     };
   },
   mounted() {
@@ -89,7 +88,6 @@ export default {
       console.error("No user is currently logged in.");
     }
     this.fetchEmails();
-    this.fetchEmailsUnread();
   },
 
   methods: {
@@ -108,22 +106,6 @@ export default {
         console.log("Fetched emails:", this.emails); // Debugging
       } catch (error) {
         console.error("Error fetching emails:", error);
-      }
-    },
-
-    async fetchEmailsUnread() {
-      try {
-        const userDocRef = doc(db, "Users", this.userId);
-        const userDocSnapshot = await getDoc(userDocRef);
-
-        if (userDocSnapshot.exists()) {
-          this.emailsUnread = userDocSnapshot.data().emailsUnread || 0;
-          console.log("Fetched emailsUnread:", this.emailsUnread);
-        } else {
-          console.error("User document does not exist.");
-        }
-      } catch (error) {
-        console.error("Error fetching emailsUnread:", error);
       }
     },
 
@@ -147,18 +129,6 @@ export default {
           .catch((error) => {
             console.error("Error updating email:", error);
           });
-
-        if (this.emailsUnread > 0) {
-          updateDoc(doc(db, "Users", this.userId), {
-            emailsUnread: increment(-1),
-          })
-            .then(() => {
-              console.log("User's unread email count decremented.");
-            })
-            .catch((error) => {
-              console.error("Error updating user's unread email count:", error);
-            });
-        }
       }
     },
 

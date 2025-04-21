@@ -14,9 +14,8 @@
             v-tooltip="`Emails`"
           />
         </button>
-        <span v-if="emailsUnread > 0" class="email-notification">{{
-          emailsUnread
-        }}</span>
+        <span v-if="emailsUnread > 0" class="email-notification">
+          {{ emailsUnread }}</span>
       </div>
     </header>
 
@@ -53,8 +52,8 @@
 <script>
 import CategoryCard from "@/components/CategoryCard.vue";
 import { auth, db } from "../../../firebase/firebase.js";
-import { getDoc, doc } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
+import { getDoc, doc, getDocs, query, collection, where } from "firebase/firestore";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
 import NameComponent from "../../components/NameComponent.vue";
 
 export default {
@@ -65,10 +64,6 @@ export default {
   props: {
     userId: {
       type: String,
-      required: true,
-    },
-    emailsUnread: {
-      type: Number,
       required: true,
     },
   },
@@ -101,7 +96,6 @@ export default {
         if (userSnap.exists()) {
           const data = userSnap.data();
           this.userName = `${data.firstName} ${data.lastName}`;
-          this.emailsUnread = data.emailsUnread || 0;
         } else {
           console.error("User document not found.");
         }
@@ -114,23 +108,7 @@ export default {
   },
 
   methods: {
-    async fetchUnreadEmails() {
-      try {
-        const userId = "testing"; // Replace with the actual user ID
-        const userDocRef = doc(db, "Users", userId);
-        const userDocSnapshot = await getDoc(userDocRef);
-
-        if (userDocSnapshot.exists()) {
-          this.emailsUnread = userDocSnapshot.data().emailsUnread || 0;
-          console.log("Unread emails count:", this.emailsUnread);
-        } else {
-          console.error("User document does not exist.");
-        }
-      } catch (error) {
-        console.error("Error fetching unread emails:", error);
-      }
-    },
-
+    
     searchPets() {
       this.$emit("search", this.searchQuery);
     },
@@ -141,6 +119,35 @@ export default {
       this.$emit('filter-category', categoryName);
       console.log("Category", categoryName);
       // Your filtering logic here
+    },
+
+    async fetchUnreadEmails() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const userUid = user.uid; // Get the current user's UID
+
+        try {
+          // Query chats where current user is in the participants array
+          const emailsQuery = query(
+            collection(db, "Emails"),
+            where("userId", "==", userUid),
+            where("isRead", "==", false) // Filter for unread chats
+          );
+
+          // Fetch the query results
+          const querySnapshot = await getDocs(emailsQuery);
+
+          const unreadCount = querySnapshot.docs.length;
+        
+          this.emailsUnread = unreadCount;
+          console.log(`Unread emails: ${this.emailsUnread}`);
+        } catch (error) {
+          console.error("Error fetching unread emails:", error);
+        }
+      } else {
+        console.error("User not authenticated");
+      }
     },
 
     goToEmails() {
