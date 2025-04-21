@@ -108,6 +108,13 @@ export default {
       const userDocRef = doc(db, "Users", userId);
       const emailsRef = collection(db, "Emails");
 
+      const reportData = {
+          selectedOption: this.selectedOption,
+          explanation: this.reason,
+          userId: userId,
+          timestamp: this.timestamp,
+      };
+
       /* Add in the report data in the Reports collection */
       await setDoc(petDocRef, {
         petListingId: petListingId,
@@ -141,13 +148,6 @@ export default {
           alert("This pet listing does not exist.");
           return;
         }
-
-        const reportData = {
-          selectedOption: this.selectedOption,
-          explanation: this.reason,
-          userId: userId,
-          timestamp: this.timestamp,
-        };
 
         const reportDoc = await getDoc(petDocRef);
 
@@ -229,8 +229,12 @@ export default {
 
     goToMarketplace() {
       /* Nsavigate to the marketplace page and send the userId along */
-      this.router.push(`/home/${this.userId}`); //to transport the userId to marketplace, put on hold first
+      this.router.push(`/home`); //to transport the userId to marketplace, put on hold first
     },
+
+    cancel() {
+      this.router.push(`/home`)
+    }
   },
 };
 </script>
