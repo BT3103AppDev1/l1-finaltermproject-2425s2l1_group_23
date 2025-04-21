@@ -1,6 +1,6 @@
 <template>
   <div class="back-button-container">
-    <button class="back-button" @click="$router.push({ name: 'MarketPlace' })">
+    <button class="back-button" @click="goBack">
       <img
         src="@/assets/images/PetProfileMockUp/BackButton.png"
         alt="BackButton"
@@ -556,6 +556,21 @@ export default {
         this.petListingId,
         this.adopterId
       );
+    },
+
+    goBack() {
+      const previousPage = localStorage.getItem("previousPage");
+      console.log("Previous page:", previousPage);
+      if (previousPage === "SendTreatsSummary") {
+        this.$router.push({ name: "SendTreatsSummary" });
+        console.log("Navigating back to SendTreatSummary");
+      } else if (previousPage === "MarketPlace") {
+        this.$router.push({ name: "MarketPlace" });
+        console.log("Navigating back to MarketPlace");
+      } else {
+        console.log("No previous page found, navigating to default page");
+        this.$router.push({ name: "MarketPlace" }); // Default fallback
+      }
     },
   },
 };

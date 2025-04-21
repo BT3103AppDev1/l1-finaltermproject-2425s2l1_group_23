@@ -70,6 +70,7 @@ export default {
 
     const goToPetProfile = (petListingId) => {
       console.log(petListingId);
+      localStorage.setItem("previousPage", "MarketPlace");
       localStorage.setItem("currentPetId", petListingId); // Store petListingId in localStorage
       router.push({ name: "PetProfile" }); // Navigate to PetProfile
     };
@@ -197,7 +198,6 @@ export default {
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
-
 }
 
 .header {

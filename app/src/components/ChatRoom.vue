@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-room" :key="renderKey">
+  <div class="chat-room">
     <!-- Person Section -->
     <div class="person">
       <img
@@ -69,7 +69,8 @@
         class="treat-a"
       >
         <p>
-          Your treat is still on its way to {{ selectedChat.petName }}. Hang tight!
+          Your treat is still on its way to {{ selectedChat.petName }}. Hang
+          tight!
         </p>
       </div>
 
@@ -174,7 +175,6 @@ export default {
       isChatExpired: false,
       adopterId: null,
       listerId: null,
-      renderKey: 0,
     };
   },
   async created() {
@@ -417,11 +417,11 @@ export default {
           Thank you for giving ${this.selectedChat.petName} a loving start. You're pawesome! 🐾`,
           latestTimeAdopter: serverTimestamp(),
           latestTimeLister: serverTimestamp(),
-          lastSenderAdopter: 'admin',
-          lastSenderLister: 'admin',
+          lastSenderAdopter: "admin",
+          lastSenderLister: "admin",
         });
         console.log("Initial message added to the message subcollection");
-        this.renderKey += 1;
+        this.selectedChat.treatStatus = "accepted"; // Update UI
       } catch (error) {
         console.log("Error", error);
       }
@@ -484,8 +484,8 @@ export default {
           latestMessageLister: `You’ve chosen to pass on this treat for ${this.selectedChat.petName} 🦴💭`,
           latestTimeAdopter: serverTimestamp(),
           latestTimeLister: serverTimestamp(),
-          lastSenderAdopter: 'admin',
-          lastSenderLister: 'admin',
+          lastSenderAdopter: "admin",
+          lastSenderLister: "admin",
         });
 
         // Calculate expiry date (1 day from now)
@@ -497,7 +497,7 @@ export default {
           expiryDate: expiryDate, // Save the expiry date
         });
 
-        this.renderKey += 1;
+        this.selectedChat.treatStatus = "rejected"; // Update UI
       } catch (error) {
         console.log("Error", error);
       }
