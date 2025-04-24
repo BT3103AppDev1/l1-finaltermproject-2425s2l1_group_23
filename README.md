@@ -126,7 +126,7 @@ View our live website [here](https://pawfecthome-a7b3d.web.app)!
 
 ## 📹 Video Demonstration
 
-Watch out demo video [here](https://youtu.be/3T88j5BV_2Y)!
+Watch out demo video [here](https://youtu.be/zeEVV0LPZPM)!
 
 ## 👩‍💻 Developer GitHub Links
 
